@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HEQING_AUTH_SYSTEM</title>
+    <style>
+      /* ── 基礎重置 ── */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg:      #050a0f;
+        --accent:  #00ffcc;
+        --accent2: #00b8ff;
+        --dim:     rgba(0, 255, 204, 0.35);
+        --err:     #ff4444;
+        --font:    "Courier New", Courier, monospace;
+        --glow:    0 0 18px rgba(0, 255, 204, 0.35);
+      }
+
+      html, body {
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--accent);
+        font-family: var(--font);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+      }
+
+      /* CRT 掃描線 */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 3px,
+          rgba(0, 0, 0, 0.13) 3px,
+          rgba(0, 0, 0, 0.13) 4px
+        );
+      }
+
+      /* ── 外框 ── */
+      .hq-shell {
+        width: min(480px, 96vw);
+        border: 1px solid var(--dim);
+        background: rgba(5, 10, 15, 0.97);
+        box-shadow: var(--glow), inset 0 0 60px rgba(0, 255, 204, 0.03);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* ── Header ── */
+      .hq-header {
+        border-bottom: 1px solid var(--dim);
+        padding: 18px 22px 0;
+        background: rgba(0, 255, 204, 0.03);
+      }
+      .hq-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .hq-title {
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+        color: var(--accent);
+        text-shadow: var(--glow);
+      }
+      .hq-blink { animation: blink 1.1s step-end infinite; }
+      @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+      .hq-badges {
+        display: flex;
+        gap: 6px;
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        color: rgba(0, 255, 204, 0.5);
+      }
+      .hq-badge {
+        border: 1px solid rgba(0, 255, 204, 0.25);
+        padding: 1px 6px;
+      }
+
+      /* ECG canvas */
+      #hqEcg {
+        display: block;
+        width: 100%;
+        height: 44px;
+        margin-top: 6px;
+      }
+
+      /* ── ASCII 分隔 ── */
+      .hq-divider-ascii {
+        font-size: 0.62rem;
+        color: var(--dim);
+        letter-spacing: 0.04em;
+        padding: 8px 22px;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      /* ── Azure 注入區 ── */
+      #api {
+        padding: 22px 22px 16px;
+      }
+
+      /* ── 覆蓋 Azure 注入的元素 ── */
+
+      /* 標題（.intro h2） */
+      #api .intro { margin-bottom: 18px; }
+      #api .intro h2 {
+        font-family: var(--font);
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        color: var(--accent);
+        text-transform: uppercase;
+        text-shadow: var(--glow);
+        font-weight: normal;
+      }
+      #api .intro h2::before { content: "> "; }
+
+      /* 各欄位容器 */
+      #api .entry-item {
+        margin-bottom: 14px;
+        position: relative;
+      }
+
+      /* Label */
+      #api label {
+        display: block;
+        font-family: var(--font);
+        font-size: 0.65rem;
+        letter-spacing: 0.14em;
+        color: rgba(0, 255, 204, 0.65);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+      #api label::before { content: "> "; }
+
+      /* Input */
+      #api input[type="email"],
+      #api input[type="password"],
+      #api input[type="text"],
+      #api input[type="tel"] {
+        width: 100%;
+        background: rgba(0, 255, 204, 0.04);
+        border: 1px solid var(--dim);
+        color: var(--accent);
+        font-family: var(--font);
+        font-size: 0.82rem;
+        padding: 9px 12px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        border-radius: 0;
+        -webkit-appearance: none;
+      }
+      #api input[type="email"]:focus,
+      #api input[type="password"]:focus,
+      #api input[type="text"]:focus,
+      #api input[type="tel"]:focus {
+        border-color: var(--accent);
+        box-shadow: var(--glow);
+        background: rgba(0, 255, 204, 0.07);
+      }
+      #api input::placeholder { color: rgba(0, 255, 204, 0.25); }
+      #api input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0 100px #050a0f inset;
+        -webkit-text-fill-color: var(--accent);
+      }
+
+      /* 驗證碼送出按鈕 */
+      #api .sendCode,
+      #api #sendCode {
+        background: transparent;
+        border: 1px solid var(--dim);
+        color: rgba(0, 255, 204, 0.7);
+        font-family: var(--font);
+        font-size: 0.65rem;
+        letter-spacing: 0.12em;
+        padding: 5px 10px;
+        cursor: pointer;
+        text-transform: uppercase;
+        margin-top: 6px;
+        transition: all 0.2s;
+      }
+      #api .sendCode:hover, #api #sendCode:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      /* 主要按鈕 (登入 / 繼續 / 建立) */
+      #api button[type="submit"],
+      #api .button.primary,
+      #api #next,
+      #api #continue,
+      #api #readOnlyEmail ~ * button {
+        width: 100%;
+        background: transparent;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        font-family: var(--font);
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        padding: 11px 0;
+        cursor: pointer;
+        text-shadow: var(--glow);
+        box-shadow: var(--glow);
+        transition: background 0.2s, box-shadow 0.2s;
+        border-radius: 0;
+        margin-top: 6px;
+      }
+      #api button[type="submit"]:hover,
+      #api .button.primary:hover,
+      #api #next:hover,
+      #api #continue:hover {
+        background: rgba(0, 255, 204, 0.1);
+        box-shadow: 0 0 28px rgba(0, 255, 204, 0.5);
+      }
+      #api button[type="submit"]::before { content: "[ "; }
+      #api button[type="submit"]::after  { content: " ]"; }
+
+      /* 次要按鈕 (取消等) */
+      #api .button.secondary,
+      #api #cancel {
+        width: 100%;
+        background: transparent;
+        border: 1px solid rgba(0, 255, 204, 0.2);
+        color: rgba(0, 255, 204, 0.5);
+        font-family: var(--font);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 9px 0;
+        cursor: pointer;
+        border-radius: 0;
+        margin-top: 8px;
+        transition: all 0.2s;
+      }
+      #api .button.secondary:hover, #api #cancel:hover {
+        border-color: var(--dim);
+        color: rgba(0, 255, 204, 0.75);
+      }
+
+      /* 錯誤訊息 */
+      #api .error.itemLevel p,
+      #api .error.pageLevel p,
+      #api #claimVerificationServerError,
+      #api .helpLink.tiny {
+        font-family: var(--font);
+        font-size: 0.65rem;
+        color: var(--err);
+        letter-spacing: 0.08em;
+        margin-top: 5px;
+      }
+      #api .error.itemLevel p::before,
+      #api .error.pageLevel p::before { content: "ERR > "; }
+
+      /* 連結（忘記密碼、建立帳號） */
+      #api a,
+      #api #forgotPassword,
+      #api #createAccount {
+        color: rgba(0, 255, 204, 0.6);
+        font-family: var(--font);
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        transition: color 0.2s;
+      }
+      #api a:hover,
+      #api #forgotPassword:hover,
+      #api #createAccount:hover { color: var(--accent); }
+      #api a::before { content: "> "; }
+
+      /* OR 分隔線 */
+      #api .divider { margin: 16px 0; display: flex; align-items: center; gap: 10px; }
+      #api .divider hr { flex: 1; border: none; border-top: 1px solid rgba(0,255,204,0.15); }
+      #api .divider .dividerContent,
+      #api .divider span {
+        font-family: var(--font);
+        font-size: 0.6rem;
+        color: rgba(0, 255, 204, 0.35);
+        letter-spacing: 0.12em;
+      }
+
+      /* 社交登入按鈕列表 */
+      #api .claims-provider-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+      #api .accountButton {
+        width: 100%;
+        background: transparent;
+        border: 1px solid rgba(0, 255, 204, 0.25);
+        color: rgba(0, 255, 204, 0.7);
+        font-family: var(--font);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 9px 0;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+        border-radius: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      #api .accountButton:hover {
+        border-color: var(--dim);
+        color: var(--accent);
+        background: rgba(0, 255, 204, 0.05);
+      }
+      /* 隱藏社交按鈕的原始圖示 */
+      #api .accountButton img { width: 16px; height: 16px; filter: invert(1) sepia(1) saturate(5) hue-rotate(120deg); }
+
+      /* 載入旋轉 (Azure 內建) */
+      #api .working { border-color: var(--dim) !important; }
+
+      /* ── Status bar ── */
+      .hq-status {
+        border-top: 1px solid var(--dim);
+        padding: 7px 22px;
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+        color: rgba(0, 255, 204, 0.5);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .hq-status-dot {
+        width: 6px; height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        box-shadow: 0 0 6px var(--accent);
+        animation: pulse 1.8s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+      @keyframes pulse {
+        0%,100% { opacity: 1; transform: scale(1); }
+        50%      { opacity: 0.4; transform: scale(0.7); }
+      }
+
+      /* ── Footer ── */
+      .hq-footer {
+        border-top: 1px solid rgba(0, 255, 204, 0.08);
+        padding: 8px 22px;
+        font-size: 0.55rem;
+        letter-spacing: 0.1em;
+        color: rgba(0, 255, 204, 0.22);
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hq-shell">
+
+      <!-- ── Header ── -->
+      <div class="hq-header">
+        <div class="hq-title-row">
+          <span class="hq-title">HEQING_AUTH_SYSTEM&nbsp;<span class="hq-blink">_</span></span>
+          <div class="hq-badges">
+            <span class="hq-badge">OIDC</span>
+            <span class="hq-badge">AES-256</span>
+            <span class="hq-badge">TLS 1.3</span>
+          </div>
+        </div>
+        <canvas id="hqEcg" height="44"></canvas>
+      </div>
+
+      <!-- ── ASCII 分隔 ── -->
+      <div class="hq-divider-ascii">
+        ──────────────────────────────────────────────────────────
+      </div>
+
+      <!-- ── Azure CIAM 注入點（必須保留 id="api"） ── -->
+      <div id="api"></div>
+
+      <!-- ── 狀態列 ── -->
+      <div class="hq-status">
+        <div class="hq-status-dot"></div>
+        <span>SECURE_CHANNEL: BODYGOCUSTOMERS.CIAMLOGIN.COM &nbsp;|&nbsp; PROTOCOL: OAUTH 2.0 / OIDC</span>
+      </div>
+
+      <!-- ── 頁尾 ── -->
+      <div class="hq-footer">
+        <span>禾青醫電股份有限公司 &copy; 2025</span>
+        <span>HEQING MEDICAL ELECTRONICS</span>
+      </div>
+
+    </div>
+
+    <!-- ECG 動畫 -->
+    <script>
+      (function () {
+        const canvas = document.getElementById("hqEcg");
+        const ctx = canvas.getContext("2d");
+        let phase = 0, raf = null;
+
+        function ecgY(x, h) {
+          const cycleLen = 120;
+          const p = ((x + phase) % cycleLen) / cycleLen;
+          let dy = 0;
+          if      (p < 0.15) dy = -Math.sin((p / 0.15) * Math.PI) * 5;
+          else if (p < 0.22) dy = 0;
+          else if (p < 0.26) dy = Math.sin(((p - 0.22) / 0.04) * Math.PI) * 3;
+          else if (p < 0.29) dy = (-(p - 0.26) / 0.03) * h * 0.38;
+          else if (p < 0.32) dy = -(1 - (p - 0.29) / 0.03) * h * 0.38;
+          else if (p < 0.36) dy = Math.sin(((p - 0.32) / 0.04) * Math.PI) * 6;
+          else if (p < 0.45) dy = 0;
+          else if (p < 0.65) dy = -Math.sin(((p - 0.45) / 0.2) * Math.PI) * 10;
+          return h / 2 + dy;
+        }
+
+        function draw() {
+          const w = canvas.width, h = canvas.height;
+          ctx.clearRect(0, 0, w, h);
+          ctx.strokeStyle = "#00ffcc";
+          ctx.lineWidth = 1.5;
+          ctx.shadowColor = "#00ffcc";
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          for (let x = 0; x < w; x++) {
+            const y = ecgY(x, h);
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          }
+          ctx.stroke();
+          const grad = ctx.createLinearGradient(0, 0, w, 0);
+          grad.addColorStop(0,    "rgba(5,10,15,0.95)");
+          grad.addColorStop(0.06, "rgba(5,10,15,0)");
+          grad.addColorStop(0.94, "rgba(5,10,15,0)");
+          grad.addColorStop(1,    "rgba(5,10,15,0.95)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+          phase += 2;
+          raf = requestAnimationFrame(draw);
+        }
+
+        function init() {
+          canvas.width = canvas.offsetWidth || 480;
+          draw();
+        }
+
+        window.addEventListener("load", init);
+        window.addEventListener("resize", () => {
+          canvas.width = canvas.offsetWidth;
+        });
+      })();
+    </script>
+  </body>
+</html>
