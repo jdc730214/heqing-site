@@ -1,0 +1,2697 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>禾青醫電 HEQING MEDICAL | 高階醫療電子開發</title>
+    <!-- MSAL Browser (Azure AD B2C / External ID) -->
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "FashionBitmap";
+        src: url("fonts/FashionBitmap16_0.09.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      :root {
+        /* === 1. Hero 參數 === */
+        --display-text: "HEQING|禾青醫電";
+        --hero-text-size: 360px;
+        --hero-scroll-speed: 1.2;
+        --hero-scroll-spacing: 900;
+        --torus-intensity: 1.4;
+        --torus-speed: 1.5;
+        --ascii-font-size: 10px;
+        --gravity: 0.8;
+        --hero-init-x: -1400;
+
+        /* === 2. 標題落下特效 === */
+        --hero-line-height: 350px;
+        --hero-text-y-offset: 50px;
+        --drop-char-size: 3rem;
+
+        /* === 3. 遊戲參數 === */
+        --game-canvas-width: 500px;
+        --game-status-size: 2.5rem;
+        --game-pixel-size: 10;
+        --game-horizon-y: 300px;
+        --game-spawn-min: 1500;
+        --game-spawn-max: 4000;
+        --game-up-duration: 1000;
+
+        /* === 4. 全域視覺規範 === */
+        --bg-color: #050a0f;
+        --text-color: #00ffcc;
+        --sub-text-color: #a0aec0;
+        --main-font: "FashionBitmap", "Courier New", Courier, monospace;
+        --title-font-size: 3rem;
+        --year-font-size: 5rem;
+        --card-bg: rgba(255, 255, 255, 0.02);
+        --accent-glow: 0 0 20px rgba(0, 255, 204, 0.3);
+        --qr-size: 110px;
+
+        /* === RWD helpers === */
+        --nav-h: 72px;
+        --side-pad: clamp(16px, 6vw, 50px);
+        --section-pad-y: clamp(72px, 10vh, 120px);
+      }
+
+      * {
+        scroll-behavior: smooth;
+        box-sizing: border-box;
+        font-family: var(--main-font);
+      }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background-color: var(--bg-color);
+        color: white;
+        overflow-x: hidden;
+      }
+
+      /* ===== NAV (RWD) ===== */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 16px var(--side-pad);
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.2);
+        background: rgba(5, 10, 15, 0.85);
+        backdrop-filter: blur(10px);
+        min-height: var(--nav-h);
+      }
+      .nav-brand {
+        color: var(--text-color);
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.3s;
+        white-space: nowrap;
+      }
+      .nav-links a:hover {
+        color: var(--text-color);
+        text-shadow: var(--accent-glow);
+      }
+
+      /* mobile menu button */
+      .nav-toggle {
+        display: none;
+        background: transparent;
+        border: 1px solid rgba(0, 255, 204, 0.35);
+        color: var(--text-color);
+        padding: 10px 12px;
+        cursor: pointer;
+        line-height: 1;
+        user-select: none;
+      }
+      .nav-toggle:active {
+        transform: translateY(1px);
+      }
+
+      /* ===== HERO ===== */
+      #hero-section {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100svh; /* mobile-safe vh */
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: black;
+        cursor: none;
+        padding-top: var(--nav-h); /* 保護 nav 覆蓋 */
+      }
+      #cursor-follower {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        color: var(--text-color);
+        z-index: 2000;
+        text-shadow: 0 0 8px var(--text-color);
+        white-space: nowrap;
+        display: none;
+        font-size: 14px;
+        transform: translate(15px, 15px);
+      }
+      #ascii-container {
+        font-size: var(--ascii-font-size);
+        line-height: 1;
+        white-space: pre;
+        text-align: center;
+        color: var(--text-color);
+        font-family: "Courier New", Courier, monospace;
+        padding: 0 10px; /* 防止手機邊界截字 */
+        user-select: none;
+      }
+      #particle-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 1500;
+      }
+
+      /* ===== SECTIONS ===== */
+      .section {
+        padding: var(--section-pad-y) 10%;
+        border-bottom: 1px solid #1a2530;
+        position: relative;
+        scroll-margin-top: calc(var(--nav-h) + 16px);
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .section-title {
+        color: var(--text-color);
+        font-size: var(--title-font-size);
+        text-align: center;
+        margin-bottom: 80px;
+        border-bottom: 2px solid currentColor;
+        padding-bottom: 10px;
+        word-break: break-word;
+      }
+
+      /* 展示網格系統 */
+      .showcase-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+      }
+      .showcase-card {
+        border: 1px solid #2d3748;
+        background: var(--card-bg);
+        transition: 0.4s;
+        overflow: hidden;
+      }
+      .showcase-card:hover {
+        border-color: var(--text-color);
+        box-shadow: var(--accent-glow);
+        transform: translateY(-10px);
+      }
+      .showcase-thumb {
+        width: 100%;
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        filter: grayscale(1);
+        transition: 0.4s;
+      }
+      .showcase-card:hover .showcase-thumb {
+        filter: grayscale(0);
+      }
+      .showcase-info {
+        padding: 20px;
+      }
+
+      /* 發展史 */
+      .history-item {
+        display: flex;
+        gap: 60px;
+        margin-bottom: 120px;
+        align-items: center;
+      }
+      .history-item:nth-child(even) {
+        flex-direction: row-reverse;
+      }
+      .history-img {
+        width: 50%;
+        height: 350px;
+        background-size: cover;
+        background-position: center;
+        border: 1px solid rgba(0, 255, 204, 0.3);
+        filter: grayscale(1);
+        transition: 0.5s;
+      }
+      .history-img:hover {
+        filter: grayscale(0);
+        border-color: var(--text-color);
+        transform: scale(1.02);
+      }
+      .history-content {
+        width: 50%;
+      }
+      .year-tag {
+        font-size: var(--year-font-size);
+        color: var(--text-color);
+        margin-bottom: 10px;
+        opacity: 0.7;
+        line-height: 1;
+      }
+      .history-content h3 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        color: #fff;
+      }
+      .history-content p {
+        color: var(--sub-text-color);
+        line-height: 1.8;
+        font-size: 1.1rem;
+      }
+
+      /* 遊戲區佈局 */
+      #game-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      #gameCanvas {
+        border: 4px solid #1a1a1a;
+        background-color: #050505;
+        image-rendering: pixelated;
+        width: min(var(--game-canvas-width), 92vw);
+        height: auto;
+        aspect-ratio: 1 / 1;
+        cursor: crosshair;
+        touch-action: manipulation; /* 手機點擊不卡 */
+      }
+
+      /* CONTACT */
+      .contact-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 60px;
+        align-items: start;
+      }
+      .qr-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .qr-card {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 15px;
+        border: 1px solid #2d3748;
+        background: var(--card-bg);
+        transition: 0.3s;
+      }
+      .qr-card img {
+        width: var(--qr-size);
+        height: var(--qr-size);
+      }
+      .qr-info b {
+        display: block;
+        color: var(--text-color);
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+      }
+      .qr-info span {
+        font-size: 12px;
+        color: #718096;
+      }
+
+      .terminal-form {
+        display: flex;
+        flex-direction: column;
+      }
+      .terminal-input {
+        background: transparent;
+        border: 1px solid #2d3748;
+        padding: 15px;
+        color: var(--text-color);
+        margin-bottom: 20px;
+        width: 100%;
+        font-size: 1rem;
+      }
+      .submit-btn {
+        background: var(--text-color);
+        color: black;
+        border: none;
+        padding: 20px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .submit-btn:hover {
+        background: white;
+        box-shadow: var(--accent-glow);
+      }
+
+      footer {
+        padding: 60px;
+        text-align: center;
+        color: #4a5568;
+        border-top: 1px solid #1a2530;
+        font-size: 14px;
+      }
+
+      /* ===== BREAKPOINTS ===== */
+      @media (max-width: 1100px) {
+        .showcase-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 900px) {
+        :root {
+          --title-font-size: 2.2rem;
+          --year-font-size: 3.6rem;
+          --qr-size: 92px;
+
+          /* Hero 在手機上略縮，避免 cols/rows 過大造成效能壓力 */
+          --ascii-font-size: 8px;
+          --hero-text-size: 160px;
+          --hero-line-height: 180px;
+          --hero-text-y-offset: 10px;
+
+          /* game 視覺字體縮小 */
+          --game-status-size: 1.6rem;
+          --game-canvas-width: 420px;
+        }
+
+        .section {
+          padding: var(--section-pad-y) var(--side-pad);
+        }
+
+        .contact-layout {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+
+        .history-item {
+          flex-direction: column !important;
+          gap: 18px;
+          margin-bottom: 80px;
+        }
+        .history-img,
+        .history-content {
+          width: 100%;
+        }
+        .history-img {
+          height: 240px;
+        }
+
+        /* nav -> hamburger */
+        .nav-toggle {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .nav-links {
+          position: fixed;
+          left: 0;
+          right: 0;
+          top: var(--nav-h);
+          background: rgba(5, 10, 15, 0.92);
+          border-bottom: 1px solid rgba(0, 255, 204, 0.2);
+          padding: 14px var(--side-pad);
+          display: none;
+          flex-direction: column;
+          gap: 12px;
+          z-index: 999;
+        }
+        .nav-links.is-open {
+          display: flex;
+        }
+        .nav-links a {
+          font-size: 14px;
+          padding: 10px 0;
+        }
+
+        /* mobile 上不要 cursor:none，避免使用者以為卡住（但功能不破壞） */
+        #hero-section {
+          cursor: default;
+        }
+        #cursor-follower {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 560px) {
+        :root {
+          --title-font-size: 1.9rem;
+          --year-font-size: 3.1rem;
+          --drop-char-size: 2.4rem;
+
+          --ascii-font-size: 7px;
+          --hero-text-size: 132px;
+          --hero-line-height: 150px;
+
+          /* 手機更保守的 scrollSpacing，避免 mask 文字太長拖慢 */
+          --hero-scroll-spacing: 700;
+        }
+
+        .showcase-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .qr-card {
+          gap: 14px;
+        }
+
+        footer {
+          padding: 40px var(--side-pad);
+        }
+      }
+
+      /* iOS safe-area */
+      @supports (padding: max(0px)) {
+        nav {
+          padding-left: max(var(--side-pad), env(safe-area-inset-left));
+          padding-right: max(var(--side-pad), env(safe-area-inset-right));
+        }
+      }
+
+      /* ===== KEYGEN SECTION ===== */
+      #keygen-section {
+        background-color: #020508;
+      }
+
+      .keygen-gate {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .keygen-gate-label {
+        font-size: 0.85rem;
+        color: var(--sub-text-color);
+        letter-spacing: 2px;
+        text-align: center;
+      }
+
+      .keygen-pw-row {
+        display: flex;
+        gap: 0;
+        width: 100%;
+        max-width: 480px;
+      }
+
+      .keygen-pw-input {
+        flex: 1;
+        background: transparent;
+        border: 1px solid rgba(0, 255, 204, 0.35);
+        border-right: none;
+        padding: 14px 18px;
+        color: var(--text-color);
+        font-size: 1rem;
+        font-family: var(--main-font);
+        letter-spacing: 4px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      .keygen-pw-input:focus {
+        border-color: var(--text-color);
+      }
+
+      .keygen-pw-input.shake {
+        animation: kgShake 0.4s ease;
+        border-color: #ff4444;
+        color: #ff4444;
+      }
+
+      .keygen-pw-btn {
+        background: rgba(0, 255, 204, 0.12);
+        border: 1px solid rgba(0, 255, 204, 0.35);
+        color: var(--text-color);
+        padding: 14px 22px;
+        cursor: pointer;
+        font-family: var(--main-font);
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        transition: 0.3s;
+        white-space: nowrap;
+      }
+
+      .keygen-pw-btn:hover {
+        background: rgba(0, 255, 204, 0.22);
+        box-shadow: var(--accent-glow);
+      }
+
+      .keygen-err {
+        font-size: 0.8rem;
+        color: #ff4444;
+        letter-spacing: 2px;
+        min-height: 1.2em;
+        text-align: center;
+      }
+
+      @keyframes kgShake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-8px); }
+        40% { transform: translateX(8px); }
+        60% { transform: translateX(-5px); }
+        80% { transform: translateX(5px); }
+      }
+
+      /* keygen result panel */
+      .keygen-panel {
+        display: none;
+        width: 100%;
+      }
+
+      .keygen-panel.unlocked {
+        display: block;
+        animation: kgFadeIn 0.5s ease;
+      }
+
+      @keyframes kgFadeIn {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .keygen-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin-top: 40px;
+      }
+
+      .keygen-card {
+        border: 1px solid rgba(0, 255, 204, 0.3);
+        background: rgba(0, 255, 204, 0.03);
+        padding: 28px 20px;
+        text-align: center;
+        position: relative;
+        transition: 0.35s;
+      }
+
+      .keygen-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--text-color), transparent);
+        opacity: 0.6;
+      }
+
+      .keygen-card:hover {
+        border-color: var(--text-color);
+        box-shadow: var(--accent-glow);
+        transform: translateY(-4px);
+      }
+
+      .keygen-card-label {
+        font-size: 0.72rem;
+        letter-spacing: 3px;
+        color: var(--sub-text-color);
+        margin-bottom: 16px;
+        display: block;
+      }
+
+      .keygen-card-value {
+        font-size: 1.05rem;
+        color: var(--text-color);
+        letter-spacing: 2px;
+        word-break: break-all;
+        line-height: 1.6;
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+      }
+
+      .keygen-card.gold .keygen-card-label {
+        color: #b8860b;
+      }
+
+      .keygen-card.gold .keygen-card-value {
+        color: #ffd700;
+        text-shadow: 0 0 14px rgba(255, 215, 0, 0.6);
+      }
+
+      .keygen-card.gold {
+        border-color: rgba(255, 215, 0, 0.35);
+        background: rgba(255, 215, 0, 0.03);
+      }
+
+      .keygen-card.gold::before {
+        background: linear-gradient(90deg, transparent, #ffd700, transparent);
+      }
+
+      .keygen-card.gold:hover {
+        border-color: #ffd700;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      }
+
+      .keygen-lock-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: rgba(0, 255, 204, 0.4);
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        margin-bottom: 28px;
+      }
+
+      .keygen-lock-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(0, 255, 204, 0.35);
+      }
+
+      .keygen-lock-dot.active {
+        background: var(--text-color);
+        box-shadow: 0 0 6px var(--text-color);
+        animation: kgBlink 1.2s ease-in-out infinite;
+      }
+
+      @keyframes kgBlink {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.3; }
+      }
+
+      /* keygen editable inputs */
+      .keygen-field-input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.3);
+        padding: 8px 4px;
+        color: var(--text-color);
+        font-family: var(--main-font);
+        font-size: 1rem;
+        letter-spacing: 2px;
+        text-align: center;
+        text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        outline: none;
+        transition: border-color 0.25s;
+      }
+      .keygen-field-input:focus {
+        border-bottom-color: var(--text-color);
+        box-shadow: 0 2px 0 rgba(0, 255, 204, 0.25);
+      }
+      .keygen-field-input.gold {
+        color: #ffd700;
+        text-shadow: 0 0 14px rgba(255, 215, 0, 0.6);
+        border-bottom-color: rgba(255, 215, 0, 0.35);
+      }
+      .keygen-field-input.gold:focus {
+        border-bottom-color: #ffd700;
+        box-shadow: 0 2px 0 rgba(255, 215, 0, 0.25);
+      }
+      /* hide number input arrows */
+      .keygen-field-input[type="number"]::-webkit-inner-spin-button,
+      .keygen-field-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; }
+      .keygen-field-input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+      @media (max-width: 700px) {
+        .keygen-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+      }
+
+      /* ===== NAV LOGIN BUTTON ===== */
+      a.nav-login {
+        border: 1px solid rgba(0, 255, 204, 0.45);
+        padding: 5px 14px !important;
+      }
+      a.nav-login:hover {
+        background: rgba(0, 255, 204, 0.1) !important;
+        box-shadow: var(--accent-glow);
+      }
+      a.nav-logout {
+        border-color: rgba(255, 80, 80, 0.5);
+        color: #ff5050 !important;
+      }
+      a.nav-logout:hover {
+        background: rgba(255, 80, 80, 0.1) !important;
+        box-shadow: 0 0 8px rgba(255, 80, 80, 0.4);
+      }
+
+      /* ===== AUTH MODAL ===== */
+      .auth-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.82);
+        backdrop-filter: blur(6px);
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .auth-overlay.is-open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .auth-modal {
+        background: #070d12;
+        border: 1px solid rgba(0, 255, 204, 0.35);
+        box-shadow:
+          0 0 60px rgba(0, 255, 204, 0.12),
+          inset 0 0 40px rgba(0, 0, 0, 0.5);
+        width: min(460px, 92vw);
+        max-height: 92vh;
+        overflow-y: auto;
+        position: relative;
+        transform: translateY(-24px) scale(0.97);
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .auth-overlay.is-open .auth-modal {
+        transform: none;
+      }
+      /* CRT scanlines overlay */
+      .auth-modal::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 3px,
+          rgba(0, 0, 0, 0.07) 3px,
+          rgba(0, 0, 0, 0.07) 4px
+        );
+        pointer-events: none;
+        z-index: 10;
+      }
+      .auth-header {
+        padding: 16px 20px 0;
+        background: rgba(0, 255, 204, 0.03);
+        border-bottom: 1px solid rgba(0, 255, 204, 0.12);
+      }
+      .auth-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .auth-header-title {
+        color: var(--text-color);
+        font-size: 0.78rem;
+        letter-spacing: 2.5px;
+      }
+      .auth-close {
+        background: transparent;
+        border: 1px solid rgba(0, 255, 204, 0.3);
+        color: var(--text-color);
+        width: 26px;
+        height: 26px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        transition: 0.2s;
+        flex-shrink: 0;
+      }
+      .auth-close:hover {
+        background: rgba(0, 255, 204, 0.12);
+        box-shadow: var(--accent-glow);
+      }
+      #authEcgCanvas {
+        display: block;
+        width: 100%;
+        height: 44px;
+      }
+      .auth-tabs {
+        display: flex;
+        border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+      }
+      .auth-tab {
+        flex: 1;
+        padding: 13px 10px;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: #4a5568;
+        cursor: pointer;
+        font-family: var(--main-font);
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        transition: 0.3s;
+      }
+      .auth-tab.active {
+        color: var(--text-color);
+        border-bottom-color: var(--text-color);
+        text-shadow: 0 0 12px rgba(0, 255, 204, 0.5);
+      }
+      .auth-tab:hover:not(.active) {
+        color: #a0aec0;
+      }
+      .auth-form {
+        padding: 22px 22px 4px;
+      }
+      .auth-form.hidden {
+        display: none;
+      }
+      .auth-field {
+        margin-bottom: 16px;
+      }
+      .auth-label {
+        display: block;
+        color: #4a5568;
+        font-size: 0.7rem;
+        letter-spacing: 2px;
+        margin-bottom: 6px;
+      }
+      .auth-input {
+        width: 100%;
+        background: rgba(0, 255, 204, 0.02);
+        border: 1px solid #2d3748;
+        padding: 10px 14px;
+        color: var(--text-color);
+        font-family: var(--main-font);
+        font-size: 0.88rem;
+        outline: none;
+        box-sizing: border-box;
+        transition:
+          border-color 0.3s,
+          box-shadow 0.3s,
+          background 0.3s;
+      }
+      .auth-input:focus {
+        border-color: rgba(0, 255, 204, 0.6);
+        box-shadow: 0 0 14px rgba(0, 255, 204, 0.1);
+        background: rgba(0, 255, 204, 0.04);
+      }
+      .auth-input::placeholder {
+        color: #2a3a4a;
+      }
+      .auth-submit {
+        width: 100%;
+        background: var(--text-color);
+        color: #000;
+        border: none;
+        padding: 14px;
+        font-family: var(--main-font);
+        font-weight: bold;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 6px;
+      }
+      .auth-submit:hover {
+        background: #fff;
+        box-shadow: var(--accent-glow);
+      }
+      .auth-submit:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .auth-status-bar {
+        padding: 11px 22px 18px;
+        font-family: "Courier New", monospace;
+        font-size: 0.7rem;
+        color: #4a5568;
+        letter-spacing: 1px;
+        min-height: 40px;
+        border-top: 1px solid rgba(0, 255, 204, 0.06);
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .auth-status-bar::before {
+        content: ">";
+        color: var(--text-color);
+        opacity: 0.35;
+        flex-shrink: 0;
+      }
+      .auth-status-bar.ok {
+        color: var(--text-color);
+      }
+      .auth-status-bar.ok::before,
+      .auth-status-bar.processing::before {
+        opacity: 1;
+      }
+      .auth-status-bar.err {
+        color: #fc8181;
+      }
+      .auth-status-bar.processing {
+        color: #f6e05e;
+      }
+      @keyframes authGlitch {
+        0% {
+          transform: translate(0, 0);
+        }
+        20% {
+          transform: translate(-3px, 1px) skewX(-1deg);
+        }
+        40% {
+          transform: translate(3px, -1px) skewX(1deg);
+        }
+        60% {
+          transform: translate(-2px, 2px);
+        }
+        80% {
+          transform: translate(2px, -2px) skewX(-0.5deg);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+      .auth-modal.glitch-anim {
+        animation: authGlitch 0.25s steps(3) 1;
+      }
+      @keyframes curBlink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .blink {
+        animation: curBlink 1s step-end infinite;
+      }
+
+      /* ===== B2C INFO BOX ===== */
+      .auth-b2c-info {
+        background: rgba(0, 255, 204, 0.02);
+        border: 1px solid rgba(0, 255, 204, 0.08);
+        padding: 16px 18px;
+        margin-bottom: 18px;
+        font-family: "Courier New", monospace;
+      }
+      .auth-b2c-line {
+        color: #4a5568;
+        font-size: 0.72rem;
+        line-height: 2.1;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .auth-b2c-line.hi {
+        color: var(--text-color);
+      }
+      .auth-b2c-line.err {
+        color: #fc8181;
+      }
+      .auth-submit-logout {
+        background: #1a2530 !important;
+        color: #fc8181 !important;
+      }
+      .auth-submit-logout:hover {
+        background: #2d3748 !important;
+        box-shadow: 0 0 20px rgba(252, 129, 129, 0.2) !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="cursor-follower">SYSTEM_INIT</div>
+    <canvas id="particle-canvas"></canvas>
+
+    <nav>
+      <a href="#" class="nav-brand">HEQING_禾青醫電</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle Menu">
+        MENU
+      </button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#about">ABOUT</a>
+        <a href="#technology">TECH</a>
+        <a href="#product">PRODUCT</a>
+        <a href="#game-section">GAME</a>
+        <a href="#contact">CONTACT</a>
+        <a href="#" id="loginBtn" class="nav-login">LOGIN</a>
+        <a
+          href="#"
+          id="logoutBtn"
+          class="nav-login nav-logout"
+          style="display: none"
+          >LOGOUT</a
+        >
+      </div>
+    </nav>
+
+    <section id="hero-section"><pre id="ascii-container"></pre></section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <h2 class="section-title">2017-2025_HISTORY</h2>
+        <div id="history-list">
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2017</div>
+              <h3>精密量測元年</h3>
+              <p>
+                禾青醫電研發中心正式啟動。我們在台北建立了首個微型化電子實驗室，專注於解決穿戴式裝置在動態環境下的生理訊號干擾問題。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1551076805-e1869033e561?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2018</div>
+              <h3>首款 AFE 晶片開發成功</h3>
+              <p>
+                成功開發出具備高共模抑制比（CMRR）的類比前端放大器（AFE），將生理訊號的噪聲降低了
+                30%，並獲得醫療設備大廠測試採用。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2019</div>
+              <h3>邊緣 AI 技術整合</h3>
+              <p>
+                啟動嵌入式 AI 辨識計畫。我們將輕量化深度學習模型部署於
+                MCU，實現在設備端即時辨識心律不整波形，大幅降低雲端運算負擔。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1505751172107-59d0250a2e79?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2020</div>
+              <h3>全球遠距醫療浪潮</h3>
+              <p>
+                因應全球疫情，禾青快速推出符合 ISO 13485
+                標準的無線監測模組，協助醫療機構在隔離環境下維持高品質的生理數據監測。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1576091160550-2173dad99901?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2021</div>
+              <h3>智慧感測專利突破</h3>
+              <p>
+                榮獲多項國際發明專利，包含「動態偽影過濾技術」與「低功耗生物電極設計」，確立了禾青在醫電領域的技術護城河。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1530210124550-912dc1381cb8?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2022</div>
+              <h3>歐洲研發辦公室成立</h3>
+              <p>
+                禾青醫電跨足國際，於瑞典哥德堡設立研發辦公室，深化與北歐生命科學聚落的合作，專注於高階植入式電子技術探索。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2023</div>
+              <h3>次世代生理監控平台</h3>
+              <p>
+                推出「禾青物聯網醫療平台」，透過 5G
+                技術將精準生理數據即時同步至雲端，提供醫師更全面的數據可視覺化診斷工具。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1631549916768-4119b295f926?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2024</div>
+              <h3>臨床試驗與國際認證</h3>
+              <p>
+                與多家醫學中心完成大規模臨床驗證。旗下的穿戴式監測系統獲得 FDA
+                與 CE 認證，正式開啟全球大規模商業化應用。
+              </p>
+            </div>
+          </div>
+
+          <div class="history-item">
+            <div
+              class="history-img"
+              style="
+                background-image: url(&quot;https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&quot;);
+              "
+            ></div>
+            <div class="history-content">
+              <div class="year-tag">2025</div>
+              <h3>預防性醫療的新紀元</h3>
+              <p>
+                禾青醫電 3.0
+                正式啟動。透過大數據分析與預測模型，我們不僅監測數據，更能提前預警潛在的生理風險，定義未來的智慧醫療標準。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="technology">
+      <div class="container">
+        <h2 class="section-title">CORE_TECHNOLOGY</h2>
+        <div class="showcase-grid">
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=7&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>AFE_SIGNAL</h4>
+              <p>極低噪聲、高共模抑制比技術。</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=8&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>EDGE_AI</h4>
+              <p>嵌入式低功耗深度學習推理。</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=9&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>WAVE_FILTER</h4>
+              <p>自適應動態運動偽影消除。</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=10&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>BLE_MESH</h4>
+              <p>醫療等級穩定的數據傳輸棧。</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=11&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>FUSION</h4>
+              <p>跨參數多生理特徵關聯分析。</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=12&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>SECURITY</h4>
+              <p>符合醫療隱私規範的端加密。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="product">
+      <div class="container">
+        <h2 class="section-title">CORE_PRODUCTS</h2>
+        <div class="showcase-grid">
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=1&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>HQ-AFE 100</h4>
+              <p>高精準度心電量測前端模組</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=2&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>BIO_SENSE v2</h4>
+              <p>穿戴式生理數據擷取器</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=3&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>AI_GATEWAY</h4>
+              <p>邊緣運算醫療網關</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=4&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>ISOLATOR_Z</h4>
+              <p>醫療級信號隔離電源</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=5&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>HQ_PATCH</h4>
+              <p>長效型動態監測貼片</p>
+            </div>
+          </div>
+
+          <div class="showcase-card">
+            <div
+              class="showcase-thumb"
+              style="
+                background-image: url(&quot;https://picsum.photos/400/300?sig=6&quot;);
+              "
+            ></div>
+            <div class="showcase-info">
+              <h4>CLOUD_PORTAL</h4>
+              <p>生理大數據可視化平台</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="section"
+      id="game-section"
+      style="background-color: #020508"
+    >
+      <div class="container" id="game-area">
+        <h2 class="section-title">INTERACTIVE_DEBUGGER</h2>
+        <div
+          id="game-status"
+          style="
+            font-size: var(--game-status-size);
+            color: var(--text-color);
+            margin-bottom: 20px;
+          "
+        >
+          STAND BY
+        </div>
+        <canvas id="gameCanvas"></canvas>
+      </div>
+    </section>
+
+    <!-- ===== KEYGEN SECTION ===== -->
+    <section class="section" id="keygen-section">
+      <div class="container">
+        <h2 class="section-title">KEYGEN_CONSOLE</h2>
+
+        <!-- lock indicator dots -->
+        <div class="keygen-lock-indicator" id="kgLockBar">
+          <span class="keygen-lock-dot"></span>
+          <span class="keygen-lock-dot"></span>
+          <span class="keygen-lock-dot"></span>
+          <span>AUTHENTICATION_REQUIRED</span>
+          <span class="keygen-lock-dot"></span>
+          <span class="keygen-lock-dot"></span>
+          <span class="keygen-lock-dot"></span>
+        </div>
+
+        <!-- password gate -->
+        <div class="keygen-gate" id="kgGate">
+          <div class="keygen-gate-label">INPUT_ACCESS_KEY // 請輸入存取密碼</div>
+          <div class="keygen-pw-row">
+            <input
+              type="password"
+              id="kgPwInput"
+              class="keygen-pw-input"
+              placeholder="● ● ● ● ● ● ● ●"
+              autocomplete="off"
+              onkeydown="if(event.key==='Enter') kgVerify()"
+            />
+            <button class="keygen-pw-btn" onclick="kgVerify()">UNLOCK()</button>
+          </div>
+          <div class="keygen-err" id="kgErr"></div>
+        </div>
+
+        <!-- result panel (hidden until unlocked) -->
+        <div class="keygen-panel" id="kgPanel">
+          <div class="keygen-grid">
+            <div class="keygen-card">
+              <span class="keygen-card-label">HOST_CODE // 主機碼</span>
+              <input class="keygen-field-input" id="kgHostCode" type="text" placeholder="—" autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="keygen-card">
+              <span class="keygen-card-label">START_DATE // 起始日</span>
+              <input class="keygen-field-input" id="kgStartDate" type="text" placeholder="YYYYMMDD" autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="keygen-card">
+              <span class="keygen-card-label">USABLE_DAYS // 可使用天數</span>
+              <input class="keygen-field-input" id="kgUsableDays" type="number" min="1" placeholder="365" autocomplete="off" />
+            </div>
+            <div class="keygen-card gold">
+              <span class="keygen-card-label">GOLD_KEY // 金鑰</span>
+              <input class="keygen-field-input gold" id="kgGoldKey" type="text" placeholder="—" autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+
+          <!-- encrypt button -->
+          <div style="text-align:center; margin-top:36px;">
+            <button class="keygen-pw-btn" id="kgEncryptBtn" onclick="kgEncrypt()" style="padding:16px 40px; font-size:1rem; letter-spacing:3px;">
+              ENCRYPT()
+            </button>
+          </div>
+
+          <!-- encrypted payload output -->
+          <div id="kgEncryptedWrap" style="display:none; margin-top:28px; display:none; flex-direction:column; gap:16px;">
+            <div class="keygen-card" style="text-align:left;">
+              <span class="keygen-card-label">SOURCE_STR // 明文來源</span>
+              <div class="keygen-card-value" id="kgSourceVal" style="font-size:0.95rem; letter-spacing:2px;"></div>
+            </div>
+            <div class="keygen-card" style="text-align:left; cursor:pointer; position:relative;" onclick="kgCopyPayload()" title="點擊複製 / Click to Copy">
+              <span class="keygen-card-label" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>ENCRYPTED_PAYLOAD // 加密結果</span>
+                <span id="kgCopyHint" style="color:var(--text-color); font-size:0.7rem; letter-spacing:1px; opacity:0.7;">[ CLICK TO COPY ]</span>
+              </span>
+              <div class="keygen-card-value" id="kgPayloadVal" style="font-size:0.82rem; letter-spacing:1px; word-break:break-all; line-height:1.8;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <h2 class="section-title">CONTACT_IO</h2>
+        <div class="contact-layout">
+          <div class="qr-sidebar">
+            <div class="qr-card">
+              <img
+                src="images/wechatQR.png"
+                onerror="
+                  this.src =
+                    'https://api.qrserver.com/v1/create-qr-code/?size=150&data=Wechat'
+                "
+              />
+              <div class="qr-info">
+                <b>WECHAT_ID</b><span>技術支援通道</span>
+              </div>
+            </div>
+            <div class="qr-card">
+              <img
+                src="images/LINEQR.png"
+                onerror="
+                  this.src =
+                    'https://api.qrserver.com/v1/create-qr-code/?size=150&data=LINE'
+                "
+              />
+              <div class="qr-info">
+                <b>LINE_OFFICIAL</b><span>產品快訊</span>
+              </div>
+            </div>
+            <div class="qr-card">
+              <img
+                src="images/TELQR.png"
+                onerror="
+                  this.src =
+                    'https://api.qrserver.com/v1/create-qr-code/?size=150&data=tel'
+                "
+              />
+              <div class="qr-info">
+                <b>DIRECT_LINE</b><span>工程服務熱線</span>
+              </div>
+            </div>
+          </div>
+
+          <form
+            class="terminal-form"
+            onsubmit="
+              event.preventDefault();
+              alert('TRANSMITTED');
+            "
+          >
+            <input
+              type="text"
+              class="terminal-input"
+              placeholder="INSTITUTION_NAME"
+              required
+            />
+            <input
+              type="email"
+              class="terminal-input"
+              placeholder="ACCESS_EMAIL"
+              required
+            />
+            <textarea
+              class="terminal-input"
+              rows="6"
+              placeholder="SYSTEM_REQUIREMENTS"
+            ></textarea>
+            <button type="submit" class="submit-btn">EXECUTE_SUBMIT()</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer>HEQING MEDICAL ELECTRONICS © 2026 // ALL_SYSTEMS_NOMINAL</footer>
+
+    <!-- ===== AUTH MODAL ===== -->
+    <div id="authOverlay" class="auth-overlay">
+      <div id="authModal" class="auth-modal">
+        <!-- Header with ECG canvas -->
+        <div class="auth-header">
+          <div class="auth-header-top">
+            <span class="auth-header-title"
+              >HEQING_AUTH_SYSTEM&nbsp;<span class="blink">_</span></span
+            >
+            <button class="auth-close" id="authClose">&#x2715;</button>
+          </div>
+          <canvas id="authEcgCanvas" height="44"></canvas>
+        </div>
+
+        <!-- Tab switcher -->
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">[ LOGIN ]</button>
+          <button class="auth-tab" data-tab="register">[ REGISTER ]</button>
+        </div>
+
+        <!-- Login form (credentials handled by Azure AD B2C on redirect) -->
+        <form id="authLoginForm" class="auth-form" novalidate>
+          <div class="auth-b2c-info">
+            <div class="auth-b2c-line">&gt; SECURE_CHANNEL: AZURE AD B2C</div>
+            <div class="auth-b2c-line">&gt; TENANT: BODYGOCUSTOMERS</div>
+            <div class="auth-b2c-line">&gt; POLICY: BodyGo_SUSI</div>
+            <div class="auth-b2c-line">&gt; PROTOCOL: OIDC / OAUTH 2.0</div>
+            <div class="auth-b2c-line">&gt; CREDENTIALS: HANDLED BY IDP</div>
+          </div>
+          <button type="submit" class="auth-submit">INITIATE_LOGIN()</button>
+        </form>
+
+        <!-- Register form (same SUSI policy handles sign-up) -->
+        <form id="authRegForm" class="auth-form hidden" novalidate>
+          <div class="auth-b2c-info">
+            <div class="auth-b2c-line">&gt; NEW_ACCOUNT: AZURE AD B2C</div>
+            <div class="auth-b2c-line">&gt; TENANT: BODYGOCUSTOMERS</div>
+            <div class="auth-b2c-line">&gt; POLICY: BodyGo_SUSI (SIGN_UP)</div>
+            <div class="auth-b2c-line">
+              &gt; REGISTRATION VIA SECURE_REDIRECT
+            </div>
+            <div class="auth-b2c-line">&gt; CREDENTIALS: HANDLED BY IDP</div>
+          </div>
+          <button type="submit" class="auth-submit">INITIATE_REGISTER()</button>
+        </form>
+
+        <!-- Logged-in state (shown after successful auth) -->
+        <div id="authLoggedIn" class="auth-form hidden">
+          <div class="auth-b2c-info">
+            <div class="auth-b2c-line hi">&gt; STATUS: ACCESS_GRANTED</div>
+            <div id="authUserName" class="auth-b2c-line">&gt; USER: --</div>
+            <div id="authUserEmail" class="auth-b2c-line">&gt; EMAIL: --</div>
+            <div class="auth-b2c-line">&gt; TENANT: BODYGOCUSTOMERS</div>
+          </div>
+          <button id="authLogoutBtn" class="auth-submit auth-submit-logout">
+            EXECUTE_LOGOUT()
+          </button>
+        </div>
+
+        <!-- Status bar -->
+        <div id="authStatusBar" class="auth-status-bar">
+          <span id="authStatusTxt">STATUS: AWAITING_INPUT</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+
+      // ===== MSAL / Azure AD External ID (CIAM) =====
+      const _MSAL_CLIENT = "93802a48-96d9-45ae-8fc3-2a93065c7f0f";
+      const _MSAL_REDIRECT = "http://localhost:5173/";
+
+      const msalInstance = new msal.PublicClientApplication({
+        auth: {
+          clientId: _MSAL_CLIENT,
+          authority: "https://bodygocustomers.ciamlogin.com/",
+          knownAuthorities: ["bodygocustomers.ciamlogin.com"],
+          redirectUri: _MSAL_REDIRECT,
+          postLogoutRedirectUri: _MSAL_REDIRECT,
+          navigateToLoginRequestUrl: false,
+        },
+        cache: {
+          cacheLocation: "sessionStorage",
+          storeAuthStateInCookie: false,
+        },
+      });
+
+      /** 跳轉到 B2C SUSI 登入/註冊頁 */
+      async function msalLogin() {
+        await msalInstance.loginRedirect({
+          scopes: ["openid", "profile", "email"],
+        });
+      }
+
+      /** 登出並跳回首頁 */
+      async function msalLogout() {
+        const acct = msalInstance.getActiveAccount();
+        await msalInstance.logoutRedirect({ account: acct ?? undefined });
+      }
+
+      /** 取得目前登入帳號 */
+      function msalGetUser() {
+        return msalInstance.getActiveAccount();
+      }
+
+      /** [新功能] 自動綁定使用者資料到 SQL 資料庫 */
+      async function bindUserData(token, user) {
+        console.log(">>> 偵測到新會員，啟動資料綁定程序...");
+        try {
+          // 這裡我們假設你有一個註冊 API，或共用同一個 API 但後端會自動判斷
+          const response = await fetch(
+            "http://localhost:7119/api/GetUserPoints",
+            {
+              method: "POST", // 之後建議後端實作 POST 進行註冊
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: user.username,
+                name: user.name,
+              }),
+            },
+          );
+          return response.ok;
+        } catch (e) {
+          console.error(">>> 綁定失敗:", e);
+          return false;
+        }
+      }
+
+      async function msalUpdateUI() {
+        const user = msalInstance.getActiveAccount();
+        const navBtn = document.getElementById("loginBtn");
+        const navLogout = document.getElementById("logoutBtn");
+        const loggedDiv = document.getElementById("authLoggedIn");
+        const loginF = document.getElementById("authLoginForm");
+        const regF = document.getElementById("authRegForm");
+        const tabBtns = document.querySelectorAll(".auth-tab");
+        const statusTxt = document.getElementById("authStatusTxt");
+        const statusBar = document.getElementById("authStatusBar");
+
+        if (user) {
+          const label = (user.name || user.username || "USER")
+            .split(/[\s@]/)[0]
+            .toUpperCase();
+          navBtn.textContent = label;
+          navBtn.title = user.username || "";
+          navLogout.style.display = "";
+
+          loginF.classList.add("hidden");
+          regF.classList.add("hidden");
+          loggedDiv.classList.remove("hidden");
+          tabBtns.forEach((t) => (t.style.visibility = "hidden"));
+
+          document.getElementById("authUserName").textContent =
+            `> USER:  ${user.name || "N/A"}`;
+          document.getElementById("authUserEmail").textContent =
+            `> EMAIL: ${user.username || "N/A"}`;
+
+          try {
+            const tokenRequest = {
+              scopes: [
+                "api://ff727949-37ca-44ae-a461-d06be688e8e1/access_as_user",
+              ],
+              account: user,
+            };
+
+            const response =
+              await msalInstance.acquireTokenSilent(tokenRequest);
+            const accessToken = response.accessToken;
+            console.log(">>> ACCESS TOKEN FOR BACKEND:", accessToken);
+
+            // 請求後端 API
+            let apiResponse = await fetch(
+              "http://localhost:7119/api/GetUserPoints",
+              {
+                method: "GET",
+                headers: { Authorization: `Bearer ${accessToken}` },
+              },
+            );
+
+            // --- 資料綁定邏輯 (Data Binding) ---
+            if (apiResponse.status === 404) {
+              statusTxt.textContent = "INITIALIZING_ACCOUNT...";
+              // 這裡呼叫綁定邏輯（目前你可以先透過後端實作自動新增，或者手動點擊按鈕）
+              // 為了自動化，我們讓後端在 GET 找不到人時直接 INSERT 預設值是最好的。
+              statusTxt.textContent = "ERR: USER_NOT_SYNCED_TO_SQL";
+            } else if (apiResponse.ok) {
+              const userData = await apiResponse.json();
+              statusTxt.textContent = `ACCESS_GRANTED // POINTS: ${userData.pointsBalance}`;
+              statusTxt.style.color = "var(--text-color)";
+              statusBar.classList.add("ok");
+            }
+          } catch (error) {
+            console.error("Token acquisition or API failed:", error);
+            statusTxt.textContent = "ERR: BACKEND_CONNECTION_FAILED";
+            statusTxt.style.color = "#fc8181";
+          }
+        } else {
+          navBtn.textContent = "LOGIN";
+          navBtn.title = "";
+          navLogout.style.display = "none";
+          loginF.classList.remove("hidden");
+          regF.classList.add("hidden");
+          loggedDiv.classList.add("hidden");
+          tabBtns.forEach((t) => (t.style.visibility = ""));
+          statusTxt.textContent = "STATUS: AWAITING_INPUT";
+          statusTxt.style.color = "";
+          statusBar.classList.remove("ok");
+        }
+      }
+
+      document.getElementById("logoutBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        msalLogout().catch((err) => console.error("[MSAL logout]", err));
+      });
+
+      msalInstance
+        .handleRedirectPromise()
+        .then((result) => {
+          if (result?.account) {
+            msalInstance.setActiveAccount(result.account);
+          } else {
+            const accounts = msalInstance.getAllAccounts();
+            if (accounts.length > 0) {
+              msalInstance.setActiveAccount(accounts[0]);
+            }
+          }
+          msalUpdateUI();
+        })
+        .catch((err) => console.error("[MSAL]", err));
+
+      // ===== Mobile nav =====
+      const navToggle = document.getElementById("navToggle");
+      const navLinks = document.getElementById("navLinks");
+      navToggle.addEventListener("click", () =>
+        navLinks.classList.toggle("is-open"),
+      );
+      navLinks.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => navLinks.classList.remove("is-open"));
+      });
+
+      const hero = document.getElementById("hero-section");
+      const container = document.getElementById("ascii-container");
+      const follower = document.getElementById("cursor-follower");
+      const pCanvas = document.getElementById("particle-canvas");
+      const pCtx = pCanvas.getContext("2d", { willReadFrequently: true });
+      const nav = document.querySelector("nav");
+
+      function getVar(name) {
+        return getComputedStyle(document.documentElement)
+          .getPropertyValue(name)
+          .trim();
+      }
+
+      let config = {
+        text: getVar("--display-text").replace(/^"|"$/g, ""),
+        scrollSpeed: parseFloat(getVar("--hero-scroll-speed")),
+        scrollSpacing: parseInt(getVar("--hero-scroll-spacing")),
+        torusIntensity: parseFloat(getVar("--torus-intensity")),
+        torusSpeed: parseFloat(getVar("--torus-speed")),
+        textSize: getVar("--hero-text-size"),
+        fontSize: parseInt(getVar("--ascii-font-size")),
+        gravity: parseFloat(getVar("--gravity")),
+        dropSize: getVar("--drop-char-size"),
+        textColor: getVar("--text-color"),
+        gPSize: parseInt(getVar("--game-pixel-size")),
+        gHorizon: parseInt(getVar("--game-horizon-y")),
+        gMin: parseInt(getVar("--game-spawn-min")),
+        gMax: parseInt(getVar("--game-spawn-max")),
+        lineHeight: parseInt(getVar("--hero-line-height")) || 160,
+        textYOffset: parseInt(getVar("--hero-text-y-offset")) || 0,
+        gUp: parseInt(getVar("--game-up-duration")),
+        initX: parseInt(getVar("--hero-init-x")) || 0,
+      };
+
+      // ===== Hero three.js / ascii =====
+      const renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        preserveDrawingBuffer: true,
+      });
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(100, 1, 0.5, 50);
+      camera.position.z = 2;
+
+      const torus = new THREE.Mesh(
+        new THREE.TorusGeometry(10, 5, 30, 100, 6.2),
+        new THREE.MeshNormalMaterial(),
+      );
+      scene.add(torus);
+
+      const maskCanvas = document.createElement("canvas");
+      const maskCtx = maskCanvas.getContext("2d", { willReadFrequently: true });
+      const colorCtx = document
+        .createElement("canvas")
+        .getContext("2d", { willReadFrequently: true });
+      const lrMaskCtx = document
+        .createElement("canvas")
+        .getContext("2d", { willReadFrequently: true });
+
+      let cols,
+        rows,
+        charW,
+        charH,
+        scrollX = config.initX,
+        currentMaskData = null,
+        particles = [],
+        isExploded = false;
+
+      // 關鍵：resize 以 hero 實際尺寸計算，避免手機/桌機切換時 Hero ASCII 壞掉
+      function resize() {
+        // config 可能被 media query 改變，resize 時重新讀一次（不破壞原功能）
+        config.fontSize = parseInt(getVar("--ascii-font-size"));
+        config.textSize = getVar("--hero-text-size");
+        config.lineHeight = parseInt(getVar("--hero-line-height")) || 160;
+        config.textYOffset = parseInt(getVar("--hero-text-y-offset")) || 0;
+        config.scrollSpacing = parseInt(getVar("--hero-scroll-spacing"));
+        config.scrollSpeed = parseFloat(getVar("--hero-scroll-speed"));
+
+        charW = config.fontSize * 0.6;
+        charH = config.fontSize;
+
+        const rect = hero.getBoundingClientRect();
+        const w = Math.max(1, Math.floor(rect.width));
+        const h = Math.max(1, Math.floor(rect.height));
+
+        cols = Math.max(2, Math.floor(w / charW));
+        rows = Math.max(2, Math.floor(h / charH));
+
+        // three.js / mask 都以 hero 尺寸為準
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+
+        maskCanvas.width = w;
+        maskCanvas.height = h;
+
+        // 粒子 canvas 維持全螢幕（原本就是 fixed）— 但也要同步 dpr
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        pCanvas.width = Math.floor(window.innerWidth * dpr);
+        pCanvas.height = Math.floor(window.innerHeight * dpr);
+        pCanvas.style.width = window.innerWidth + "px";
+        pCanvas.style.height = window.innerHeight + "px";
+        pCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        colorCtx.canvas.width = cols;
+        colorCtx.canvas.height = rows;
+        lrMaskCtx.canvas.width = cols;
+        lrMaskCtx.canvas.height = rows;
+      }
+
+      // resize 事件：用 rAF 節流，避免手機旋轉狂刷造成卡頓
+      let _rPending = false;
+      function requestResize() {
+        if (_rPending) return;
+        _rPending = true;
+        requestAnimationFrame(() => {
+          _rPending = false;
+          resize();
+        });
+      }
+      window.addEventListener("resize", requestResize);
+      window.addEventListener("orientationchange", requestResize);
+      resize();
+
+      function isInHeroViewport() {
+        const r = hero.getBoundingClientRect();
+        return r.bottom > 0 && r.top < window.innerHeight;
+      }
+
+      window.addEventListener("mousemove", (e) => {
+        // 桌機才顯示 follower（手機上 CSS 已關）
+        const inHero = isInHeroViewport();
+        follower.style.display = inHero && !isExploded ? "block" : "none";
+        follower.style.left = e.clientX + "px";
+        follower.style.top = e.clientY + "px";
+      });
+
+      const triggeredSections = new Set();
+      window.addEventListener("scroll", () => {
+        const navBottom = nav.getBoundingClientRect().bottom;
+        document.querySelectorAll(".section-title").forEach((title) => {
+          const rect = title.getBoundingClientRect();
+          if (
+            Math.abs(rect.top - navBottom) <= 20 &&
+            rect.top > navBottom - 20
+          ) {
+            const id = title.closest("section").id;
+            if (!triggeredSections.has(id)) {
+              const color = getComputedStyle(title).color;
+              const titleText = title.innerText;
+              for (let i = 0; i < 25; i++) {
+                particles.push({
+                  x: rect.left + Math.random() * rect.width,
+                  y: rect.top + window.scrollY,
+                  vx: (Math.random() - 0.5) * 8,
+                  vy: Math.random() * 2,
+                  alpha: 1,
+                  char: titleText[Math.floor(Math.random() * titleText.length)],
+                  color: color,
+                  isDrop: true,
+                  size: getVar("--drop-char-size"),
+                });
+              }
+              triggeredSections.add(id);
+            }
+          } else if (rect.top > navBottom + 50) {
+            triggeredSections.delete(title.closest("section").id);
+          }
+        });
+
+        // Hero 回到可視範圍上方時允許重玩爆炸
+        if (
+          isInHeroViewport() &&
+          hero.getBoundingClientRect().top >= 0 &&
+          isExploded
+        ) {
+          isExploded = false;
+          particles = [];
+        }
+      });
+
+      hero.addEventListener("mousedown", () => {
+        if (isExploded) return;
+        isExploded = true;
+        setTimeout(
+          () => document.getElementById("about").scrollIntoView(),
+          1000,
+        );
+
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            if (currentMaskData && currentMaskData[(y * cols + x) * 4] > 128) {
+              particles.push({
+                x: x * charW,
+                y: y * charH,
+                vx: (Math.random() - 0.5) * 12,
+                vy: -Math.random() * 6,
+                alpha: 1,
+                color: config.textColor,
+                char: "HEQING"[Math.floor(Math.random() * 6)],
+                isDrop: false,
+              });
+            }
+          }
+        }
+      });
+
+      // ===== Game (保持 400x400 邏輯不變，CSS 只縮放呈現) =====
+      const gCanvas = document.getElementById("gameCanvas");
+      const gCtx = gCanvas.getContext("2d");
+      const gStatus = document.getElementById("game-status");
+      gCanvas.width = 400;
+      gCanvas.height = 400;
+
+      let gState = "waiting",
+        hammerActive = false,
+        spawnTime = 0;
+
+      const sprites = {
+        hole: [
+          [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+          [0, 1, 2, 2, 2, 2, 2, 2, 1, 0],
+          [1, 2, 2, 2, 2, 2, 2, 2, 2, 1],
+          [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ],
+        mole: [
+          [0, 0, 1, 1, 1, 1, 0, 0],
+          [0, 1, 1, 1, 1, 1, 1, 0],
+          [1, 1, 0, 1, 1, 0, 1, 1],
+          [1, 1, 1, 1, 1, 1, 1, 1],
+          [1, 1, 0, 0, 0, 0, 1, 1],
+        ],
+        mole_hit: [
+          [0, 0, 1, 1, 1, 1, 0, 0],
+          [0, 1, 1, 1, 1, 1, 1, 0],
+          [1, 1, 2, 1, 1, 3, 1, 1],
+          [1, 1, 1, 1, 1, 1, 1, 1],
+          [1, 1, 0, 0, 0, 0, 1, 1],
+        ],
+        hammer: [
+          [0, 0, 0, 0, 1, 1],
+          [0, 0, 0, 0, 1, 1],
+          [1, 1, 1, 1, 1, 1],
+          [1, 1, 1, 1, 1, 1],
+          [1, 1, 1, 1, 1, 1],
+          [0, 0, 0, 0, 1, 1],
+          [0, 0, 0, 0, 1, 1],
+        ],
+      };
+
+      function drawMatrix(matrix, x, y, color, scale) {
+        matrix.forEach((row, rIdx) => {
+          row.forEach((pixel, cIdx) => {
+            const px = x + cIdx * scale;
+            const py = y + rIdx * scale;
+            if (pixel === 1) {
+              gCtx.fillStyle = color;
+              gCtx.fillRect(px, py, scale, scale);
+            } else if (pixel === 2) {
+              gCtx.fillStyle = "#fff";
+              gCtx.fillRect(px, py, scale, scale);
+            } else if (pixel === 3) {
+              gCtx.strokeStyle = "#fff";
+              gCtx.lineWidth = 2;
+              gCtx.beginPath();
+              gCtx.moveTo(px, py);
+              gCtx.lineTo(px + scale, py + scale);
+              gCtx.moveTo(px + scale, py);
+              gCtx.lineTo(px, py + scale);
+              gCtx.stroke();
+            } else if (pixel === 0) {
+              gCtx.fillStyle = "#000";
+              gCtx.fillRect(px, py, scale, scale);
+            }
+          });
+        });
+      }
+
+      function spawn() {
+        if (gState !== "waiting") return;
+
+        const min =
+          parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--game-spawn-min",
+            ),
+          ) || 1500;
+        const max =
+          parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--game-spawn-max",
+            ),
+          ) || 4000;
+        const delay = Math.random() * (max - min) + min;
+
+        setTimeout(() => {
+          gState = "mole_up";
+          spawnTime = Date.now();
+          gStatus.innerText = "GO!";
+          gStatus.style.color = config.textColor;
+
+          setTimeout(() => {
+            if (gState === "mole_up") {
+              gState = "waiting";
+              gStatus.innerText = "MISS";
+              gStatus.style.color = "#444";
+              spawn();
+            }
+          }, config.gUp);
+        }, delay);
+      }
+
+      // 兼容 touch：手機點擊也能觸發（不破壞桌機）
+      function onHit() {
+        hammerActive = true;
+        if (gState === "mole_up") {
+          gStatus.innerText = `${Date.now() - spawnTime}ms`;
+          gState = "hit";
+          setTimeout(() => {
+            gState = "waiting";
+            spawn();
+          }, 800);
+        }
+        setTimeout(() => (hammerActive = false), 100);
+      }
+      gCanvas.addEventListener("mousedown", onHit);
+      gCanvas.addEventListener(
+        "touchstart",
+        (e) => {
+          e.preventDefault();
+          onHit();
+        },
+        { passive: false },
+      );
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        if (!isExploded) {
+          torus.rotation.y = Date.now() * 0.0005 * config.torusSpeed;
+
+          renderer.render(scene, camera);
+          colorCtx.drawImage(renderer.domElement, 0, 0, cols, rows);
+          const colorData = colorCtx.getImageData(0, 0, cols, rows).data;
+
+          // mask
+          maskCtx.fillStyle = "black";
+          maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+
+          const lines = config.text.split("|");
+          maskCtx.font = `900 ${config.textSize} Arial`;
+          const maxLineWidth = Math.max(
+            ...lines.map((l) => maskCtx.measureText(l).width),
+          );
+          const totalLoopWidth = maxLineWidth + config.scrollSpacing;
+
+          scrollX -= config.scrollSpeed;
+          if (scrollX <= -totalLoopWidth) scrollX = 0;
+
+          maskCtx.fillStyle = "black";
+          maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+          maskCtx.fillStyle = "white";
+          maskCtx.font = `900 ${config.textSize} Arial`;
+          maskCtx.textAlign = "left";
+          maskCtx.textBaseline = "middle";
+
+          for (
+            let offset = 0;
+            offset < maskCanvas.width + totalLoopWidth;
+            offset += totalLoopWidth
+          ) {
+            lines.forEach((line, i) => {
+              maskCtx.fillText(
+                line,
+                maskCanvas.width + scrollX + offset,
+                maskCanvas.height / 2 +
+                  (i - (lines.length - 1) / 2) * config.lineHeight +
+                  config.textYOffset,
+              );
+            });
+          }
+
+          lrMaskCtx.drawImage(maskCanvas, 0, 0, cols, rows);
+          currentMaskData = lrMaskCtx.getImageData(0, 0, cols, rows).data;
+
+          let output = "";
+          for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+              const i = (y * cols + x) * 4;
+              if (currentMaskData[i] > 128) {
+                const lum =
+                  (0.21 * colorData[i] +
+                    0.72 * colorData[i + 1] +
+                    0.07 * colorData[i + 2]) *
+                  config.torusIntensity;
+
+                output +=
+                  lum > 20
+                    ? "N@#W$9876543210?!abc;:-. "[
+                        Math.floor((1 - Math.min(1, lum / 255)) * 24)
+                      ]
+                    : ".";
+              } else output += " ";
+            }
+            output += "\n";
+          }
+          container.textContent = output;
+        } else {
+          container.textContent = "";
+        }
+
+        // particles
+        pCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        particles.forEach((p, i) => {
+          p.vy += config.gravity;
+          p.y += p.vy;
+          p.x += p.vx;
+
+          if (p.y - window.scrollY >= window.innerHeight) {
+            p.y = window.innerHeight + window.scrollY;
+            p.vy *= -0.3;
+            p.alpha -= 0.03;
+          }
+          if (p.alpha <= 0) {
+            particles.splice(i, 1);
+            return;
+          }
+          pCtx.globalAlpha = p.alpha;
+          pCtx.fillStyle = p.color || config.textColor;
+          pCtx.font = p.isDrop
+            ? `bold ${config.dropSize} FashionBitmap`
+            : `${config.fontSize}px Courier New`;
+          pCtx.fillText(p.char, p.x, p.y - window.scrollY);
+        });
+
+        // game render (保持原邏輯)
+        gCtx.clearRect(0, 0, 400, 400);
+        const cx = 200,
+          by = config.gHorizon,
+          ps = config.gPSize;
+
+        drawMatrix(sprites.hole, cx - 50, by, "#333", ps);
+
+        if (gState === "mole_up") {
+          drawMatrix(sprites.mole, cx - 40, by - 50, config.textColor, ps);
+        } else if (gState === "hit") {
+          drawMatrix(sprites.mole_hit, cx - 40 + 15, by - 50, "#ff0000", ps);
+        }
+
+        if (hammerActive) {
+          drawMatrix(sprites.hammer, cx - 60, by - 80, "#ffffff", ps);
+        }
+      }
+
+      animate();
+      spawn();
+      resize();
+
+      // ===== AUTH MODAL =====
+      (function () {
+        const overlay = document.getElementById("authOverlay");
+        const modal = document.getElementById("authModal");
+        const closeBtn = document.getElementById("authClose");
+        const loginBtn = document.getElementById("loginBtn");
+        const loginForm = document.getElementById("authLoginForm");
+        const regForm = document.getElementById("authRegForm");
+        const statusBar = document.getElementById("authStatusBar");
+        const statusTxt = document.getElementById("authStatusTxt");
+        const ecgCanvas = document.getElementById("authEcgCanvas");
+        const ecgCtx = ecgCanvas.getContext("2d");
+        const tabs = document.querySelectorAll(".auth-tab");
+
+        let ecgAnimId = null,
+          ecgPhase = 0,
+          bootTimers = [];
+
+        // --- Status helpers ---
+        function setStatus(msg, cls) {
+          statusBar.className = "auth-status-bar" + (cls ? " " + cls : "");
+          statusTxt.textContent = msg;
+        }
+
+        // --- Boot sequence typed into status bar on open ---
+        const bootSeq = [
+          { msg: "HEQING_AUTH_SYSTEM BOOT...", cls: "", t: 0 },
+          { msg: "LOADING SECURE_CHANNEL...", cls: "", t: 480 },
+          { msg: "AES-256 ENCRYPTION ACTIVE", cls: "", t: 960 },
+          { msg: "STATUS: AWAITING_INPUT", cls: "ok", t: 1440 },
+        ];
+        function runBoot() {
+          bootTimers.forEach(clearTimeout);
+          bootTimers = bootSeq.map(({ msg, cls, t }) =>
+            setTimeout(() => setStatus(msg, cls), t),
+          );
+        }
+        function stopBoot() {
+          bootTimers.forEach(clearTimeout);
+          bootTimers = [];
+        }
+
+        // --- ECG waveform (medical theme) ---
+        function ecgY(x, h) {
+          const cycleLen = 120;
+          const p = ((x + ecgPhase) % cycleLen) / cycleLen; // 0..1
+          let dy = 0;
+          if (p < 0.15)
+            dy = -Math.sin((p / 0.15) * Math.PI) * 5; // P wave
+          else if (p < 0.22)
+            dy = 0; // PR segment
+          else if (p < 0.26)
+            dy = Math.sin(((p - 0.22) / 0.04) * Math.PI) * 3; // Q dip
+          else if (p < 0.29)
+            dy = (-(p - 0.26) / 0.03) * h * 0.38; // R ascend
+          else if (p < 0.32)
+            dy = -(1 - (p - 0.29) / 0.03) * h * 0.38; // R descend
+          else if (p < 0.36)
+            dy = Math.sin(((p - 0.32) / 0.04) * Math.PI) * 6; // S wave
+          else if (p < 0.45)
+            dy = 0; // ST segment
+          else if (p < 0.65) dy = -Math.sin(((p - 0.45) / 0.2) * Math.PI) * 10; // T wave
+          return h / 2 + dy;
+        }
+
+        function drawEcg() {
+          const w = ecgCanvas.width,
+            h = ecgCanvas.height;
+          ecgCtx.clearRect(0, 0, w, h);
+          ecgCtx.strokeStyle = "#00ffcc";
+          ecgCtx.lineWidth = 1.5;
+          ecgCtx.shadowColor = "#00ffcc";
+          ecgCtx.shadowBlur = 8;
+          ecgCtx.beginPath();
+          for (let x = 0; x < w; x++) {
+            const y = ecgY(x, h);
+            x === 0 ? ecgCtx.moveTo(x, y) : ecgCtx.lineTo(x, y);
+          }
+          ecgCtx.stroke();
+          // Fade edges so line appears to scroll in from a buffer
+          const grad = ecgCtx.createLinearGradient(0, 0, w, 0);
+          grad.addColorStop(0, "rgba(7,13,18,0.95)");
+          grad.addColorStop(0.07, "rgba(7,13,18,0)");
+          grad.addColorStop(0.93, "rgba(7,13,18,0)");
+          grad.addColorStop(1, "rgba(7,13,18,0.95)");
+          ecgCtx.fillStyle = grad;
+          ecgCtx.fillRect(0, 0, w, h);
+          ecgPhase += 2;
+          ecgAnimId = requestAnimationFrame(drawEcg);
+        }
+
+        function startEcg() {
+          ecgCanvas.width = ecgCanvas.offsetWidth || 420;
+          ecgPhase = 0;
+          if (!ecgAnimId) drawEcg();
+        }
+        function stopEcg() {
+          if (ecgAnimId) {
+            cancelAnimationFrame(ecgAnimId);
+            ecgAnimId = null;
+          }
+          ecgCtx.clearRect(0, 0, ecgCanvas.width, ecgCanvas.height);
+        }
+
+        // --- Glitch effect on modal ---
+        function triggerGlitch() {
+          modal.classList.remove("glitch-anim");
+          void modal.offsetWidth; // force reflow to restart animation
+          modal.classList.add("glitch-anim");
+          setTimeout(() => modal.classList.remove("glitch-anim"), 350);
+        }
+
+        // --- ASCII loading bar in status ---
+        function showLoading(label, onDone) {
+          const total = 20;
+          let n = 0;
+          setStatus(label + " [" + "░".repeat(total) + "] 0%", "processing");
+          const iv = setInterval(() => {
+            n++;
+            const pct = Math.round((n / total) * 100);
+            setStatus(
+              label +
+                " [" +
+                "█".repeat(n) +
+                "░".repeat(total - n) +
+                "] " +
+                pct +
+                "%",
+              "processing",
+            );
+            if (n >= total) {
+              clearInterval(iv);
+              setTimeout(onDone, 150);
+            }
+          }, 55);
+        }
+
+        // --- Particle burst on success (reuses main particle system) ---
+        function successBurst() {
+          const chars = "HEQING01";
+          for (let i = 0; i < 50; i++) {
+            particles.push({
+              x: window.innerWidth / 2 + (Math.random() - 0.5) * 400,
+              y: window.innerHeight / 2 + (Math.random() - 0.5) * 200,
+              vx: (Math.random() - 0.5) * 16,
+              vy: -Math.random() * 10 - 2,
+              alpha: 1,
+              color: config.textColor,
+              char: chars[Math.floor(Math.random() * chars.length)],
+              isDrop: false,
+            });
+          }
+        }
+
+        // --- Open / Close ---
+        function openModal() {
+          msalUpdateUI(); // 先同步登入狀態再開 modal
+          overlay.classList.add("is-open");
+          startEcg();
+          runBoot();
+          triggerGlitch();
+        }
+        function closeModal() {
+          stopBoot();
+          triggerGlitch();
+          setTimeout(() => {
+            overlay.classList.remove("is-open");
+            stopEcg();
+            setStatus("STATUS: AWAITING_INPUT", "");
+          }, 280);
+        }
+
+        // --- Tab switching ---
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tab.classList.add("active");
+            const target = tab.dataset.tab;
+            loginForm.classList.toggle("hidden", target !== "login");
+            regForm.classList.toggle("hidden", target !== "register");
+            setStatus("STATUS: AWAITING_INPUT", "ok");
+          });
+        });
+
+        // --- Form submit (Azure AD B2C via MSAL redirect) ---
+        function msalRedirect(form, label) {
+          const btn = form.querySelector(".auth-submit");
+          btn.disabled = true;
+          triggerGlitch();
+          showLoading(label, () => {
+            setStatus("REDIRECTING TO AZURE_B2C...", "processing");
+            msalLogin().catch((err) => {
+              setStatus(
+                "ERR: " + (err.errorCode || err.message || "UNKNOWN"),
+                "err",
+              );
+              triggerGlitch();
+              btn.disabled = false;
+            });
+          });
+        }
+
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          msalRedirect(loginForm, "AUTHENTICATING");
+        });
+
+        regForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          msalRedirect(regForm, "REGISTERING");
+        });
+
+        document
+          .getElementById("authLogoutBtn")
+          .addEventListener("click", () => {
+            triggerGlitch();
+            setStatus("TERMINATING SESSION...", "processing");
+            setTimeout(() => {
+              msalLogout().catch((err) => {
+                setStatus(
+                  "ERR: " + (err.errorCode || err.message || "UNKNOWN"),
+                  "err",
+                );
+                triggerGlitch();
+              });
+            }, 400);
+          });
+
+        // --- Event listeners ---
+        loginBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          openModal();
+        });
+        closeBtn.addEventListener("click", closeModal);
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) closeModal();
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && overlay.classList.contains("is-open"))
+            closeModal();
+        });
+      })();
+    </script>
+
+    <!-- ===== KEYGEN LOGIC ===== -->
+    <script>
+      (function () {
+        const KG_PW = "jd5828828";
+
+        /* ---- generators ---- */
+        function kgGenerateHostCode() {
+          const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+          let out = "";
+          for (let s = 0; s < 4; s++) {
+            if (s) out += "-";
+            for (let i = 0; i < 5; i++)
+              out += chars[Math.floor(Math.random() * chars.length)];
+          }
+          return out;
+        }
+        function kgGenerateStartDate() {
+          const now = new Date();
+          return `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`;
+        }
+        function kgGenerateUsableDays() {
+          return [30, 60, 90, 180, 365][Math.floor(Math.random() * 5)];
+        }
+        function kgGenerateGoldKey() {
+          const hex = "0123456789ABCDEF";
+          let k = "GK-";
+          for (let i = 0; i < 24; i++) {
+            if (i && i % 6 === 0) k += "-";
+            k += hex[Math.floor(Math.random() * 16)];
+          }
+          return k;
+        }
+
+        /* ---- MD5 → raw bytes (16 bytes, for IV) ---- */
+        function md5Bytes(str) {
+          function safeAdd(x, y) { var l=(x&0xFFFF)+(y&0xFFFF),m=(x>>16)+(y>>16)+(l>>16); return(m<<16)|(l&0xFFFF); }
+          function rol(n,c){ return(n<<c)|(n>>>(32-c)); }
+          function cmn(q,a,b,x,s,t){ return safeAdd(rol(safeAdd(safeAdd(a,q),safeAdd(x,t)),s),b); }
+          function ff(a,b,c,d,x,s,t){ return cmn((b&c)|((~b)&d),a,b,x,s,t); }
+          function gg(a,b,c,d,x,s,t){ return cmn((b&d)|(c&(~d)),a,b,x,s,t); }
+          function hh(a,b,c,d,x,s,t){ return cmn(b^c^d,a,b,x,s,t); }
+          function ii(a,b,c,d,x,s,t){ return cmn(c^(b|(~d)),a,b,x,s,t); }
+
+          var bytes = new TextEncoder().encode(str);
+          var l8 = bytes.length, tail = ((l8+72)>>6)<<4;
+          var M = new Int32Array(tail);
+          for(var i=0;i<l8;i++) M[i>>2]|=bytes[i]<<((i%4)*8);
+          M[l8>>2]|=0x80<<((l8%4)*8); M[tail-2]=l8*8;
+
+          var a=0x67452301,b=0xEFCDAB89,c=0x98BADCFE,d=0x10325476;
+          for(var i=0;i<tail;i+=16){
+            var A=a,B=b,C=c,D=d;
+            a=ff(a,b,c,d,M[i+ 0], 7,-680876936);  d=ff(d,a,b,c,M[i+ 1],12,-389564586);
+            c=ff(c,d,a,b,M[i+ 2],17, 606105819);  b=ff(b,c,d,a,M[i+ 3],22,-1044525330);
+            a=ff(a,b,c,d,M[i+ 4], 7,-176418897);  d=ff(d,a,b,c,M[i+ 5],12, 1200080426);
+            c=ff(c,d,a,b,M[i+ 6],17,-1473231341); b=ff(b,c,d,a,M[i+ 7],22,-45705983);
+            a=ff(a,b,c,d,M[i+ 8], 7, 1770035416); d=ff(d,a,b,c,M[i+ 9],12,-1958414417);
+            c=ff(c,d,a,b,M[i+10],17,-42063);       b=ff(b,c,d,a,M[i+11],22,-1990404162);
+            a=ff(a,b,c,d,M[i+12], 7, 1804603682); d=ff(d,a,b,c,M[i+13],12,-40341101);
+            c=ff(c,d,a,b,M[i+14],17,-1502002290); b=ff(b,c,d,a,M[i+15],22, 1236535329);
+            a=gg(a,b,c,d,M[i+ 1], 5,-165796510);  d=gg(d,a,b,c,M[i+ 6], 9,-1069501632);
+            c=gg(c,d,a,b,M[i+11],14, 643717713);  b=gg(b,c,d,a,M[i+ 0],20,-373897302);
+            a=gg(a,b,c,d,M[i+ 5], 5,-701558691);  d=gg(d,a,b,c,M[i+10], 9, 38016083);
+            c=gg(c,d,a,b,M[i+15],14,-660478335);  b=gg(b,c,d,a,M[i+ 4],20,-405537848);
+            a=gg(a,b,c,d,M[i+ 9], 5, 568446438);  d=gg(d,a,b,c,M[i+14], 9,-1019803690);
+            c=gg(c,d,a,b,M[i+ 3],14,-187363961);  b=gg(b,c,d,a,M[i+ 8],20, 1163531501);
+            a=gg(a,b,c,d,M[i+13], 5,-1444681467); d=gg(d,a,b,c,M[i+ 2], 9,-51403784);
+            c=gg(c,d,a,b,M[i+ 7],14, 1735328473); b=gg(b,c,d,a,M[i+12],20,-1926607734);
+            a=hh(a,b,c,d,M[i+ 5], 4,-378558);     d=hh(d,a,b,c,M[i+ 8],11,-2022574463);
+            c=hh(c,d,a,b,M[i+11],16, 1839030562); b=hh(b,c,d,a,M[i+14],23,-35309556);
+            a=hh(a,b,c,d,M[i+ 1], 4,-1530992060); d=hh(d,a,b,c,M[i+ 4],11, 1272893353);
+            c=hh(c,d,a,b,M[i+ 7],16,-155497632);  b=hh(b,c,d,a,M[i+10],23,-1094730640);
+            a=hh(a,b,c,d,M[i+13], 4, 681279174);  d=hh(d,a,b,c,M[i+ 0],11,-358537222);
+            c=hh(c,d,a,b,M[i+ 3],16,-722521979);  b=hh(b,c,d,a,M[i+ 6],23, 76029189);
+            a=hh(a,b,c,d,M[i+ 9], 4,-640364487);  d=hh(d,a,b,c,M[i+12],11,-421815835);
+            c=hh(c,d,a,b,M[i+15],16, 530742520);  b=hh(b,c,d,a,M[i+ 2],23,-995338651);
+            a=ii(a,b,c,d,M[i+ 0], 6,-198630844);  d=ii(d,a,b,c,M[i+ 7],10, 1126891415);
+            c=ii(c,d,a,b,M[i+14],15,-1416354905); b=ii(b,c,d,a,M[i+ 5],21,-57434055);
+            a=ii(a,b,c,d,M[i+12], 6, 1700485571); d=ii(d,a,b,c,M[i+ 3],10,-1894986606);
+            c=ii(c,d,a,b,M[i+10],15,-1051523);    b=ii(b,c,d,a,M[i+ 1],21,-2054922799);
+            a=ii(a,b,c,d,M[i+ 8], 6, 1873313359); d=ii(d,a,b,c,M[i+15],10,-30611744);
+            c=ii(c,d,a,b,M[i+ 6],15,-1560198380); b=ii(b,c,d,a,M[i+13],21, 1309151649);
+            a=ii(a,b,c,d,M[i+ 4], 6,-145523070);  d=ii(d,a,b,c,M[i+11],10,-1120210379);
+            c=ii(c,d,a,b,M[i+ 2],15, 718787259);  b=ii(b,c,d,a,M[i+ 9],21,-343485551);
+            a=safeAdd(a,A); b=safeAdd(b,B); c=safeAdd(c,C); d=safeAdd(d,D);
+          }
+          var buf=new ArrayBuffer(16), v=new DataView(buf);
+          v.setInt32(0,a,true); v.setInt32(4,b,true);
+          v.setInt32(8,c,true); v.setInt32(12,d,true);
+          return new Uint8Array(buf);
+        }
+
+        /* ---- AES-CBC encrypt → Base64 (mirrors C# aesEncryptBase64) ---- */
+        /* Key = SHA-256(CryptoKey)   IV = MD5(CryptoKey)                   */
+        async function aesEncryptBase64(sourceStr, cryptoKey) {
+          const enc = new TextEncoder();
+          const keyHash = await crypto.subtle.digest("SHA-256", enc.encode(cryptoKey));
+          const iv = md5Bytes(cryptoKey);
+          const aesKey = await crypto.subtle.importKey(
+            "raw", keyHash, { name: "AES-CBC" }, false, ["encrypt"]
+          );
+          const cipher = await crypto.subtle.encrypt(
+            { name: "AES-CBC", iv },
+            aesKey,
+            enc.encode(sourceStr)
+          );
+          return btoa(String.fromCharCode(...new Uint8Array(cipher)));
+        }
+
+        /* ---- verify password ---- */
+        window.kgVerify = function () {
+          const input   = document.getElementById("kgPwInput");
+          const errEl   = document.getElementById("kgErr");
+          const gate    = document.getElementById("kgGate");
+          const panel   = document.getElementById("kgPanel");
+          const lockBar = document.getElementById("kgLockBar");
+
+          if (input.value === KG_PW) {
+            errEl.textContent = "";
+            gate.style.display = "none";
+            lockBar.innerHTML =
+              '<span class="keygen-lock-dot active"></span>'.repeat(3) +
+              '<span style="color:var(--text-color)">ACCESS_GRANTED // 存取成功</span>' +
+              '<span class="keygen-lock-dot active"></span>'.repeat(3);
+
+            document.getElementById("kgHostCode").value   = kgGenerateHostCode();
+            document.getElementById("kgStartDate").value  = kgGenerateStartDate();
+            document.getElementById("kgUsableDays").value = kgGenerateUsableDays();
+            document.getElementById("kgGoldKey").value    = kgGenerateGoldKey();
+
+            // reset encrypt area on new unlock
+            document.getElementById("kgEncryptedWrap").style.display = "none";
+            document.getElementById("kgSourceVal").textContent  = "";
+            document.getElementById("kgPayloadVal").textContent = "";
+
+            panel.classList.add("unlocked");
+          } else {
+            errEl.textContent = "ACCESS_DENIED // 密碼錯誤";
+            input.classList.add("shake");
+            input.value = "";
+            setTimeout(() => input.classList.remove("shake"), 500);
+          }
+        };
+
+        /* ---- encrypt button ---- */
+        window.kgEncrypt = async function () {
+          const hostCode   = document.getElementById("kgHostCode").value.trim();
+          const startDate  = document.getElementById("kgStartDate").value.trim();
+          const usableDays = document.getElementById("kgUsableDays").value.trim();
+          const goldKey    = document.getElementById("kgGoldKey").value.trim();
+
+          if (!goldKey || !hostCode) return;
+
+          const btn = document.getElementById("kgEncryptBtn");
+          btn.textContent = "PROCESSING...";
+          btn.disabled = true;
+
+          try {
+            const sourceStr = `${hostCode},${startDate},${usableDays}`;
+            const result    = await aesEncryptBase64(sourceStr, goldKey);
+            document.getElementById("kgSourceVal").textContent  = sourceStr;
+            document.getElementById("kgPayloadVal").textContent = result;
+            document.getElementById("kgEncryptedWrap").style.display = "flex";
+            document.getElementById("kgCopyHint").textContent = "[ CLICK TO COPY ]";
+          } catch(e) {
+            document.getElementById("kgSourceVal").textContent  = "";
+            document.getElementById("kgPayloadVal").textContent = "ERROR: " + e.message;
+            document.getElementById("kgEncryptedWrap").style.display = "flex";
+          }
+
+          btn.textContent = "ENCRYPT()";
+          btn.disabled = false;
+        };
+
+        /* ---- one-click copy ---- */
+        window.kgCopyPayload = function () {
+          const val = document.getElementById("kgPayloadVal").textContent;
+          if (!val) return;
+          navigator.clipboard.writeText(val).then(() => {
+            const hint = document.getElementById("kgCopyHint");
+            hint.textContent = "[ COPIED! ]";
+            hint.style.color = "var(--text-color)";
+            hint.style.opacity = "1";
+            setTimeout(() => {
+              hint.textContent = "[ CLICK TO COPY ]";
+              hint.style.opacity = "0.7";
+            }, 2000);
+          });
+        };
+
+      })();
+    </script>
+  </body>
+</html>
