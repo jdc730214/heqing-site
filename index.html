@@ -1790,6 +1790,12 @@
             const accessToken = response.accessToken;
             console.log(">>> ACCESS TOKEN FOR BACKEND:", accessToken);
 
+            // 自動註冊：fire-and-forget，讓後端在首次登入時建立 platform_Accounts 記錄
+            fetch(
+              "https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/platform/me",
+              { method: "GET", headers: { Authorization: `Bearer ${accessToken}` } }
+            ).catch(() => {});
+
             // 請求後端 API
             let apiResponse = await fetch(
               "https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/GetUserPoints",
