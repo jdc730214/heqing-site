@@ -1,0 +1,189 @@
+================================================================
+  禾青醫電 / BodyGo 系統架構說明
+  HEQING MEDICAL / BodyGo System Architecture
+  更新日期：2026-03-21
+================================================================
+
+【專案組成 / Project Components】
+  前端  : d:\工作相關\禾青醫電網站點陣版\index.html  (靜態 HTML)
+  後端  : d:\工作相關\禾青醫電網站點陣版\BodyGoWeb.Backend\  (Azure Functions .NET 8)
+  資料庫: Azure SQL  →  bodygo-server-web.database.windows.net / BodyGoDB
+  身分驗證: Azure CIAM  →  bodygocustomers.ciamlogin.com
+
+================================================================
+  一、本地開發啟動流程 / Local Dev Startup
+================================================================
+
+  ★ 依序開三個終端機：
+
+  [終端機 1] 啟動 Azurite (本地 Azure Storage 模擬器)
+    azurite --location C:\azurite
+
+  [終端機 2] 啟動後端 Azure Functions
+    cd "d:\工作相關\禾青醫電網站點陣版\BodyGoWeb.Backend"
+    func start
+    → 監聽 http://localhost:7119
+
+  [終端機 3 / VS Code] 開啟前端
+    index.html → 右鍵 → Open with Live Server
+    → 監聽 http://localhost:5500
+
+================================================================
+  二、註冊流程 / Registration Flow
+================================================================
+
+  1. 使用者點 [REGISTER]
+  2. MSAL 呼叫 loginRedirect()
+  3. 瀏覽器跳轉到 Azure CIAM 託管頁面
+     → 填 Email / 密碼 / 驗證碼，或選擇 Google 帳號
+  4. Azure CIAM 建立帳號，產生授權碼 (code)
+     → 導回 http://localhost:5500/#code=...
+  5. MSAL handleRedirectPromise() 自動處理
+     → 取得 Access Token + ID Token
+     → setActiveAccount()
+  6. 前端呼叫 GET /api/GetUserPoints（帶 Bearer Token）
+  7. 後端 GetUserPoints：
+     → TokenValidator 驗證 Token 真偽與有效期
+     → 查詢 Azure SQL：SELECT * FROM Users WHERE UserOID = ?
+     → 查無此人 → 自動 INSERT 新用戶，給予 100 點
+     → 回傳 { status: "NEW_USER_CREATED", PointsBalance: 100 }
+  8. 前端顯示登入狀態 + 點數
+
+================================================================
+  三、登入流程 / Login Flow
+================================================================
+
+  1. 使用者點 [LOGIN]
+  2. 同上步驟 2～5（Azure CIAM 驗證已有帳號）
+  3. 前端呼叫 GET /api/GetUserPoints
+  4. 後端：
+     → TokenValidator 驗證 Token
+     → 查詢 Azure SQL：找到既有用戶
+     → 回傳 { UserOID, Email, PointsBalance }
+  5. 前端顯示：ACCESS_GRANTED // POINTS: xxx
+
+================================================================
+  四、扣點流程 / Deduct Points Flow
+================================================================
+
+  使用者進行 BodyGo 量測
+  → 前端呼叫 POST /api/DeductPoints（帶 Bearer Token）
+  → 後端：
+      驗證 Token
+      開啟 SQL Transaction
+      確認點數 >= 10
+      PointsBalance - 10
+      寫入 Transactions 資料表（流水紀錄）
+      Commit
+      回傳 { status: "SUCCESS", deducted: 10 }
+
+================================================================
+  五、資料庫結構 / Database Tables
+================================================================
+
+  [Users]
+    UserOID        - Azure CIAM 使用者唯一 ID (sub claim)
+    Email          - 使用者 Email
+    PointsBalance  - 點數餘額（新用戶預設 100）
+    CreatedAt      - 建立時間
+    UpdatedAt      - 最後更新時間
+
+  [Transactions]
+    UserOID    - 對應 Users 資料表
+    Amount     - 扣點數量（例如 -10）
+    Reason     - 原因（例如 'BodyGo_Measurement'）
+    CreatedAt  - 交易時間
+
+================================================================
+  六、安全機制 / Security Layers
+================================================================
+
+  身分識別  : Azure CIAM (OIDC / OAuth 2.0)
+  Token 驗證: 後端用 JWKS 公鑰驗簽章 + 檢查過期時間
+  資料傳輸  : Bearer Token，不在前端存密碼
+  資料庫操作: SQL Transaction 防止點數異常扣除
+
+================================================================
+  七、關鍵設定值 / Key Config Values
+================================================================
+
+  前端 MSAL Client ID  : 93802a48-96d9-45ae-8fc3-2a93065c7f0f
+  後端 API Client ID   : ff727949-37ca-44ae-a461-d06be688e8e1
+  CIAM Tenant          : bodygocustomers
+  Azure CIAM Authority : https://bodygocustomers.ciamlogin.com/
+  Redirect URI (本地)  : http://localhost:5500/
+  後端 API (本地)      : http://localhost:7119
+  後端 API (生產)      : https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net
+
+  ★ local.settings.json 的 SqlConnectionString 含密碼，
+    請勿 commit 至 Git（已在 .gitignore 排除）
+
+================================================================
+  八、下一步：後端部署至 Azure Functions 雲端
+  Next Step: Deploy Backend to Azure Functions Cloud
+================================================================
+
+  ★ 部署完成後，本地不再需要 Azurite 和 func start
+
+  [ 步驟 1 ] 在 Azure Portal 建立 Function App
+  --------------------------------------------------
+  1. 前往 portal.azure.com
+  2. 建立資源 → Function App
+  3. 設定：
+       訂閱        : 你的 Azure 訂閱
+       資源群組    : 建議新建 (例如 rg-bodygo)
+       Function App 名稱 : 例如 bodygo-backend
+       執行階段堆疊 : .NET 8 (isolated)
+       區域        : East Asia 或 Japan East（亞洲較近）
+       方案        : Consumption（用多少付多少，初期省錢）
+
+  [ 步驟 2 ] 設定 Application Settings（環境變數）
+  --------------------------------------------------
+  在 Function App → Settings → Environment variables 新增：
+    SqlConnectionString = <同 local.settings.json 的連線字串>
+
+  ( 這樣雲端就能連到 Azure SQL，不需要 local.settings.json )
+
+  [ 步驟 3 ] 設定 CORS
+  --------------------------------------------------
+  在 Function App → API → CORS 新增前端網址：
+    https://<你的 Azure Static Web Apps 網址>
+    http://localhost:5500  （本地開發用）
+
+  [ 步驟 4 ] 部署程式碼
+  --------------------------------------------------
+  在終端機執行：
+    cd "d:\工作相關\禾青醫電網站點陣版\BodyGoWeb.Backend"
+    func azure functionapp publish bodygo-backend
+
+  部署成功後會顯示：
+    Functions in bodygo-backend:
+      GetUserPoints  - [GET] https://bodygo-backend.azurewebsites.net/api/GetUserPoints
+      DeductPoints   - [POST] https://bodygo-backend.azurewebsites.net/api/DeductPoints
+
+  [ 步驟 5 ] 更新前端 API 網址
+  --------------------------------------------------
+  index.html 裡所有 http://localhost:7119 改成：
+    https://bodygo-backend.azurewebsites.net
+
+  [ 步驟 6 ] 更新 Azure CIAM App Registration
+  --------------------------------------------------
+  Azure Portal → App Registration → Authentication
+  新增正式環境 Redirect URI：
+    https://<你的 Azure Static Web Apps 網址>/
+
+  [ 完成後的架構 ]
+  --------------------------------------------------
+  使用者瀏覽器
+      ↓ HTTPS
+  Azure Static Web Apps（前端）
+      ↓ HTTPS + Bearer Token
+  Azure Functions 雲端（後端）
+      ↓ TCP 1433
+  Azure SQL Database
+      ↑ OIDC 驗證
+  Azure CIAM
+
+  ★ 全部在 Azure 雲端，本機不需要跑任何服務
+
+================================================================

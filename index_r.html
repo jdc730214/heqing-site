@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>禾青醫電</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="cs/style.css" />
+  </head>
+  <body>
+    <div class="header container-fluid">
+      <div class="videoHeaderBar container-fluid">
+        <video
+          class="video-background"
+          playsinline="playsinline"
+          controlsList="nodownload noplaybackrate nofullscreen"
+          autoplay="autoplay"
+          muted="muted"
+          loop="loop"
+        >
+          <source src="media/video10.mp4" type="video/mp4" />
+        </video>
+        <div class="navbarcontainer container-fluid">
+          <nav class="navbar navbar-expand-xl bg-light">
+            <a class="navbar-brand" href="#">
+              <img
+                src="images/logo.png"
+                width="45"
+                height="45"
+                class="d-inline-block align-top"
+                alt=""
+              />
+              <span class="text">禾青醫電</span>
+            </a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarNavDropdown"
+              aria-controls="navbarNavDropdown"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"> </span>
+            </button>
+            <div
+              class="collapse navbar-collapse justify-content-center"
+              id="navbarNavDropdown"
+            >
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#aboutInfo"
+                    >關於我們 <span class="sr-only">(current)</span></a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#productInfo">產品</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#contactInfo">聯絡我們</a>
+                </li>
+                <li class="nav-item">
+                  <a id="underConstruction" class="nav-link" href="#"
+                    >線上測驗(建製中)</a
+                  >
+                </li>
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    代理商資訊
+                  </a>
+                  <div class="dropdown-menu">
+                    <a
+                      class="dropdown-item"
+                      target="_blank"
+                      href="http://www.realmasters8899.com/"
+                      >台灣總代理商-真醫健康</a
+                    >
+                    <a
+                      class="dropdown-item"
+                      target="_blank"
+                      href="https://www.habitz-medtech.com/"
+                      >台灣代理商-晁禾醫療</a
+                    >
+                    <a
+                      class="dropdown-item"
+                      target="_blank"
+                      href="https://www.taiwan-healthcare.org/zh/homepage"
+                      >台灣代理商-全球醫療採購</a
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- <video
+          class="video-background"
+          playsinline="playsinline"
+          controlsList="nodownload noplaybackrate nofullscreen"
+          autoplay="autoplay"
+          muted="muted"
+          loop="loop"
+        >
+          <source src="media/video11.mp4" type="video/mp4" />
+        </video> -->
+
+    <div
+      class="main1 container-fluid d-flex flex-column justify-content-center align-items-center"
+    >
+      <div
+        class="ourInfo d-flex flex-column justify-content-center align-items-center"
+      >
+        <h2 id="aboutInfo" class="text-center">關於禾青醫電</h2>
+        <h5 class="text-center">┋禾青，稻穗的青翠，生命的象徵┋</h5>
+        <p class="hisInfo text-left">
+          禾青醫電於2017年成立，由陳紀鼎技術長帶領團隊，團隊專精於影像辨識、機器學習、語音辨識技術研發，將這些技術應用於各種領域。2018年於長庚大學育成中心進駐，精進研發傾聽需求將技術結合導入多項產品，2020年取得林口新創園區優良技術進駐，透過園區輔導成功將產品拓展，在大陸、香港、馬來西亞、日本、美國等地。
+        </p>
+      </div>
+      <div
+        class="timeline-div container-fluid d-flex flex-column justify-content-center align-items-center"
+      >
+        <section class="timeline">
+          <ol>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2017</time>
+                <p>
+                  長庚大學配合政府的科技發展政策，推動創新育成提供培育中小企業的服務平台，禾青醫電進駐長庚大學育成中心，以這裡為起點也是禾青醫電的開始。
+                </p>
+                <img src="images/h8.png" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2017</time>
+                <p>
+                  與長庚大學林佩欣教授實驗室合作，將第一代BodyGO多人科技體適評估與車體公司合作，在偏鄉的活動中心進行服務，第一代BodyGO科技體適能評估問世。
+                </p>
+                <img src="images/h1.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2017</time>
+                <p>
+                  與台灣廠商威士登科技、山東DHZ運動器材有限公司合作並簽署兩年合作委託案，運用影像辨識與機器學習人體體架識別，著手進行競技型體適能評估開發。
+                </p>
+                <img src="images/h2.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2017</time>
+                <p>
+                  心肺醫療學術研討會，蘇州協力醫療器材邀請我司參與，並開始合作大陸杭州區域性代理銷售，研討會期間將產品理念、檢測方式進行展示。
+                </p>
+                <img src="images/h3.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2018</time>
+                <p>
+                  競技型體適能於上海 FIBO
+                  CHINA展示，應用於運動中心協助教練規劃課程，並檢測學員程度，安排適當之運動處方。
+                </p>
+                <img src="images/h4.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2018</time>
+                <p>
+                  與長庚大學林佩欣教實驗室合作開發，輕度認知障礙評估將MOCA評估量表科技化，以語音的方式跟影像識別判斷受測者的作答。
+                </p>
+                <img src="images/h5.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2019</time>
+                <p>
+                  山東DHZ運動器材有限公司，開始進行競技型體適能評估銷售並導入至學齡前兒童體適能進行測試寓教於樂，訓練小朋友的靈敏度、敏捷性、與反應力。
+                </p>
+                <img src="images/h6.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2020</time>
+                <p>
+                  山東DHZ運動器材有限公司，開始進行競技型體適能評估結合原有的器材一起銷售並導入運動中心。
+                </p>
+                <img src="images/h7.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2020</time>
+                <p>
+                  與長庚大學王鐘賢教授實室，周政憲博士進行科技體適能BodyGo第二代進行優化與常模導入，將週邊藍芽心率錶與深度影像等進行結合，優化演算法三軸空間關節活動度。
+                </p>
+                <img src="images/h9.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2021</time>
+                <p>
+                  北京安真醫療進行2年的大陸總代理，代理產品科技體適能BodyGo第二代，並進行軟體技術合作串接雲端，智能登入系統與運動處方整合方案。
+                </p>
+                <img src="images/h10.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2022</time>
+                <p>為更利於企業媒與合招商，進駐林口新創園區。</p>
+                <img src="images/h11.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2022</time>
+                <p>
+                  與真醫健康企業有限公司合作，並成為科技體適能BodyGo第二代台灣區總代理，真醫健康深植長照醫療體系多年，成功將產品導入學校、長日照單位、健檢單位、智慧住宅等。
+                </p>
+                <img src="images/h12.jpg" />
+              </div>
+            </li>
+            <li>
+              <div class="timeline-item container-fluid">
+                <time>2023-Now</time>
+                <p>
+                  真醫健康企業有限公司持續代理科技體適能BodyGo第二代台灣區總代理，禾青將客不斷優化系統並研發精度更佳電子設備導入至系統，科技體適能BodyGo第三代問市成為科技體適能第一品牌。
+                </p>
+                <img src="images/h13.jpg" />
+              </div>
+            </li>
+            <li></li>
+          </ol>
+        </section>
+      </div>
+    </div>
+    <div
+      class="main2 d-flex flex-column justify-content-space-around align-items-center"
+    >
+      <div id="productInfo" class="product">
+        <h2 class="text-center">產品</h2>
+      </div>
+      <div class="row d-flex justify-content-around align-items-center">
+        <!-- 打 .col-12.com-md-3*4 (TAB)  -->
+        <div
+          class="productInfo col-12 col-sm-6 col-lg-3 d-flex justify-content-center"
+        >
+          <object
+            type="text/html"
+            data="products/product1/index_showProduct.html"
+          >
+            <p>無法取得商品資訊</p>
+          </object>
+        </div>
+        <div
+          class="productInfo col-12 col-sm-6 col-lg-3 d-flex justify-content-center"
+        >
+          <object
+            type="text/html"
+            data="products/product2/index_showProduct.html"
+          >
+            <p>無法取得商品資訊</p>
+          </object>
+        </div>
+        <div
+          class="productInfo col-12 col-sm-6 col-lg-3 d-flex justify-content-center"
+        >
+          <object
+            type="text/html"
+            data="products/product3/index_showProduct.html"
+          >
+            <p>無法取得商品資訊</p>
+          </object>
+        </div>
+        <div
+          class="productInfo col-12 col-sm-6 col-lg-3 d-flex justify-content-center"
+        >
+          <object
+            type="text/html"
+            data="products/product4/index_showProduct.html"
+          >
+            <p>無法取得商品資訊</p>
+          </object>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-around align-items-center">
+        <div class="productInfo col-12 col-md-6 d-flex justify-content-center">
+          <object
+            type="text/html"
+            data="products/product5/index_showProduct.html"
+          >
+            <p>無法取得商品資訊</p>
+          </object>
+        </div>
+        <div class="productInfo col-12 col-md-6 d-flex justify-content-center">
+          <object
+            type="text/html"
+            data="products/product6/index_showProduct.html"
+          >
+            <p>無法取得商品資訊</p>
+          </object>
+        </div>
+      </div>
+    </div>
+    <div
+      id="contactInfo"
+      class="main3 container-fluid container-fluid d-flex flex-column justify-content-center align-items-center"
+    >
+      <div
+        class="contact container-fluid d-flex flex-column justify-content-center align-items-center"
+      >
+        <h2 class="text-center">聯絡我們</h2>
+        <iframe src="contact/contact2.html"></iframe>
+      </div>
+    </div>
+    <img src="images/scroll_top.png" onclick="topFunction()" id="backTopBtn" />
+    <div class="container-fluid main-footer text-center">
+      &copy; copyright by JD Chen
+    </div>
+    <link rel="stylesheet" href="cs/style.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
+      integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
