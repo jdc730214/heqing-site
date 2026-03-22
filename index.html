@@ -1807,7 +1807,7 @@
               statusTxt.textContent = "ERR: USER_NOT_SYNCED_TO_SQL";
             } else if (apiResponse.ok) {
               const userData = await apiResponse.json();
-              statusTxt.textContent = `ACCESS_GRANTED // POINTS: ${userData.pointsBalance}`;
+              statusTxt.textContent = `ACCESS_GRANTED // POINTS: ${userData.PointsBalance}`;
               statusTxt.style.color = "var(--text-color)";
               statusBar.classList.add("ok");
             }
