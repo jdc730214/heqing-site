@@ -1848,7 +1848,7 @@
           }
           msalUpdateUI();
         })
-        .catch((err) => console.error("[MSAL]", err));
+        .catch((err) => { console.error("[MSAL]", err); msalUpdateUI(); });
 
       // ===== Mobile nav =====
       const navToggle = document.getElementById("navToggle");
