@@ -5,8 +5,10 @@
       "rewrite": "/admin/index.html"
     },
     {
-      "route": "/admin/*",
-      "rewrite": "/admin/index.html"
+      "route": "/admin/assets/*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
     }
   ],
   "navigationFallback": {
