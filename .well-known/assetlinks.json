@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.heqing.hrapp",
+    "sha256_cert_fingerprints": [
+      "6A:14:45:B1:C5:76:32:B4:0F:4D:6A:4D:8B:08:78:C2:FE:66:C5:9C:9C:EC:78:33:81:5F:47:C3:64:38:47:17"
+    ]
+  }
+}]
