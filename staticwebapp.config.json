@@ -1,6 +1,16 @@
 {
+  "routes": [
+    {
+      "route": "/admin",
+      "rewrite": "/admin/index.html"
+    },
+    {
+      "route": "/admin/*",
+      "rewrite": "/admin/index.html"
+    }
+  ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/.well-known/*"]
+    "exclude": ["/.well-known/*", "/admin/*"]
   }
 }
