@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>心率監測 | HR Monitor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      padding: 24px;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #7d8590;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .bpm-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bpm-value {
+      font-size: 9rem;
+      font-weight: 700;
+      line-height: 1;
+      color: #f85149;
+      transition: color 0.3s;
+      font-variant-numeric: tabular-nums;
+      min-width: 3ch;
+      text-align: center;
+    }
+
+    .bpm-value.connected { color: #3fb950; }
+    .bpm-value.idle { color: #30363d; }
+
+    .bpm-unit {
+      font-size: 1.4rem;
+      color: #7d8590;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .pulse-ring {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #3fb950;
+      box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.4);
+      display: none;
+    }
+
+    .pulse-ring.active {
+      display: block;
+      animation: pulse 1s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(63,185,80,0.6); }
+      70%  { box-shadow: 0 0 0 12px rgba(63,185,80,0); }
+      100% { box-shadow: 0 0 0 0 rgba(63,185,80,0); }
+    }
+
+    .status {
+      font-size: 0.9rem;
+      color: #7d8590;
+      text-align: center;
+      min-height: 1.4em;
+    }
+
+    .btn {
+      padding: 12px 32px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, background 0.2s;
+      letter-spacing: 0.05em;
+    }
+
+    .btn:hover { opacity: 0.85; }
+    .btn:disabled { opacity: 0.4; cursor: default; }
+
+    .btn-connect {
+      background: #238636;
+      color: #fff;
+    }
+
+    .btn-disconnect {
+      background: #21262d;
+      color: #f85149;
+      border: 1px solid #f0454533;
+    }
+
+    .device-name {
+      font-size: 0.8rem;
+      color: #7d8590;
+      text-align: center;
+    }
+
+    .no-support {
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px 24px;
+      font-size: 0.9rem;
+      color: #f85149;
+      text-align: center;
+      max-width: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>心率監測 &nbsp;|&nbsp; HR Monitor</h1>
+
+  <div class="bpm-display">
+    <div class="bpm-value idle" id="bpmValue">--</div>
+    <div class="bpm-unit">BPM</div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="pulse-ring" id="pulseRing"></div>
+    <div class="status" id="status">等待連線 / Waiting to connect</div>
+  </div>
+
+  <div id="deviceName" class="device-name"></div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn btn-connect" id="btnConnect">連接心率錶 / Connect HR Monitor</button>
+    <button class="btn btn-disconnect" id="btnDisconnect" style="display:none;">中斷連線 / Disconnect</button>
+  </div>
+
+  <div id="noSupport" class="no-support" style="display:none;">
+    此瀏覽器不支援 Web Bluetooth API。<br>
+    This browser does not support Web Bluetooth API.<br><br>
+    請使用 Chrome 或 Edge 桌面版。<br>
+    Please use Chrome or Edge (desktop).
+  </div>
+
+<script>
+  // Standard BLE Heart Rate Service & Characteristic UUIDs
+  // 標準 BLE 心率服務 UUID（與 hr_app 相同）
+  const HR_SERVICE_UUID = 0x180D;
+  const HR_MEASUREMENT_UUID = 0x2A37;
+
+  const bpmValue   = document.getElementById('bpmValue');
+  const statusEl   = document.getElementById('status');
+  const pulseRing  = document.getElementById('pulseRing');
+  const deviceName = document.getElementById('deviceName');
+  const btnConnect    = document.getElementById('btnConnect');
+  const btnDisconnect = document.getElementById('btnDisconnect');
+  const noSupport  = document.getElementById('noSupport');
+
+  let device = null;
+  let characteristic = null;
+
+  // Check Web Bluetooth support
+  if (!navigator.bluetooth) {
+    noSupport.style.display = 'block';
+    btnConnect.disabled = true;
+  }
+
+  btnConnect.addEventListener('click', connect);
+  btnDisconnect.addEventListener('click', disconnect);
+
+  async function connect() {
+    try {
+      setStatus('掃描裝置中... / Scanning...', false);
+      btnConnect.disabled = true;
+
+      device = await navigator.bluetooth.requestDevice({
+        filters: [{ services: [HR_SERVICE_UUID] }],
+        optionalServices: [HR_SERVICE_UUID]
+      });
+
+      device.addEventListener('gattserverdisconnected', onDisconnected);
+
+      setStatus('連線中... / Connecting...', false);
+      const server = await device.gatt.connect();
+
+      const service = await server.getPrimaryService(HR_SERVICE_UUID);
+      characteristic = await service.getCharacteristic(HR_MEASUREMENT_UUID);
+
+      await characteristic.startNotifications();
+      characteristic.addEventListener('characteristicvaluechanged', onHRData);
+
+      // Initial read
+      try {
+        const initial = await characteristic.readValue();
+        onHRData({ target: { value: initial } });
+      } catch (_) {}
+
+      deviceName.textContent = device.name || 'Unknown Device';
+      setStatus('已連線 / Connected', true);
+      btnConnect.style.display = 'none';
+      btnDisconnect.style.display = 'inline-block';
+      bpmValue.classList.remove('idle', 'active');
+      bpmValue.classList.add('connected');
+      pulseRing.classList.add('active');
+
+    } catch (err) {
+      if (err.name === 'NotFoundError' || err.name === 'AbortError') {
+        setStatus('取消選擇 / Cancelled', false);
+      } else {
+        setStatus('連線失敗：' + err.message, false);
+      }
+      btnConnect.disabled = false;
+    }
+  }
+
+  async function disconnect() {
+    if (characteristic) {
+      try { await characteristic.stopNotifications(); } catch (_) {}
+      characteristic = null;
+    }
+    if (device && device.gatt.connected) {
+      device.gatt.disconnect();
+    }
+    device = null;
+    resetUI();
+  }
+
+  function onDisconnected() {
+    setStatus('連線中斷 / Disconnected', false);
+    resetUI();
+  }
+
+  function resetUI() {
+    bpmValue.textContent = '--';
+    bpmValue.className = 'bpm-value idle';
+    pulseRing.classList.remove('active');
+    deviceName.textContent = '';
+    btnConnect.style.display = 'inline-block';
+    btnConnect.disabled = false;
+    btnDisconnect.style.display = 'none';
+    setStatus('等待連線 / Waiting to connect', false);
+  }
+
+  function onHRData(event) {
+    const value = event.target.value;
+    const bpm = parseHrMeasurement(value);
+    if (bpm !== null) {
+      bpmValue.textContent = bpm;
+      // Pulse animation on each beat
+      bpmValue.style.transform = 'scale(1.05)';
+      setTimeout(() => { bpmValue.style.transform = 'scale(1)'; }, 100);
+    }
+  }
+
+  // Parse BLE Heart Rate Measurement (same logic as Flutter _parseHrMeasurement)
+  // 解析方式與 hr_app 的 _parseHrMeasurement 相同
+  function parseHrMeasurement(dataView) {
+    if (!dataView || dataView.byteLength < 1) return null;
+    const flags = dataView.getUint8(0);
+    const is16bit = (flags & 0x01) !== 0;
+    if (!is16bit) {
+      if (dataView.byteLength < 2) return null;
+      return dataView.getUint8(1);
+    } else {
+      if (dataView.byteLength < 3) return null;
+      return dataView.getUint16(1, true); // little-endian
+    }
+  }
+
+  function setStatus(msg, isConnected) {
+    statusEl.textContent = msg;
+    statusEl.style.color = isConnected ? '#3fb950' : '#7d8590';
+  }
+</script>
+</body>
+</html>
