@@ -35,23 +35,25 @@ ${a}`);return}throw _o(e.error,e.error_description,e.suberror)?new ee(e.error,e.
                 <td class="text-muted small">${s}</td>
                 <td>${t.UserCount??t.userCount??0}</td>
                 <td>${Gl(t.CreatedAt??t.createdAt)}</td>
-                <td class="d-flex gap-2">
-                  <button class="btn btn-outline-primary btn-sm"
-                    onclick="window.location.hash='#/groups/${n}/users'">
-                    <i class="bi bi-people me-1"></i>管理使用者
-                  </button>
-                  <button class="btn btn-outline-info btn-sm"
-                    onclick="openManagersModal(${n}, '${X(o)}')">
-                    <i class="bi bi-person-gear me-1"></i>管理者
-                  </button>
-                  <button class="btn btn-outline-secondary btn-sm"
-                    onclick="openEditGroup(${n}, '${X(o)}', '${X(i)}')">
-                    <i class="bi bi-pencil"></i>
-                  </button>
-                  <button class="btn btn-outline-danger btn-sm"
-                    onclick="confirmDeleteGroup(${n}, '${X(o)}')">
-                    <i class="bi bi-trash"></i>
-                  </button>
+                <td>
+                  <div class="d-flex gap-2 align-items-center">
+                    <button class="btn btn-outline-primary btn-sm"
+                      onclick="window.location.hash='#/groups/${n}/users'">
+                      <i class="bi bi-people me-1"></i>管理使用者
+                    </button>
+                    <button class="btn btn-outline-info btn-sm"
+                      onclick="openManagersModal(${n}, '${X(o)}')">
+                      <i class="bi bi-person-gear me-1"></i>管理者
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm"
+                      onclick="openEditGroup(${n}, '${X(o)}', '${X(i)}')">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm"
+                      onclick="confirmDeleteGroup(${n}, '${X(o)}')">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>`}).join("")}
           </tbody>
