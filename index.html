@@ -1457,8 +1457,8 @@
       </div>
     </section>
 
-    <!-- ===== KEYGEN SECTION ===== -->
-    <section class="section" id="keygen-section">
+    <!-- KEYGEN_CONSOLE moved to admin panel (#/keygen) -->
+    <section class="section d-none" id="keygen-section">
       <div class="container">
         <h2 class="section-title">KEYGEN_CONSOLE</h2>
 
@@ -2567,12 +2567,12 @@
       })();
     </script>
 
-    <!-- ===== KEYGEN LOGIC ===== -->
+    <!-- KEYGEN LOGIC removed — moved to admin panel -->
     <script>
       (function () {
-        const KG_PW = "jd5828828";
+        // keygen moved to /admin#/keygen — nothing to do here
 
-        /* ---- generators ---- */
+        /* ---- generators (unused, kept for reference only) ---- */
         function kgGenerateHostCode() {
           const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
           let out = "";
