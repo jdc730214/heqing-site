@@ -28,11 +28,11 @@ ${a}`);return}throw _o(e.error,e.error_description,e.suberror)?new ee(e.error,e.
             </tr>
           </thead>
           <tbody>
-            ${e.map(t=>{const n=t.GroupID??t.groupID,o=t.Name??t.name,i=t.AppID??t.appID,a=t.ManagerNames??t.managerNames??"-";return`
+            ${e.map(t=>{const n=t.GroupID??t.groupID,o=t.Name??t.name,i=t.AppID??t.appID,a=t.ManagerNames??t.managerNames??"",s=a?a.split("，").map(c=>`<div>${X(c.trim())}</div>`).join(""):"<div>-</div>";return`
               <tr>
                 <td class="fw-semibold">${X(o)}</td>
                 <td><span class="badge bg-secondary">${Fl(i)}</span></td>
-                <td class="text-muted small">${X(a)}</td>
+                <td class="text-muted small">${s}</td>
                 <td>${t.UserCount??t.userCount??0}</td>
                 <td>${Gl(t.CreatedAt??t.createdAt)}</td>
                 <td class="d-flex gap-2">
