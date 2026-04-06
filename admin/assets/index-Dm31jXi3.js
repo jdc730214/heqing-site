@@ -171,6 +171,7 @@ ${a}`);return}throw No(e.error,e.error_description,e.suberror)?new oe(e.error,e.
               <th>登入碼（病歷號）</th>
               <th>備註</th>
               <th>生日</th>
+              <th>性別</th>
               <th>訓練區間（bpm）</th>
               <th>開始日期</th>
               <th>結束日期</th>
@@ -184,6 +185,7 @@ ${a}`);return}throw No(e.error,e.error_description,e.suberror)?new oe(e.error,e.
                 <td class="fw-semibold">${De(t.LoginID??t.loginID)}</td>
                 <td>${De(t.Note??t.note)||"-"}</td>
                 <td>${en(t.BirthDate??t.birthDate)||"-"}</td>
+                <td>${{M:"男",F:"女",O:"其他"}[t.Sex??t.sex]??"-"}</td>
                 <td>${i}</td>
                 <td>${en(t.StartDate??t.startDate)}</td>
                 <td>${en(t.EndDate??t.endDate)}</td>
@@ -301,9 +303,20 @@ ${a}`);return}throw No(e.error,e.error_description,e.suberror)?new oe(e.error,e.
           <label class="form-label">備註（科別等）</label>
           <input type="text" class="form-control" id="u-note" value="${De((t==null?void 0:t.Note)??(t==null?void 0:t.note)??"")}" placeholder="例：心臟科" />
         </div>
-        <div class="mb-3">
-          <label class="form-label">生日</label>
-          <input type="date" class="form-control" id="u-birthDate" value="${tn((t==null?void 0:t.BirthDate)??(t==null?void 0:t.birthDate))}" />
+        <div class="row">
+          <div class="col mb-3">
+            <label class="form-label">生日</label>
+            <input type="date" class="form-control" id="u-birthDate" value="${tn((t==null?void 0:t.BirthDate)??(t==null?void 0:t.birthDate))}" />
+          </div>
+          <div class="col mb-3">
+            <label class="form-label">性別</label>
+            <select class="form-select" id="u-sex">
+              <option value="">未填</option>
+              <option value="M" ${((t==null?void 0:t.Sex)??(t==null?void 0:t.sex))==="M"?"selected":""}>男</option>
+              <option value="F" ${((t==null?void 0:t.Sex)??(t==null?void 0:t.sex))==="F"?"selected":""}>女</option>
+              <option value="O" ${((t==null?void 0:t.Sex)??(t==null?void 0:t.sex))==="O"?"selected":""}>其他</option>
+            </select>
+          </div>
         </div>
         <div class="row">
           <div class="col mb-3">
@@ -341,7 +354,7 @@ ${a}`);return}throw No(e.error,e.error_description,e.suberror)?new oe(e.error,e.
       <button class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
       <button class="btn btn-primary" id="btn-confirm-user">${n?"儲存":"建立"}</button>
     </div>
-  `),n)try{const o=await Gi("group_user",String(e)),i=o.MinHR??o.minHR,a=o.MaxHR??o.maxHR;i!=null&&(document.getElementById("u-hrMin").value=i),a!=null&&(document.getElementById("u-hrMax").value=a)}catch{}document.getElementById("btn-confirm-user").addEventListener("click",async()=>{const o=document.getElementById("u-startDate").value,i=document.getElementById("u-endDate").value;if(!o||!i){_("請填寫開始與結束日期","danger");return}let a=null,s=null;if(n){const c=document.getElementById("u-hrMin").value,l=document.getElementById("u-hrMax").value;if(a=c?Number(c):null,s=l?Number(l):null,a!=null!=(s!=null)){_("最低與最高訓練心率請同時填寫或同時留空","warning");return}if(a!=null&&s!=null&&a>=s){_("最低訓練心率必須小於最高訓練心率","warning");return}}try{if(n)await Dl(e,{note:document.getElementById("u-note").value,birthDate:document.getElementById("u-birthDate").value||null,startDate:o,endDate:i,isActive:document.getElementById("u-isActive").checked}),await Ul({ownerType:"group_user",ownerId:String(e),minHR:a,maxHR:s});else{const c=document.getElementById("u-loginId").value.trim();if(!c){_("請填寫登入碼","danger");return}await Ll(r,{loginId:c,note:document.getElementById("u-note").value,birthDate:document.getElementById("u-birthDate").value||null,startDate:o,endDate:i})}ie(),_(n?"已儲存":"使用者建立成功"),await Vt(r)}catch(c){_(`失敗：${c.message}`,"danger")}})}function De(r){return String(r??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}function en(r){return r?new Date(r).toLocaleDateString("zh-TW"):""}function tn(r){return r?new Date(r).toISOString().split("T")[0]:""}const td="https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api";async function Me(r,e,t){const n=await ut(),o=await fetch(`${td}${e}`,{method:r,headers:{Authorization:`Bearer ${n}`,"Content-Type":"application/json"},body:t?JSON.stringify(t):void 0});if(!o.ok){const i=await o.json().catch(()=>({}));throw new Error(i.message||i.error||`HTTP ${o.status}`)}return o.json()}const nd=()=>Me("GET","/platform/accounts"),od=r=>Me("POST","/platform/accounts",r),rd=(r,e)=>Me("PUT",`/platform/accounts/${r}`,e),Yi=(r,e)=>Me("PUT",`/platform/accounts/${r}/role`,e),id=()=>Me("GET","/platform/members"),ad=r=>Me("POST","/platform/members",r),sd=(r,e)=>Me("PUT",`/platform/members/${r}`,e),Yt=[{id:"hrtrain",label:"禾青心訓"},{id:"bodygo",label:"BodyGo"}];async function ho(){const r=document.getElementById("main-content");r.innerHTML=`
+  `),n)try{const o=await Gi("group_user",String(e)),i=o.MinHR??o.minHR,a=o.MaxHR??o.maxHR;i!=null&&(document.getElementById("u-hrMin").value=i),a!=null&&(document.getElementById("u-hrMax").value=a)}catch{}document.getElementById("btn-confirm-user").addEventListener("click",async()=>{const o=document.getElementById("u-startDate").value,i=document.getElementById("u-endDate").value;if(!o||!i){_("請填寫開始與結束日期","danger");return}let a=null,s=null;if(n){const c=document.getElementById("u-hrMin").value,l=document.getElementById("u-hrMax").value;if(a=c?Number(c):null,s=l?Number(l):null,a!=null!=(s!=null)){_("最低與最高訓練心率請同時填寫或同時留空","warning");return}if(a!=null&&s!=null&&a>=s){_("最低訓練心率必須小於最高訓練心率","warning");return}}try{if(n)await Dl(e,{note:document.getElementById("u-note").value,birthDate:document.getElementById("u-birthDate").value||null,sex:document.getElementById("u-sex").value||null,startDate:o,endDate:i,isActive:document.getElementById("u-isActive").checked}),await Ul({ownerType:"group_user",ownerId:String(e),minHR:a,maxHR:s});else{const c=document.getElementById("u-loginId").value.trim();if(!c){_("請填寫登入碼","danger");return}await Ll(r,{loginId:c,note:document.getElementById("u-note").value,birthDate:document.getElementById("u-birthDate").value||null,sex:document.getElementById("u-sex").value||null,startDate:o,endDate:i})}ie(),_(n?"已儲存":"使用者建立成功"),await Vt(r)}catch(c){_(`失敗：${c.message}`,"danger")}})}function De(r){return String(r??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}function en(r){return r?new Date(r).toLocaleDateString("zh-TW"):""}function tn(r){return r?new Date(r).toISOString().split("T")[0]:""}const td="https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api";async function Me(r,e,t){const n=await ut(),o=await fetch(`${td}${e}`,{method:r,headers:{Authorization:`Bearer ${n}`,"Content-Type":"application/json"},body:t?JSON.stringify(t):void 0});if(!o.ok){const i=await o.json().catch(()=>({}));throw new Error(i.message||i.error||`HTTP ${o.status}`)}return o.json()}const nd=()=>Me("GET","/platform/accounts"),od=r=>Me("POST","/platform/accounts",r),rd=(r,e)=>Me("PUT",`/platform/accounts/${r}`,e),Yi=(r,e)=>Me("PUT",`/platform/accounts/${r}/role`,e),id=()=>Me("GET","/platform/members"),ad=r=>Me("POST","/platform/members",r),sd=(r,e)=>Me("PUT",`/platform/members/${r}`,e),Yt=[{id:"hrtrain",label:"禾青心訓"},{id:"bodygo",label:"BodyGo"}];async function ho(){const r=document.getElementById("main-content");r.innerHTML=`
     <h4 class="mb-4"><i class="bi bi-person-gear me-2"></i>帳號管理</h4>
 
     <ul class="nav nav-tabs mb-4" id="accounts-tabs">
