@@ -676,6 +676,10 @@ async function _voicePage({ guard, question, hint, say, keywords, similar, saveK
   _typewrite(DOM.qText, question, 90);
   _typewrite(DOM.qHint, hint, 60);
 
+  // 跨次語音累積：iOS continuous:true 的 raw 本身就是累積的；
+  // Android continuous:false 每次重啟後 raw 只有當次，需手動疊加
+  let _accum = '';
+
   try {
     await _speak(say, 0.9, guard);
     if (!guard()) return;
@@ -687,7 +691,12 @@ async function _voicePage({ guard, question, hint, say, keywords, similar, saveK
     }
 
     _startRecognition(guard, (raw) => {
-      const t = _applySimilar(_normalize(raw), similar);
+      if (_isIOS) {
+        _accum = raw;                             // iOS: browser 已累積
+      } else {
+        _accum = (_accum + ' ' + raw).trim();     // Android: 手動累積
+      }
+      const t = _applySimilar(_normalize(_accum), similar);
       _updateWhiteBox(_highlight(t, keywords));
 
       // 判斷答對（checkFn 存在用 checkFn，否則用 keywords 全匹配；兩者至少有一個才能自動跳）
