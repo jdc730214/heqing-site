@@ -15,6 +15,30 @@
       "rewrite": "/icope/index.html"
     },
     {
+      "route": "/icope/index.html"
+    },
+    {
+      "route": "/icope/script.js"
+    },
+    {
+      "route": "/icope/license.js"
+    },
+    {
+      "route": "/icope/shared-storage.js"
+    },
+    {
+      "route": "/icope/fonts/*"
+    },
+    {
+      "route": "/icope/images/*"
+    },
+    {
+      "route": "/icope/libs/*"
+    },
+    {
+      "route": "/icope/sounds/*"
+    },
+    {
       "route": "/icope/*",
       "rewrite": "/icope/index.html"
     }
