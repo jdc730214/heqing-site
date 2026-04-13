@@ -9,10 +9,14 @@
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
+    },
+    {
+      "route": "/icope",
+      "rewrite": "/icope/index.html"
     }
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/.well-known/*", "/admin/*"]
+    "exclude": ["/.well-known/*", "/admin/*", "/icope/*"]
   }
 }
