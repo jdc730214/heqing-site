@@ -9,9 +9,8 @@
 // ─────────────────────────────────────────────
 const synth = window.speechSynthesis;
 
-// iOS 判斷：iPhone / iPad / iPod，或使用 Apple Silicon Mac (iPad UA)
-const _isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+// _isIOS は audioProcessFromBrowser.js (先に読込) で宣言済み — ここでは使い回す
+// _isIOS is declared in audioProcessFromBrowser.js (loaded first) — reused here
 
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
