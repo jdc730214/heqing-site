@@ -568,6 +568,18 @@ function _permBtnClick() {
 
 DOM.permStartBtn.onclick = _permBtnClick;
 
+// iOS 靜音模式提醒：硬體靜音鍵會完全停用 Web Audio 與 TTS，網頁端無法繞過
+// 在授權面板底部插入提示文字
+if (_isIOS) {
+  const panel = document.querySelector('.perm-panel');
+  if (panel) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:0.73rem;color:#c44;margin-top:0.6rem;text-align:left;line-height:1.4;';
+    note.textContent = '⚠️ iOS 裝置：若聽不到聲音，請確認手機側面的靜音開關已關閉。';
+    panel.appendChild(note);
+  }
+}
+
 function _startAssessment() {
   DOM.permStartBtn.disabled = true;
   // 清除上一次的答案，避免舊資料殘留到結果頁
@@ -712,9 +724,9 @@ function _setupVoiceDate(guard) {
       const hasM = new RegExp(ms + '[月份]').test(t);
       // 日：X日 或 X號
       const hasD = new RegExp(ds + '[日號]').test(t);
-      // 至少 2 個部分正確即算對
+      // 三個部分（年、月、日）都需正確
       const correct = [hasY, hasM, hasD].filter(Boolean).length;
-      return correct >= 2;
+      return correct >= 3;
     },
   });
 }
@@ -1035,13 +1047,54 @@ function _setBadgeEl(id, cls, text) {
   el.textContent = text;
 }
 
-// Save screenshot
+// Save screenshot — capture full result card (not just visible viewport)
 document.getElementById('saveBtn').addEventListener('click', () => {
-  html2canvas(document.getElementById('card-result')).then(canvas => {
-    const a = document.createElement('a');
-    a.download = `ICOPE_${new Date().toLocaleDateString('zh-TW')}.png`;
-    a.href = canvas.toDataURL();
-    a.click();
+  const card = document.getElementById('card-result');
+  const deck = document.querySelector('.deck');
+  const fullH = card.scrollHeight;
+  const fullW = card.offsetWidth;
+
+  // Temporarily expand clipping parents so html2canvas sees full content
+  const prev = {
+    deckOverflow: deck.style.overflow,
+    cardBottom:   card.style.bottom,
+    cardHeight:   card.style.height,
+    cardMaxH:     card.style.maxHeight,
+    cardOverflow: card.style.overflow,
+  };
+  deck.style.overflow  = 'visible';
+  card.style.bottom    = 'auto';          // release inset:0 bottom constraint
+  card.style.height    = fullH + 'px';
+  card.style.maxHeight = 'none';
+  card.style.overflow  = 'visible';
+
+  requestAnimationFrame(() => {
+    html2canvas(card, {
+      useCORS: true,
+      scrollY: 0,
+      scrollX: 0,
+      width:  fullW,
+      height: fullH,
+    }).then(canvas => {
+      // Restore styles
+      deck.style.overflow  = prev.deckOverflow;
+      card.style.bottom    = prev.cardBottom;
+      card.style.height    = prev.cardHeight;
+      card.style.maxHeight = prev.cardMaxH;
+      card.style.overflow  = prev.cardOverflow;
+
+      const a = document.createElement('a');
+      a.download = `ICOPE_${new Date().toLocaleDateString('zh-TW')}.png`;
+      a.href = canvas.toDataURL('image/jpeg', 0.92);
+      a.click();
+    }).catch(() => {
+      // Restore on error too
+      deck.style.overflow  = prev.deckOverflow;
+      card.style.bottom    = prev.cardBottom;
+      card.style.height    = prev.cardHeight;
+      card.style.maxHeight = prev.cardMaxH;
+      card.style.overflow  = prev.cardOverflow;
+    });
   });
 });
 

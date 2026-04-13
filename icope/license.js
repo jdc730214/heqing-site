@@ -134,5 +134,13 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
 
   btn.addEventListener('click', doValidate)
   input.addEventListener('keydown', e => { if (e.key === 'Enter') doValidate() })
-  input.focus()
+
+  // URL 帶碼自動登入：https://heqinghealth.com/icope?code=XXXX-XXXX-XXXX
+  const urlCode = new URLSearchParams(window.location.search).get('code')
+  if (urlCode) {
+    input.value = urlCode.toUpperCase()
+    doValidate()   // 自動驗證，不需使用者手動按確認
+  } else {
+    input.focus()
+  }
 })()
