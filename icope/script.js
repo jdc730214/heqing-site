@@ -265,6 +265,8 @@ function _stopRecognition() {
     document.removeEventListener('audioProcessed', _recHandler);
     _recHandler = null;
   }
+  // 銷毀引擎（nullify handlers 防止幽靈 callback）
+  if (audioProcessorFromBrowser) audioProcessorFromBrowser.stopRecognition();
 }
 
 function _startRecognition(guard, onResult) {
@@ -274,20 +276,24 @@ function _startRecognition(guard, onResult) {
     document.removeEventListener('audioProcessed', _recHandler);
     _recHandler = null;
   }
+  isStopRecognition = true;   // 新引擎啟動前先鎖定，避免舊引擎殘留結果漏進來
 
   _recHandler = (e) => {
     if (!guard() || isStopRecognition) return;
-    const { transcript, error } = e.detail;
-    if (error) { console.warn('辨識錯誤:', error); return; }
+    const { transcript } = e.detail;
     if (!transcript) return;
     onResult(transcript);
   };
   document.addEventListener('audioProcessed', _recHandler);
 
-  // 把舊題結果偏移量推進，確保引擎持續運行（不 stop/start 避免 iOS 失敗）
-  audioProcessorFromBrowser.restartForQuestion(null);
-  isStopRecognition = false;
-  _showEar();
+  // 每題都建立全新的 SpeechRecognition 物件（Android 相容性關鍵）：
+  // TTS 播放時 Android 會強制停止舊引擎，若舊物件卡在錯誤狀態
+  // 直接 start() 會靜默失敗。新物件保證乾淨啟動。
+  audioProcessorFromBrowser.restartForQuestion(() => {
+    if (!guard()) return;
+    isStopRecognition = false;
+    _showEar();
+  });
 }
 
 // ─────────────────────────────────────────────

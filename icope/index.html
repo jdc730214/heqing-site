@@ -174,6 +174,22 @@
         padding-bottom: env(safe-area-inset-bottom);
       }
 
+      /* 版本標籤（右下角固定，方便測試時識別） */
+      .app-version {
+        position: fixed;
+        bottom: max(6px, env(safe-area-inset-bottom));
+        right: 8px;
+        font-size: 9px;
+        color: rgba(255,255,255,0.45);
+        background: rgba(0,0,0,0.28);
+        border-radius: 4px;
+        padding: 2px 5px;
+        pointer-events: none;
+        z-index: 9999;
+        letter-spacing: 0.3px;
+        font-family: monospace;
+      }
+
       /* 首頁時讓 app-shell 背景與 card-home 漸層一致，消除 footer 白邊 */
       .app-shell.is-home {
         background: linear-gradient(145deg, #0d2b6b 0%, #1565c0 35%, #00695c 70%, #004d40 100%);
@@ -1372,6 +1388,7 @@
         </button>
       </div>
     </div>
+    <div class="app-version">v4.3 · 2026-04-13</div>
     <!-- /app-shell -->
 
     <!-- DEV ONLY -->
