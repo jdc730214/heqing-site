@@ -672,33 +672,46 @@ DOM.btnMotion.addEventListener('click', function() {
   const pageGuard = (() => { const t = _pageToken; return () => t === _pageToken; })();
 
   if (_motionDetector) { _motionDetector.stopDetection(); _motionDetector = null; }
-  _motionDetector = new MotionDetection({ threshold: 1.2, duration: 250, maxCount: 5 });
+  _motionDetector = new MotionDetection({
+    maxCount:      5,      // 目標 5 次坐站
+    upperThresh:   0.8,    // 進入動作狀態閾值 (m/s²)
+    lowerThresh:   0.3,    // 回靜止狀態閾值 (m/s²)
+    minIntervalMs: 600,    // 同一峰值最短間隔
+    emaAlpha:      0.25,   // EMA 濾波速度
+    timeoutSec:    300,
+    // 每偵測到一個半次（坐→站 or 站→坐）呼叫一次
+    onPeakCount: (peakCount, repCount) => {
+      if (!pageGuard()) return;
+      _udCount = repCount;
+      DOM.motionCount.textContent = repCount;
+      // 偶數峰 = 完成一次完整坐站，語音播報次數
+      if (peakCount % 2 === 0 && repCount > 0) {
+        _speak(String(repCount), 1, () => true);
+      }
+    },
+    onComplete: ({ totalTime, repCount, isTimeout }) => {
+      if (!pageGuard()) return;
+      _udCount = repCount;
+      _udTime  = parseFloat(totalTime) || 0;
+      DOM.motionCount.textContent = repCount;
+      DOM.motionTime.textContent  = _udTime;
+      _stopCountdown();
+      const msg = isTimeout ? '時間到！' : '測試完成！';
+      _speak(msg, 1, () => true).then(() => {
+        _saveMotionResult();
+        _showNxt();
+      }).catch(() => {});
+      if (_motionDetector) { _motionDetector.stopDetection(); _motionDetector = null; }
+    },
+  });
   _motionDetector.startDetection();
   _startCountdown(300, pageGuard, () => {
-    // 300s timeout
+    // 300s 逾時 fallback（onComplete 的 isTimeout 已處理，此處補保險）
+    if (!_motionDetector) return;
     _udTime = 300;
     _saveMotionResult();
     _showNxt();
   });
-});
-
-document.addEventListener('motionDetected', (e) => {
-  const { count } = e.detail;
-  _udCount = count;
-  DOM.motionCount.textContent = count;
-  _speak(String(count), 1, () => true);
-});
-
-document.addEventListener('motionComplete', (e) => {
-  const { totalTime } = e.detail;
-  _udTime = parseFloat(totalTime) || 0;
-  DOM.motionTime.textContent = _udTime;
-  _stopCountdown();
-  _speak('測試完成！', 1, () => true).then(() => {
-    _saveMotionResult();
-    _showNxt();
-  }).catch(() => {});
-  if (_motionDetector) { _motionDetector.stopDetection(); _motionDetector = null; }
 });
 
 function _saveMotionResult() {
