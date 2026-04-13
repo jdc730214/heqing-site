@@ -592,14 +592,15 @@ function _permBtnClick() {
     } catch (_) {}
 
     // ③ SR 啟動：iOS 要求 start() 在手勢同步路徑中（任何 await 後就失效）
-    if (!audioProcessorFromBrowser) {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SR) {
+    // 每次點擊都重啟，確保「重試授權」時 SR 也能在手勢路徑中重新 start()
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      if (!audioProcessorFromBrowser) {
         audioProcessorFromBrowser = new AudioProcessFromBrowser();
-        if (audioProcessorFromBrowser.initRecognition()) {
-          audioProcessorFromBrowser.startRecognition();  // 同步，在手勢路徑中 ✓
-          isStopRecognition = true;
-        }
+      }
+      if (audioProcessorFromBrowser.initRecognition()) {
+        audioProcessorFromBrowser.startRecognition();  // 同步，在手勢路徑中 ✓
+        isStopRecognition = true;
       }
     }
   }
@@ -607,6 +608,26 @@ function _permBtnClick() {
 }
 
 DOM.permStartBtn.onclick = _permBtnClick;
+
+// SR 麥克風權限被拒時（iOS not-allowed error）更新 badge 並提示使用者
+document.addEventListener('srPermissionDenied', () => {
+  _permState.mic = false;
+  _setBadge('perm-mic', 'fail', '未授權');
+  DOM.permStartBtn.textContent = '重試授權';
+  DOM.permStartBtn.disabled = false;
+  DOM.permStartBtn.onclick = _permBtnClick;
+  // iOS 提示：引導使用者至系統設定開啟麥克風
+  if (_isIOS) {
+    const panel = document.querySelector('.perm-panel');
+    if (panel && !document.getElementById('sr-denied-hint')) {
+      const hint = document.createElement('div');
+      hint.id = 'sr-denied-hint';
+      hint.style.cssText = 'font-size:0.73rem;color:#c44;margin-top:0.5rem;text-align:left;line-height:1.5;';
+      hint.textContent = '⚠️ 麥克風授權失敗。請至「設定 → Safari → 麥克風」選擇「允許」，再重新整理頁面後再試。';
+      panel.appendChild(hint);
+    }
+  }
+});
 
 // iOS 靜音模式提醒：硬體靜音鍵會完全停用 Web Audio 與 TTS，網頁端無法繞過
 // 在授權面板底部插入提示文字

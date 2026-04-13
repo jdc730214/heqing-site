@@ -61,6 +61,11 @@ class AudioProcessFromBrowser {
     sr.onerror = (err) => {
       // aborted / no-speech 屬正常，略過
       if (err.error === 'aborted' || err.error === 'no-speech') return;
+      // not-allowed: 麥克風權限被拒 — 通知 script.js 更新 badge
+      if (err.error === 'not-allowed') {
+        document.dispatchEvent(new CustomEvent('srPermissionDenied'));
+        return;
+      }
       console.warn('語音辨識錯誤:', err.error);
     };
 
