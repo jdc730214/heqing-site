@@ -386,7 +386,6 @@
         position: absolute;
         width: 80px;
         height: 80px;
-        margin-top: 180px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.15);
         display: flex;
@@ -406,14 +405,16 @@
         font-weight: 800;
         color: #fff;
         margin-bottom: 3px;
-        z-index: 1;
+        position: relative;
+        z-index: 2;
       }
       .home-sub {
         margin-top: 1px;
         font-size: 0.58rem;
         color: rgba(255, 255, 255, 0.75);
         margin-bottom: 16px;
-        z-index: 1;
+        position: relative;
+        z-index: 2;
       }
 
       /* Permission panel */
@@ -425,7 +426,8 @@
         width: min(calc(100% - 2rem), 7.1rem);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.18);
-        z-index: 1;
+        position: relative;
+        z-index: 2;
       }
       .perm-title {
         font-size: 0.54rem;
@@ -830,12 +832,14 @@
     ══════════════════════════════════════ */
       .app-footer {
         flex-shrink: 0;
-        padding: 0.27rem 0.49rem 0.43rem;
+        padding: 0.27rem 0.49rem 0;
+        /* 確保按鈕不被手勢列或瀏覽器 UI 遮住 */
+        padding-bottom: max(0.55rem, env(safe-area-inset-bottom));
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.49rem;
-        min-height: 2.4rem;
+        min-height: 3rem;
         background: transparent;
       }
 

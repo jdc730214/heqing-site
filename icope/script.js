@@ -269,14 +269,12 @@ function _stopRecognition() {
 
 function _startRecognition(guard, onResult) {
   if (!audioProcessorFromBrowser) return;
-  // 先移除舊 handler，再設定新的
+  // 移除舊 handler
   if (_recHandler) {
     document.removeEventListener('audioProcessed', _recHandler);
     _recHandler = null;
   }
-  audioProcessorFromBrowser.resetOffset();
-  isStopRecognition = false;
-  _showEar();
+  isStopRecognition = true; // 先鎖定，等重啟完成再開放
 
   _recHandler = (e) => {
     if (!guard() || isStopRecognition) return;
@@ -286,6 +284,13 @@ function _startRecognition(guard, onResult) {
     onResult(transcript);
   };
   document.addEventListener('audioProcessed', _recHandler);
+
+  // 每題都重新啟動辨識引擎，確保 clean state
+  audioProcessorFromBrowser.restartForQuestion(() => {
+    if (!guard()) return;
+    isStopRecognition = false;
+    _showEar();
+  });
 }
 
 // ─────────────────────────────────────────────
@@ -590,7 +595,7 @@ function _setupVoiceDate(guard) {
   _voicePage({
     guard,
     question: '請說出今天西元幾年幾月幾日。',
-    hint:     '例如：2024年8月15日',
+    hint:     '說出西元年、月、日',
     say:      '請說出今天西元幾年幾月幾日。',
     keywords: [],
     similar:  {},
@@ -634,7 +639,7 @@ function _setupVoiceMem2(guard) {
   _voicePage({
     guard,
     question: '請說出一開始要你記住的三項東西。',
-    hint:     '三項物品：鉛筆、汽車、書',
+    hint:     '請說出您記住的三項物品名稱',
     say:      '請說出一開始要你記住的三項東西。',
     keywords: ['鉛筆', '汽車', '書'],
     similar: {
@@ -673,27 +678,23 @@ DOM.btnMotion.addEventListener('click', function() {
 
   if (_motionDetector) { _motionDetector.stopDetection(); _motionDetector = null; }
   _motionDetector = new MotionDetection({
-    maxCount:      5,      // 目標 5 次坐站
-    upperThresh:   0.8,    // 進入動作狀態閾值 (m/s²)
-    lowerThresh:   0.3,    // 回靜止狀態閾值 (m/s²)
-    minIntervalMs: 600,    // 同一峰值最短間隔
-    emaAlpha:      0.25,   // EMA 濾波速度
+    maxCount:      5,      // 目標 5 次坐站（每次站起 = 1 次）
+    upperThresh:   1.2,    // 偵測站起的 Y 軸閾值 (m/s²)
+    lowerThresh:   0.5,    // 回靜止的閾值
+    minIntervalMs: 800,    // 連續兩次站起最短間隔
+    emaAlpha:      0.3,
     timeoutSec:    300,
-    // 每偵測到一個半次（坐→站 or 站→坐）呼叫一次
-    onPeakCount: (peakCount, repCount) => {
+    onPeakCount: (count) => {
       if (!pageGuard()) return;
-      _udCount = repCount;
-      DOM.motionCount.textContent = repCount;
-      // 偶數峰 = 完成一次完整坐站，語音播報次數
-      if (peakCount % 2 === 0 && repCount > 0) {
-        _speak(String(repCount), 1, () => true);
-      }
+      _udCount = count;
+      DOM.motionCount.textContent = count;
+      _speak(String(count), 1, () => true);
     },
-    onComplete: ({ totalTime, repCount, isTimeout }) => {
+    onComplete: ({ totalTime, count, isTimeout }) => {
       if (!pageGuard()) return;
-      _udCount = repCount;
+      _udCount = count;
       _udTime  = parseFloat(totalTime) || 0;
-      DOM.motionCount.textContent = repCount;
+      DOM.motionCount.textContent = count;
       DOM.motionTime.textContent  = _udTime;
       _stopCountdown();
       const msg = isTimeout ? '時間到！' : '測試完成！';

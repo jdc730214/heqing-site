@@ -2,128 +2,112 @@ class AudioProcessFromBrowser {
   constructor() {
     this.speechRecognition = null;
     this.isRecognizing = false;
-    this._resultOffset = 0;      // 每題開始時重設，只取新增的辨識結果
-    this._lastResultLength = 0;  // 在 onresult 內追蹤真實長度
+    this._resultOffset = 0;
+    this._lastResultLength = 0;
   }
 
-  // 新題開始時呼叫，把目前已累積的結果數記為起點
-  resetOffset() {
-    this._resultOffset = this._lastResultLength;
-  }
-
-  // 初始化語音辨識
+  // 初始化語音辨識引擎（只呼叫一次）
   initRecognition() {
     try {
-      const isIphone = /iPhone|iPad|iPod/.test(navigator.userAgent);
-
-      // 確認使用哪個語音辨識 API
-      const SpeechRecognition = isIphone
-        ? window.webkitSpeechRecognition
-        : window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
 
       if (!SpeechRecognition) {
-        alert("瀏覽器不支援 SpeechRecognition");
-        console.error("瀏覽器不支援 SpeechRecognition");
-
+        console.error('瀏覽器不支援 SpeechRecognition');
         return false;
       }
 
       this.speechRecognition = new SpeechRecognition();
-      this.speechRecognition.lang = "zh-TW"; // 設定語言為中文（繁體）
-      this.speechRecognition.interimResults = true; // 即時結果
-      this.speechRecognition.continuous = true; // 持續辨識
+      this.speechRecognition.lang = 'zh-TW';
+      this.speechRecognition.interimResults = true;
+      this.speechRecognition.continuous = true;
 
-      // 成功辨識時的處理：只取 _resultOffset 之後的新結果，避免舊題答案污染新題
       this.speechRecognition.onresult = (event) => {
-        // 記錄真實累積長度，供 resetOffset() 使用
         this._lastResultLength = event.results.length;
-
         const newResults = Array.from(event.results).slice(this._resultOffset);
 
-        // 分成「已確定」與「進行中」兩段
         const finalTranscript = newResults
-          .filter(r => r.isFinal)
-          .map(r => r[0].transcript)
-          .join("");
+          .filter(r => r.isFinal).map(r => r[0].transcript).join('');
         const interimTranscript = newResults
-          .filter(r => !r.isFinal)
-          .map(r => r[0].transcript)
-          .join("");
+          .filter(r => !r.isFinal).map(r => r[0].transcript).join('');
 
-        // 顯示用：合併成一條，但標記是否為 final
         const transcript = finalTranscript + interimTranscript;
-        const isFinal = interimTranscript === "" && finalTranscript !== "";
+        const isFinal = interimTranscript === '' && finalTranscript !== '';
 
-        console.log("即時語音辨識結果：", transcript, isFinal ? "[final]" : "[interim]");
-
-        const recognitionEvent = new CustomEvent("audioProcessed", {
+        document.dispatchEvent(new CustomEvent('audioProcessed', {
           detail: { transcript, isFinal },
-        });
-        document.dispatchEvent(recognitionEvent);
+        }));
       };
 
-      // 辨識失敗或錯誤處理
       this.speechRecognition.onerror = (error) => {
-        console.error("語音辨識失敗：", error);
-
-        // 'aborted' 是主動停止造成的，不是真正的錯誤，忽略即可
-        if (error.error === 'aborted') return;
-
-        const errorEvent = new CustomEvent("audioProcessed", {
-          detail: { error: "語音辨識失敗" },
-        });
-        document.dispatchEvent(errorEvent);
+        // 'aborted' / 'no-speech' 是正常情況，忽略；其他才算錯誤
+        if (error.error === 'aborted' || error.error === 'no-speech') return;
+        console.warn('語音辨識錯誤:', error.error);
+        document.dispatchEvent(new CustomEvent('audioProcessed', {
+          detail: { error: error.error },
+        }));
       };
 
-      // 辨識意外結束（網路斷線、瀏覽器自動停止等）時自動重啟
-      // 使用 setTimeout 避免在 file:// 協定下同步呼叫 start() 觸發新的權限視窗
       this.speechRecognition.onend = () => {
         if (this.isRecognizing) {
-          console.log("語音辨識意外結束，延遲重啟...");
-          // 重啟後 event.results 會從 0 重新開始，offset 必須清零
-          this._resultOffset = 0;
-          this._lastResultLength = 0;
+          // 引擎意外停止，重啟
           setTimeout(() => {
             if (this.isRecognizing) {
-              try { this.speechRecognition.start(); } catch(_) {}
+              // 重啟時 event.results 從 0 開始，offset 須對應清零
+              this._resultOffset = 0;
+              this._lastResultLength = 0;
+              try { this.speechRecognition.start(); } catch (_) {}
             }
-          }, 300);
-        } else {
-          console.log("語音辨識已停止。");
+          }, 150);
         }
       };
 
       return true;
-    } catch (error) {
-      console.error("初始化語音辨識時發生錯誤：", error);
-
-      // 回傳初始化錯誤事件
-      const errorEvent = new CustomEvent("audioProcessed", {
-        detail: { error: "初始化語音辨識失敗" },
-      });
-      document.dispatchEvent(errorEvent);
+    } catch (e) {
+      console.error('initRecognition 失敗:', e);
       return false;
     }
   }
 
-  // 開始語音辨識
+  // 首次啟動辨識（授權後呼叫一次）
   startRecognition() {
-    if (!this.speechRecognition) {
-      console.error("語音辨識尚未初始化");
-      return;
-    }
-
+    if (!this.speechRecognition) return;
     this.isRecognizing = true;
-    this.speechRecognition.start();
-    console.log("即時語音辨識開始");
+    this._resultOffset = 0;
+    this._lastResultLength = 0;
+    try { this.speechRecognition.start(); } catch (_) {}
   }
 
-  // 停止語音辨識
+  // 停止辨識
   stopRecognition() {
+    this.isRecognizing = false;
     if (this.speechRecognition) {
+      try { this.speechRecognition.stop(); } catch (_) {}
+    }
+  }
+
+  /**
+   * 每題開始時呼叫：確保辨識正在運行，並清除舊題的偏移量。
+   * callback 在辨識確認啟動後執行。
+   */
+  restartForQuestion(callback) {
+    if (!this.speechRecognition) { if (callback) callback(); return; }
+
+    const doStart = () => {
+      this._resultOffset = 0;
+      this._lastResultLength = 0;
+      this.isRecognizing = true;
+      try { this.speechRecognition.start(); } catch (_) {}
+      if (callback) callback();
+    };
+
+    if (this.isRecognizing) {
+      // 先停再啟，確保從全新狀態開始
       this.isRecognizing = false;
-      this.speechRecognition.stop();
-      console.log("即時語音辨識結束");
+      try { this.speechRecognition.stop(); } catch (_) {}
+      setTimeout(doStart, 200);
+    } else {
+      doStart();
     }
   }
 }
