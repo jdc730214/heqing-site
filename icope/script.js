@@ -762,15 +762,26 @@ function _setupVoiceDate(guard) {
       const ys = String(y);
       const ms = String(m);
       const ds = String(d);
-      // 年：包含 4 位年份
+      // 年：4位數，不易碰撞，直接比對
       const hasY = t.includes(ys);
-      // 月：X月 或 X月份，避免數字誤判（加月後綴）
-      const hasM = new RegExp(ms + '[月份]').test(t);
-      // 日：X日 或 X號
-      const hasD = new RegExp(ds + '[日號]').test(t);
-      // 三個部分（年、月、日）都需正確
+      // 月：(?<![0-9]) 前瞻確保數字前不是另一個數字
+      //   避免「11月」被月份=1誤判、「13日」被日期=3誤判
+      const hasM = new RegExp('(?<![0-9])' + ms + '[月份]').test(t);
+      // 日：同上，前瞻防止子數字碰撞
+      const hasD = new RegExp('(?<![0-9])' + ds + '[日號]').test(t);
+
+      // 至少說對 2 個部分（允許省略其中一個部分）
       const correct = [hasY, hasM, hasD].filter(Boolean).length;
-      return correct >= 3;
+      if (correct < 2) return false;
+
+      // 若有說年份（數字+年）但不是今年 → 錯
+      const wrongYear  = !hasY && /\d{4}年/.test(t);
+      // 若有說月份（數字+月/份）但不是今月（同樣加前瞻）→ 錯
+      const wrongMonth = !hasM && new RegExp('(?<![0-9])\\d+[月份]').test(t);
+      // 若有說日期（數字+日/號）但不是今日（同樣加前瞻）→ 錯
+      const wrongDay   = !hasD && new RegExp('(?<![0-9])\\d+[日號]').test(t);
+
+      return !(wrongYear || wrongMonth || wrongDay);
     },
   });
 }
