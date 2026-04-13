@@ -13,6 +13,10 @@
     {
       "route": "/icope",
       "rewrite": "/icope/index.html"
+    },
+    {
+      "route": "/icope/*",
+      "rewrite": "/icope/index.html"
     }
   ],
   "navigationFallback": {
