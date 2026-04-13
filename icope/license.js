@@ -136,15 +136,18 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
   input.addEventListener('keydown', e => { if (e.key === 'Enter') doValidate() })
 
   // URL 帶碼自動登入
-  // 優先讀路徑格式（不受 LINE 等 app 截斷 query string 影響）：
+  // 優先讀 hash 格式（LINE 不截斷 hash，且不需要伺服器路由）：
+  //   https://heqinghealth.com/icope#XXXX-XXXX-XXXX
+  // 也相容路徑格式（備用）：
   //   https://heqinghealth.com/icope/XXXX-XXXX-XXXX
   // 也相容 query string 格式（備用）：
   //   https://heqinghealth.com/icope?code=XXXX-XXXX-XXXX
+  const _hash = window.location.hash.slice(1).trim()
   const _pathSegs = window.location.pathname.split('/').filter(Boolean)
   const _pathCode = _pathSegs.length >= 2
     ? decodeURIComponent(_pathSegs[_pathSegs.length - 1])
     : null
-  const urlCode = _pathCode || new URLSearchParams(window.location.search).get('code')
+  const urlCode = _hash || _pathCode || new URLSearchParams(window.location.search).get('code')
 
   if (urlCode) {
     input.value = urlCode.toUpperCase()
