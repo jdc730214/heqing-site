@@ -1072,6 +1072,36 @@
       color: #b0bec5;
       margin-top: 20px;
     }
+
+    /* ── 橫式鎖定提示（限手機，桌機不觸發）── */
+    #rotate-gate {
+      display: none;
+      position: fixed; inset: 0; z-index: 999999;
+      background: #0d2b6b;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 20px;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: #fff; text-align: center; padding: 24px;
+    }
+    #rotate-gate .rg-icon {
+      font-size: 64px;
+      animation: rg-spin 1.5s ease-in-out infinite alternate;
+      display: inline-block;
+    }
+    @keyframes rg-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(-90deg); }
+    }
+    #rotate-gate .rg-title {
+      font-size: 18px; font-weight: 700; margin: 0;
+    }
+    #rotate-gate .rg-sub {
+      font-size: 14px; color: #90caf9; margin: 0;
+    }
+    /* 手機橫式時才顯示（max-height 限縮，避免誤觸桌機寬螢幕） */
+    @media (orientation: landscape) and (max-height: 600px) {
+      #rotate-gate { display: flex; }
+    }
     </style>
   </head>
   <body>
@@ -1366,6 +1396,13 @@
 
     <!-- In-App Browser Gate -->
     <div id="iab-gate"></div>
+
+    <!-- 直式鎖定提示（手機橫式時蓋住畫面） -->
+    <div id="rotate-gate">
+      <div class="rg-icon">📱</div>
+      <p class="rg-title">請將手機轉為直式</p>
+      <p class="rg-sub">本系統僅支援直式操作<br>Please rotate your device to portrait</p>
+    </div>
 
     <!-- License Gate Overlay -->
     <div id="license-gate" class="hidden">
