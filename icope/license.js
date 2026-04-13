@@ -79,7 +79,7 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
       if (data.valid) {
         saveCache(cache.code, data.expiryDate)
       } else {
-        // 後端說無效（已被停用或刪除）→ 清快取，下次開啟需重新輸入
+        // 後端說無效（停用、刪除、次數耗盡）→ 清快取，下次開啟需重新輸入
         clearCache()
       }
     } catch {
@@ -113,6 +113,8 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
           ? `此授權碼已於 ${data.expiryDate} 到期`
           : data.reason === 'DISABLED'
           ? '此授權碼已被停用，請聯絡管理員'
+          : data.reason === 'EXCEEDED'
+          ? `此授權碼的評估次數已用完（${data.usedCount}／${data.maxUses} 次），請聯絡管理員`
           : '授權碼無效，請確認後再試'
         showStatus(msg, 'error')
         input.select()

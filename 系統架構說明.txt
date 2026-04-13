@@ -1,7 +1,7 @@
 ================================================================
   禾青醫電 / BodyGo 系統架構說明
   HEQING MEDICAL / BodyGo System Architecture
-  更新日期：2026-03-21
+  更新日期：2026-03-22
 ================================================================
 
 【專案組成 / Project Components】
@@ -112,6 +112,7 @@
   CIAM Tenant          : bodygocustomers
   Azure CIAM Authority : https://bodygocustomers.ciamlogin.com/
   Redirect URI (本地)  : http://localhost:5500/
+  Redirect URI (生產)  : https://heqinghealth.com/
   後端 API (本地)      : http://localhost:7119
   後端 API (生產)      : https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net
 
@@ -119,8 +120,37 @@
     請勿 commit 至 Git（已在 .gitignore 排除）
 
 ================================================================
-  八、下一步：後端部署至 Azure Functions 雲端
-  Next Step: Deploy Backend to Azure Functions Cloud
+  八、正式環境網域 / Production Domain
+================================================================
+
+  網域供應商 : Cloudflare Registrar
+  網域       : heqinghealth.com（$10.46 USD/年，2027-03-22 到期）
+  前端網址   : https://heqinghealth.com/
+  www 轉址   : https://www.heqinghealth.com/ → 同上
+
+  DNS 設定（Cloudflare）：
+    CNAME  @    → agreeable-hill-01ed44e00.2.azurestaticapps.net  (DNS only)
+    CNAME  www  → agreeable-hill-01ed44e00.2.azurestaticapps.net  (DNS only)
+    TXT    @    → _t34hcuwyb0ysru4tb1si1d6ufv00t6n  (Azure 驗證用)
+
+  Azure Static Web Apps 自訂網域：已驗證 ✓
+  Azure CIAM Redirect URI：已新增 heqinghealth.com + www ✓
+  後端 CORS：已新增 heqinghealth.com + www ✓
+
+================================================================
+  九、下一步：串接金流（刷卡買點數）
+  Next Step: Payment Integration (ECPay)
+================================================================
+
+  計畫使用綠界 ECPay 信用卡付款，費率 2.75%/筆。
+  需新增：
+    - Azure SQL 資料表：Orders
+    - Azure Function：POST /api/CreateOrder
+    - Azure Function：POST /api/PaymentCallback（ECPay Webhook）
+  ECPay 申請需提供商業網站網址：https://heqinghealth.com/
+
+================================================================
+  十、後端部署步驟備忘 / Backend Deployment Reference
 ================================================================
 
   ★ 部署完成後，本地不再需要 Azurite 和 func start

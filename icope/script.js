@@ -856,9 +856,29 @@ DOM.btnReListen.addEventListener('click', async () => {
 });
 
 /* 10. 結果頁 */
+const USE_URL = 'https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/icope/use'
+
+async function _recordUse() {
+  try {
+    const cache = JSON.parse(localStorage.getItem('icope_license_v1') || 'null')
+    if (!cache?.code) return
+    const res = await fetch(`${USE_URL}?code=${encodeURIComponent(cache.code)}`, { method: 'POST' })
+    if (!res.ok) return
+    const data = await res.json()
+    if (!data.success) {
+      console.warn('ICOPE use record failed:', data.reason)
+    }
+  } catch (e) {
+    // 離線或網路問題：靜默忽略，不影響結果顯示
+    console.warn('ICOPE use record error:', e)
+  }
+}
+
 function _setupResult(_guard) {
   _hideNxt();
   DOM.btnReListen.style.display = 'none';
+  // 評估完成，記錄一次使用次數（非同步，不阻塞結果顯示）
+  _recordUse();
 
   const today = new Date();
   document.getElementById('result-date').textContent =
