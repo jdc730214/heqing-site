@@ -896,7 +896,9 @@
         height: 52px;
       }
     /* ── License Gate ── */
+    /* 強制重設字型大小，避免頁面 clamp(22px~37px) 影響 gate 元件 */
     #license-gate {
+      font-size: 16px;
       position: fixed;
       inset: 0;
       z-index: 9999;
@@ -904,7 +906,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      padding: 24px;
       transition: opacity 0.5s;
     }
     #license-gate.hidden {
@@ -913,66 +915,70 @@
     }
     .lg-card {
       background: #fff;
-      border-radius: 1rem;
-      padding: 2rem 1.8rem;
+      border-radius: 16px;
+      padding: 32px 28px;
       width: 100%;
-      max-width: 380px;
+      max-width: 340px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.35);
       text-align: center;
+      font-size: 16px;
     }
-    .lg-logo { height: 2.4rem; margin-bottom: 1rem; }
+    .lg-logo { height: 40px; margin-bottom: 16px; }
     .lg-title {
-      font-size: 1.05rem;
+      font-size: 18px;
       font-weight: 700;
       color: #1565c0;
-      margin-bottom: 0.3rem;
+      margin-bottom: 6px;
     }
     .lg-sub {
-      font-size: 0.7rem;
+      font-size: 13px;
       color: #607d8b;
-      margin-bottom: 1.4rem;
-    }
-    .lg-input-wrap {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 0.9rem;
+      margin-bottom: 24px;
+      line-height: 1.5;
     }
     #lg-input {
-      flex: 1;
-      padding: 0.6rem 0.8rem;
+      display: block;
+      width: 100%;
+      padding: 12px 14px;
       border: 2px solid #90caf9;
-      border-radius: 0.5rem;
-      font-size: 0.95rem;
+      border-radius: 8px;
+      font-size: 17px;
       font-family: monospace;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       outline: none;
       text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 10px;
+      box-sizing: border-box;
     }
     #lg-input:focus { border-color: #1565c0; }
     #lg-btn {
-      padding: 0.6rem 1.1rem;
+      display: block;
+      width: 100%;
+      padding: 12px;
       background: #1565c0;
       color: #fff;
       border: none;
-      border-radius: 0.5rem;
-      font-size: 0.9rem;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      white-space: nowrap;
+      margin-bottom: 10px;
     }
     #lg-btn:disabled { opacity: 0.6; cursor: default; }
     .lg-status {
-      font-size: 0.72rem;
-      padding: 0.5rem 0.7rem;
-      border-radius: 0.4rem;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 6px;
       display: none;
       text-align: left;
     }
     .lg-status.ok   { background: #e8f5e9; color: #2e7d32; }
     .lg-status.error{ background: #fdecea; color: #c62828; }
     .lg-footer {
-      font-size: 0.6rem;
+      font-size: 11px;
       color: #b0bec5;
-      margin-top: 1.2rem;
+      margin-top: 20px;
     }
     </style>
   </head>
@@ -1272,10 +1278,8 @@
         <img src="images/logo_禾青.png" alt="Logo" class="lg-logo" />
         <div class="lg-title">ICOPE 長者功能評估系統</div>
         <div class="lg-sub">請輸入授權碼以繼續使用<br>Please enter your license code</div>
-        <div class="lg-input-wrap">
-          <input id="lg-input" type="text" placeholder="授權碼" autocomplete="off" spellcheck="false" />
-          <button id="lg-btn">確認</button>
-        </div>
+        <input id="lg-input" type="text" placeholder="授權碼" autocomplete="off" spellcheck="false" />
+        <button id="lg-btn">確認</button>
         <div id="lg-status" class="lg-status"></div>
         <div class="lg-footer">禾青醫電 HEQING MEDICAL · 如有問題請聯絡管理員</div>
       </div>
