@@ -1046,56 +1046,116 @@ function _ynAnswer(row, qi, val, answers, total, saveKey, guard) {
   }
 }
 
-/* 8. 聽力狀況 */
-function _setupVoiceHear(guard) {
-  _voicePage({
-    guard,
-    question: '請唸出你聽到的數字。',
-    hint:     '專心聆聽音檔，唸出聽到的數字',
-    say:      '請唸出你聽到的數字。',
+/* 8. 聽力狀況 — 兩輪測試：619 失敗後自動測 257 */
+
+// 兩輪設定
+const _HEAR_ROUNDS = [
+  {
+    audioId:  'audio1',
     keywords: ['619'],
-    similar:  {
-      '619': ['6與9','61球','六羽球','六一九','六百一十九','六百十九','6一9','六19','六一玖','六壹九'],
+    similar:  { '619': ['6與9','61球','六羽球','六一九','六百一十九','六百十九','6一9','六19','六一玖','六壹九'] },
+    checkFn:  (t) => t.includes('619') || /六.{0,2}一.{0,2}九/.test(t),
+  },
+  {
+    audioId:  'audio5',
+    keywords: ['257'],
+    similar:  { '257': ['二五七','兩五七','2五7','二百五十七'] },
+    checkFn:  (t) => t.includes('257') || /二.{0,2}五.{0,2}七/.test(t),
+  },
+];
+
+// 記錄目前輪次設定，供重聽按鈕使用
+let _hearConfig = null;
+
+async function _setupVoiceHear(guard) {
+  DOM.btnReListen.style.display = 'none';
+  _typewrite(DOM.qText, '請唸出你聽到的數字。', 90);
+  _typewrite(DOM.qHint, '專心聆聽音檔，唸出聽到的數字', 60);
+  try {
+    await _speak('請唸出你聽到的數字。', 0.9, guard);
+    if (!guard()) return;
+    await _runHearRound(guard, 0);
+  } catch (_) {}
+}
+
+async function _runHearRound(guard, roundIdx) {
+  if (!guard()) return;
+  const round  = _HEAR_ROUNDS[roundIdx];
+  const isLast = roundIdx >= _HEAR_ROUNDS.length - 1;
+
+  // 更新本輪設定（重聽按鈕會讀取）
+  _hearConfig = {
+    audioId:  round.audioId,
+    keywords: round.keywords,
+    similar:  round.similar,
+    checkFn:  round.checkFn,
+    onTimeout: async () => {
+      if (!guard()) return;
+      if (!isLast) {
+        // 第一輪失敗 → 自動進第二輪
+        DOM.btnReListen.style.display = 'none';
+        _updateWhiteBox('');
+        await new Promise(r => setTimeout(r, 700));
+        if (!guard()) return;
+        await _runHearRound(guard, roundIdx + 1);
+      } else {
+        _showNxt();
+      }
     },
-    saveKey: 'q7_a',
-    // 619：數字本身或「六」「一」「九」分開說都算對
-    checkFn: (t) => t.includes('619') || /六.{0,2}一.{0,2}九/.test(t),
-    playAudioId: 'audio1',
-    showReListen: true,
+  };
+
+  // 播放音檔
+  try { await _playAudio(round.audioId, guard); } catch (e) {
+    if (e === 'cancelled' || !guard()) return;
+  }
+  if (!guard()) return;
+  DOM.btnReListen.style.display = 'flex';
+
+  _startHearListen(guard, round.keywords, round.similar, round.checkFn, _hearConfig.onTimeout);
+}
+
+/** 辨識 + 倒計時（_runHearRound 與重聽按鈕共用） */
+function _startHearListen(guard, keywords, similar, checkFn, onTimeout) {
+  let _accum = '', _tempInterim = '';
+  _startRecognition(guard, (raw, isFinal) => {
+    if (_isIOS) { _accum = raw; _tempInterim = ''; }
+    else if (isFinal) { _accum = (_accum + ' ' + raw).trim(); _tempInterim = ''; }
+    else { _tempInterim = raw; }
+    const display = (_accum + (_tempInterim ? ' ' + _tempInterim : '')).trim();
+    const t = _applySimilar(_normalize(display), similar);
+    _updateWhiteBox(_highlight(t, keywords));
+    if (checkFn(t)) {
+      isStopRecognition = true;
+      _hideEar();
+      _stopCountdown();
+      SharedStorage.set('q7_a', { value: t, result: true });
+      const a3 = document.getElementById('audio3'); if (a3) a3.play().catch(() => {});
+      _showCorrect();
+      setTimeout(() => { if (guard()) goToNext(); }, 1500);
+    } else {
+      SharedStorage.set('q7_a', { value: t, result: false });
+    }
+  });
+  _startCountdown(30, guard, () => {
+    if (!guard()) return;
+    _stopRecognition();
+    _hideEar();
+    onTimeout();
   });
 }
 
-// 重新聆聽按鈕
+// 重新聆聽按鈕（兩輪共用，timeout 行為與輪次一致）
 DOM.btnReListen.addEventListener('click', async () => {
-  if (_pageIndex !== 8) return;
+  if (_pageIndex !== 8 || !_hearConfig) return;
+  const { audioId, keywords, similar, checkFn, onTimeout } = _hearConfig;
   const guard = (() => { const t = _pageToken; return () => t === _pageToken; })();
   isStopRecognition = true;
   _stopCountdown();
-  try {
-    await _playAudio('audio4', guard);
-    if (!guard()) return;
-    _startRecognition(guard, (raw) => {
-      const t = _applySimilar(_normalize(raw), { '619': ['6與9','61球','六羽球','六一九','六百一十九','六百十九','6一9','六19','六一玖','六壹九'] });
-      _updateWhiteBox(_highlight(t, ['619']));
-      if (t.includes('619') || /六.{0,2}一.{0,2}九/.test(t)) {
-        isStopRecognition = true;
-        _hideEar();
-        _stopCountdown();
-        const a3 = document.getElementById('audio3'); if (a3) a3.play().catch(() => {});
-        _showCorrect();
-        SharedStorage.set('q7_a', { value: t, result: true });
-        setTimeout(() => { if (guard()) goToNext(); }, 1500);
-      } else {
-        SharedStorage.set('q7_a', { value: t, result: false });
-      }
-    });
-    _startCountdown(30, guard, () => {
-      if (!guard()) return;
-      _stopRecognition();
-      _hideEar();
-      _showNxt();
-    });
-  } catch (_) {}
+  try { await _playAudio(audioId, guard); } catch (e) {
+    if (e === 'cancelled' || !guard()) return;
+  }
+  if (!guard()) return;
+  _startHearListen(guard, keywords, similar, checkFn, onTimeout);
 });
 
 /* 10. 結果頁 */
@@ -1218,10 +1278,20 @@ document.getElementById('saveBtn').addEventListener('click', () => {
       card.style.maxHeight = prev.cardMaxH;
       card.style.overflow  = prev.cardOverflow;
 
-      const a = document.createElement('a');
-      a.download = `ICOPE_${new Date().toLocaleDateString('zh-TW')}.png`;
-      a.href = canvas.toDataURL('image/jpeg', 0.92);
-      a.click();
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+      if (_isIOS) {
+        // iOS 不支援 <a download>，改用長按圖片儲存的浮層
+        const overlay = document.getElementById('screenshot-overlay');
+        const img     = document.getElementById('screenshot-img');
+        img.src = dataUrl;
+        overlay.classList.add('visible');
+      } else {
+        const a = document.createElement('a');
+        a.download = `ICOPE_${new Date().toLocaleDateString('zh-TW')}.png`;
+        a.href = dataUrl;
+        a.click();
+      }
     }).catch(() => {
       // Restore on error too
       deck.style.overflow  = prev.deckOverflow;
@@ -1231,6 +1301,13 @@ document.getElementById('saveBtn').addEventListener('click', () => {
       card.style.overflow  = prev.cardOverflow;
     });
   });
+});
+
+// iOS 截圖浮層：點背景（非圖片）關閉
+document.getElementById('screenshot-overlay').addEventListener('click', (e) => {
+  if (e.target.id !== 'screenshot-img') {
+    document.getElementById('screenshot-overlay').classList.remove('visible');
+  }
 });
 
 // ─────────────────────────────────────────────
