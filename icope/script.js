@@ -789,8 +789,11 @@ function _setupVoiceDate(guard) {
       // 月：(?<![0-9]) 前瞻確保數字前不是另一個數字
       //   避免「11月」被月份=1誤判、「13日」被日期=3誤判
       const hasM = new RegExp('(?<![0-9])' + ms + '[月份]').test(t);
-      // 日：同上，前瞻防止子數字碰撞
-      const hasD = new RegExp('(?<![0-9])' + ds + '[日號]').test(t);
+      // 日：兩種格式均接受
+      //   格式A「13日/13號」—— STT 帶日字
+      //   格式B「月13」後面不接數字 —— STT 省略「日」字（如「4月13」）
+      const hasD = new RegExp('(?<![0-9])' + ds + '[日號]').test(t) ||
+                   new RegExp('[月]' + ds + '(?![0-9])').test(t);
 
       // 至少說對 2 個部分（允許省略其中一個部分）
       const correct = [hasY, hasM, hasD].filter(Boolean).length;
@@ -800,8 +803,12 @@ function _setupVoiceDate(guard) {
       const wrongYear  = !hasY && /\d{4}年/.test(t);
       // 若有說月份（數字+月/份）但不是今月（同樣加前瞻）→ 錯
       const wrongMonth = !hasM && new RegExp('(?<![0-9])\\d+[月份]').test(t);
-      // 若有說日期（數字+日/號）但不是今日（同樣加前瞻）→ 錯
-      const wrongDay   = !hasD && new RegExp('(?<![0-9])\\d+[日號]').test(t);
+      // 若有說日期但不是今日 → 錯
+      //   格式A：數字+日/號；格式B：月+數字（STT 省略「日」字）
+      const wrongDay   = !hasD && (
+        new RegExp('(?<![0-9])\\d+[日號]').test(t) ||
+        new RegExp('[月]\\d+(?![0-9])').test(t)
+      );
 
       return !(wrongYear || wrongMonth || wrongDay);
     },
