@@ -301,7 +301,21 @@ function _stopRecognition() {
     document.removeEventListener('audioProcessed', _recHandler);
     _recHandler = null;
   }
-  // 銷毀引擎（nullify handlers 防止幽靈 callback）
+  // iOS：換題時保留引擎繼續運行，不銷毀。
+  //   原因：iOS 重啟 SR 需要使用者手勢；換頁是從 setTimeout 回呼觸發，
+  //   不在手勢路徑中，呼叫 start() 會靜默失敗。
+  //   isStopRecognition=true 已確保此題結果不會被下一題的 handler 接收。
+  // Android/Desktop：每次都銷毀，下題重新建立乾淨物件。
+  if (!_isIOS && audioProcessorFromBrowser) audioProcessorFromBrowser.stopRecognition();
+}
+
+/** 評估結束或離開頁面時呼叫，不論平台都完全銷毀引擎 */
+function _hardStopRecognition() {
+  isStopRecognition = true;
+  if (_recHandler) {
+    document.removeEventListener('audioProcessed', _recHandler);
+    _recHandler = null;
+  }
   if (audioProcessorFromBrowser) audioProcessorFromBrowser.stopRecognition();
 }
 
@@ -553,13 +567,30 @@ async function _initPermissions() {
  * 先同步建立並啟動 SR 引擎（iOS only）。
  */
 function _permBtnClick() {
-  if (_isIOS && !audioProcessorFromBrowser) {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SR) {
-      audioProcessorFromBrowser = new AudioProcessFromBrowser();
-      if (audioProcessorFromBrowser.initRecognition()) {
-        audioProcessorFromBrowser.startRecognition();  // 同步，在手勢路徑中 ✓
-        isStopRecognition = true;
+  if (_isIOS) {
+    // ① TTS 解鎖：iOS 要求第一次 speak() 必須在手勢同步路徑中呼叫，
+    //   之後 setTimeout 裡的 speak() 才能正常播放。
+    //   用無聲 utterance 在此建立 TTS session。
+    try {
+      const u = new SpeechSynthesisUtterance(' ');
+      u.volume = 0;
+      synth.speak(u);
+    } catch (_) {}
+
+    // ② AudioContext 解鎖：Web Audio API 在 iOS 也需在手勢中 resume
+    try {
+      if (_clickCtx && _clickCtx.state === 'suspended') _clickCtx.resume();
+    } catch (_) {}
+
+    // ③ SR 啟動：iOS 要求 start() 在手勢同步路徑中（任何 await 後就失效）
+    if (!audioProcessorFromBrowser) {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        audioProcessorFromBrowser = new AudioProcessFromBrowser();
+        if (audioProcessorFromBrowser.initRecognition()) {
+          audioProcessorFromBrowser.startRecognition();  // 同步，在手勢路徑中 ✓
+          isStopRecognition = true;
+        }
       }
     }
   }
@@ -586,6 +617,19 @@ function _startAssessment() {
   SharedStorage.clear();
   // 申請螢幕常亮（評估期間不讓螢幕變暗）
   _requestWakeLock();
+  // iOS：在此手勢路徑中再次確保 TTS / AudioContext 已解鎖。
+  // 第一題的 speak() 從 setTimeout 觸發，不在手勢中；
+  // 此處（"開始評估" 按鈕 click）的 unlock 讓 iOS 接受後續非手勢 speak()。
+  if (_isIOS) {
+    try {
+      const u = new SpeechSynthesisUtterance(' ');
+      u.volume = 0;
+      synth.speak(u);
+    } catch (_) {}
+    try {
+      if (_clickCtx && _clickCtx.state === 'suspended') _clickCtx.resume();
+    } catch (_) {}
+  }
   // 首頁 icon 飛散動畫後進入第一題
   _iconBurst(() => goToPage(1));
 }
@@ -984,6 +1028,8 @@ async function _recordUse() {
 function _setupResult(_guard) {
   _hideNxt();
   DOM.btnReListen.style.display = 'none';
+  // 評估完成：完全銷毀 SR 引擎（iOS 也包含）
+  _hardStopRecognition();
   // 評估完成，釋放螢幕常亮鎖（結果頁不需要繼續佔用）
   _releaseWakeLock();
   // 評估完成，記錄一次使用次數（非同步，不阻塞結果顯示）
