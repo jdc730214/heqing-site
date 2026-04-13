@@ -778,7 +778,8 @@ function _setupYesNoPage(guard, questions, saveKey) {
     });
   });
 
-  // 是否題不朗讀題目，讓使用者直接閱讀後點選
+  // 唸一句提示，不逐題朗讀
+  _speak('看完題目請自行點選是或否。', 0.9, guard).catch(() => {});
 }
 
 function _ynAnswer(row, qi, val, answers, total, saveKey, guard) {
