@@ -274,7 +274,6 @@ function _startRecognition(guard, onResult) {
     document.removeEventListener('audioProcessed', _recHandler);
     _recHandler = null;
   }
-  isStopRecognition = true; // 先鎖定，等重啟完成再開放
 
   _recHandler = (e) => {
     if (!guard() || isStopRecognition) return;
@@ -285,12 +284,10 @@ function _startRecognition(guard, onResult) {
   };
   document.addEventListener('audioProcessed', _recHandler);
 
-  // 每題都重新啟動辨識引擎，確保 clean state
-  audioProcessorFromBrowser.restartForQuestion(() => {
-    if (!guard()) return;
-    isStopRecognition = false;
-    _showEar();
-  });
+  // 把舊題結果偏移量推進，確保引擎持續運行（不 stop/start 避免 iOS 失敗）
+  audioProcessorFromBrowser.restartForQuestion(null);
+  isStopRecognition = false;
+  _showEar();
 }
 
 // ─────────────────────────────────────────────
@@ -446,6 +443,10 @@ async function _initPermissions() {
   // Microphone + SpeechRecognition pre-warm
   try {
     _globalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    // 取得麥克風授權後立刻釋放 getUserMedia stream，
+    // 避免與 SpeechRecognition 競用麥克風（在 iOS 上尤其重要）
+    _globalStream.getTracks().forEach(t => t.stop());
+    _globalStream = null;
     _globalAudioCtx = new (window.AudioContext || window['webkitAudioContext'])();
     // 建立辨識引擎（只建一次，class 由 libs/audioProcessFromBrowser.js 載入）
     audioProcessorFromBrowser = new AudioProcessFromBrowser();
@@ -678,10 +679,10 @@ DOM.btnMotion.addEventListener('click', function() {
 
   if (_motionDetector) { _motionDetector.stopDetection(); _motionDetector = null; }
   _motionDetector = new MotionDetection({
-    maxCount:      5,      // 目標 5 次坐站（每次站起 = 1 次）
+    maxCount:      5,      // 目標 5 次坐站（站→坐→站 = 1 次）
     upperThresh:   1.2,    // 偵測站起的 Y 軸閾值 (m/s²)
     lowerThresh:   0.5,    // 回靜止的閾值
-    minIntervalMs: 800,    // 連續兩次站起最短間隔
+    minIntervalMs: 800,    // 連續兩次計數最短間隔
     emaAlpha:      0.3,
     timeoutSec:    300,
     onPeakCount: (count) => {
@@ -771,16 +772,7 @@ function _setupYesNoPage(guard, questions, saveKey) {
     });
   });
 
-  // TTS 朗讀題目
-  (async () => {
-    try {
-      await _speak('請在右側勾選是或否。', 0.9, guard);
-      for (const q of questions) {
-        if (!guard()) return;
-        await _speak(q, 0.85, guard);
-      }
-    } catch (_) {}
-  })();
+  // 是否題不朗讀題目，讓使用者直接閱讀後點選
 }
 
 function _ynAnswer(row, qi, val, answers, total, saveKey, guard) {

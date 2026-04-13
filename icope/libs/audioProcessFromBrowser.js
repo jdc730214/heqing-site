@@ -87,27 +87,25 @@ class AudioProcessFromBrowser {
   }
 
   /**
-   * 每題開始時呼叫：確保辨識正在運行，並清除舊題的偏移量。
-   * callback 在辨識確認啟動後執行。
+   * 每題開始時呼叫：把結果偏移量推進到最新位置，忽略上一題的辨識結果。
+   * 不停止／重啟引擎（避免在 iOS 上 start() 失敗），確保辨識持續運行。
+   * Every-question call: advance the result offset to skip prior question's
+   * transcripts. Engine stays running — no stop/start race on iOS.
    */
   restartForQuestion(callback) {
     if (!this.speechRecognition) { if (callback) callback(); return; }
 
-    const doStart = () => {
+    // 把偏移量推進到目前最新結果的位置，新題只看之後的結果
+    this._resultOffset = this._lastResultLength;
+
+    // 若引擎已停止（意外），重新啟動
+    if (!this.isRecognizing) {
+      this.isRecognizing = true;
       this._resultOffset = 0;
       this._lastResultLength = 0;
-      this.isRecognizing = true;
       try { this.speechRecognition.start(); } catch (_) {}
-      if (callback) callback();
-    };
-
-    if (this.isRecognizing) {
-      // 先停再啟，確保從全新狀態開始
-      this.isRecognizing = false;
-      try { this.speechRecognition.stop(); } catch (_) {}
-      setTimeout(doStart, 200);
-    } else {
-      doStart();
     }
+
+    if (callback) callback();
   }
 }

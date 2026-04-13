@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════
-   MotionDetection — 坐站偵測 v3
+   MotionDetection — 坐站偵測 v4
    ─────────────────────────────────────────────────────────────────
-   核心改進：只計「站起」動作，1次站起 = 1次
+   核心邏輯：站→坐→站 算 1 次（完整坐站循環才計數）
    ─────────────────────────────────────────────────────────────────
    演算法：
      1. 校準（前 20 幀 ≈ 0.33 秒）：由 accelerationIncludingGravity.y
@@ -9,17 +9,18 @@
      2. 取 acceleration.y（已去除重力）* upSign → 正值 = 向上運動。
         若裝置不提供 acceleration，退回合向量大小（方向中性）。
      3. EMA 濾波後，進入狀態機：
-           STILL → RISING（向上超閾）：偵測到站起，計 +1
-           STILL → FALLING（向下超閾）：偵測到坐下，不計數
+           STILL → FALLING（向下超閾）：偵測到坐下，設 _hasSatDown = true
+           STILL → RISING（向上超閾）：偵測到站起
+             └ 若 _hasSatDown == true：計 +1，重置 _hasSatDown
+             └ 若 _hasSatDown == false：初始站姿，忽略
            RISING / FALLING → STILL：信號回落至下閾後恢復靜止
-     4. 兩次站起之間最短間隔 = minIntervalMs（預設 800ms），
-        防止同一個站起動作被重複計數。
+     4. 兩次計數之間最短間隔 = minIntervalMs（預設 800ms）。
      5. 達到 maxCount 或 timeout 時觸發 onComplete。
 
    為什麼這樣設計：
-     - 快速使用者（1s/次）：每次站起約 1 秒後再站 → 不受限
-     - 行動緩慢長者（3s/次）：每次站起間隔 > 800ms → 完全不受限
-     - 坐下的信號（向下）不被計數，不混淆次數
+     - 使用者從站姿開始：第一個向上信號不計（_hasSatDown = false）
+     - 坐下後再站起：才算 1 次（站→坐→站 = 1 次）
+     - 行動緩慢長者也能正確偵測，不會因速度差異造成多計或漏計
 ═══════════════════════════════════════════════════════════════════ */
 
 class MotionDetection {
@@ -60,6 +61,7 @@ class MotionDetection {
     this._ema          = 0;
     this._startTime    = null;
     this._timerId      = null;
+    this._hasSatDown   = false;     // 需先偵測到坐下，再計站起（站→坐→站＝1次）
 
     // 校準
     this._calibSamples = [];
@@ -94,6 +96,7 @@ class MotionDetection {
     this._state         = 'STILL';
     this._lastCountTime = 0;
     this._ema           = 0;
+    this._hasSatDown    = false;
     this._calibSamples  = [];
     this._calibrated    = false;
     this._startTime     = performance.now();
@@ -137,23 +140,27 @@ class MotionDetection {
 
     const now = performance.now();
 
-    // ── 狀態機 ──
+    // ── 狀態機（站→坐→站 = 1次）──
     if (this._state === 'STILL') {
       if (this._ema > this.upperThresh) {
         // 向上運動：偵測到站起
         this._state = 'RISING';
-        const dt = now - this._lastCountTime;
-        if (dt >= this.minIntervalMs) {
-          // 冷卻期結束，正式計數
-          this._count++;
-          this._lastCountTime = now;
-          if (this.onPeakCount) this.onPeakCount(this._count);
-          if (this._count >= this.maxCount) { this._finish(false); return; }
+        if (this._hasSatDown) {
+          // 完成一次坐站循環（先坐下過、現在站起）→ 計數
+          const dt = now - this._lastCountTime;
+          if (dt >= this.minIntervalMs) {
+            this._hasSatDown    = false;
+            this._count++;
+            this._lastCountTime = now;
+            if (this.onPeakCount) this.onPeakCount(this._count);
+            if (this._count >= this.maxCount) { this._finish(false); return; }
+          }
         }
-        // 若在冷卻期內，狀態已切換到 RISING，等信號回落後再進 STILL
+        // 若未曾坐下，或仍在冷卻期：狀態切換到 RISING，等信號回落
       } else if (this._ema < -this.upperThresh) {
-        // 向下運動：坐下，不計數，只切狀態
-        this._state = 'FALLING';
+        // 向下運動：偵測到坐下，記錄已坐下
+        this._state      = 'FALLING';
+        this._hasSatDown = true;
       }
     } else {
       // RISING 或 FALLING：等信號回到安靜
