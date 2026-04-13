@@ -664,6 +664,11 @@ function _startAssessment() {
     try {
       if (_clickCtx && _clickCtx.state === 'suspended') _clickCtx.resume();
     } catch (_) {}
+    // 在手勢路徑中解鎖所有 <audio> 元素：
+    // iOS 要求 play() 必須在手勢同步路徑中呼叫過一次才能之後自動播放。
+    document.querySelectorAll('audio').forEach(a => {
+      a.play().then(() => a.pause()).catch(() => {});
+    });
     // 在手勢路徑中重新啟動 SR 引擎：
     // _permBtnClick() 啟動後若使用者在首頁停留過久，iOS 可能終止引擎；
     // 此處（"開始評估" click 仍在手勢中）重啟，確保評估開始時引擎是活的。
