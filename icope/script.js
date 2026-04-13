@@ -623,7 +623,7 @@ document.addEventListener('srPermissionDenied', () => {
       const hint = document.createElement('div');
       hint.id = 'sr-denied-hint';
       hint.style.cssText = 'font-size:0.73rem;color:#c44;margin-top:0.5rem;text-align:left;line-height:1.5;';
-      hint.textContent = '⚠️ 麥克風授權失敗。請至「設定 → Safari → 麥克風」選擇「允許」，再重新整理頁面後再試。';
+      hint.textContent = '⚠️ 語音辨識授權失敗。請確認：① 設定 → 隱私權與安全性 → 語音辨識 → 開啟 Safari（或 Chrome）；② 設定 → Safari → 麥克風 → 允許。完成後重新整理頁面再試。';
       panel.appendChild(hint);
     }
   }
@@ -638,6 +638,10 @@ if (_isIOS) {
     note.style.cssText = 'font-size:0.73rem;color:#c44;margin-top:0.6rem;text-align:left;line-height:1.4;';
     note.textContent = '⚠️ iOS 裝置：若聽不到聲音，請確認手機側面的靜音開關已關閉。';
     panel.appendChild(note);
+    const notesr = document.createElement('div');
+    notesr.style.cssText = 'font-size:0.73rem;color:#555;margin-top:0.4rem;text-align:left;line-height:1.4;';
+    notesr.textContent = '📢 首次使用語音辨識：請至「設定 → 隱私權與安全性 → 語音辨識」，開啟 Safari（或 Chrome）的語音辨識權限。';
+    panel.appendChild(notesr);
   }
 }
 

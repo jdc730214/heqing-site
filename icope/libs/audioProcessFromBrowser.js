@@ -61,8 +61,9 @@ class AudioProcessFromBrowser {
     sr.onerror = (err) => {
       // aborted / no-speech 屬正常，略過
       if (err.error === 'aborted' || err.error === 'no-speech') return;
-      // not-allowed: 麥克風權限被拒 — 通知 script.js 更新 badge
-      if (err.error === 'not-allowed') {
+      // not-allowed / service-not-allowed: 麥克風或語音辨識權限被拒 — 通知 script.js 更新 badge
+      // iOS「設定→隱私權與安全性→語音辨識」關閉時觸發 service-not-allowed
+      if (err.error === 'not-allowed' || err.error === 'service-not-allowed') {
         document.dispatchEvent(new CustomEvent('srPermissionDenied'));
         return;
       }
