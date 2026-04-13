@@ -5,6 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/icope/" />
     <title>BodyGo X ICOPE</title>
+    <!-- In-App Browser 偵測：在所有資源載入前執行 -->
+    <style>
+      #iab-gate {
+        display: none;
+        position: fixed; inset: 0; z-index: 99999;
+        background: linear-gradient(145deg, #0d2b6b 0%, #1565c0 50%, #004d40 100%);
+        align-items: center; justify-content: center;
+        padding: 24px; font-size: 16px;
+        font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      }
+      #iab-gate.show { display: flex; }
+      .iab-card {
+        background: #fff; border-radius: 16px;
+        padding: 32px 24px; width: 100%; max-width: 340px;
+        text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      }
+      .iab-logo { height: 40px; margin-bottom: 16px; }
+      .iab-title { font-size: 18px; font-weight: 700; color: #1565c0; margin-bottom: 8px; }
+      .iab-desc  { font-size: 14px; color: #546e7a; line-height: 1.6; margin-bottom: 20px; }
+      .iab-steps {
+        background: #f0f4ff; border-radius: 10px;
+        padding: 14px 16px; text-align: left;
+        font-size: 14px; color: #1a2636; line-height: 1.8;
+        margin-bottom: 16px;
+      }
+      .iab-steps strong { color: #1565c0; }
+      .iab-btn {
+        display: block; width: 100%; padding: 13px;
+        background: #1565c0; color: #fff;
+        border: none; border-radius: 8px;
+        font-size: 16px; font-weight: 600; cursor: pointer;
+        text-decoration: none;
+      }
+    </style>
+    <script>
+      (function () {
+        var ua = navigator.userAgent || '';
+        var isIOS = /iPhone|iPad|iPod/.test(ua);
+        var isAndroid = /Android/.test(ua);
+        var isLine = /Line\//i.test(ua);
+        var isFB   = /FBAN|FBAV|FB_IAB|FBIOS/.test(ua);
+        var isIG   = /Instagram/.test(ua);
+        var isWx   = /MicroMessenger/.test(ua);
+        var inApp  = isLine || isFB || isIG || isWx;
+        if (!inApp) return;
+
+        // Android：嘗試用 intent 直接跳 Chrome
+        if (isAndroid) {
+          var url = 'https://heqinghealth.com/icope';
+          window.location.href =
+            'intent://' + url.replace('https://', '') +
+            '#Intent;scheme=https;action=android.intent.action.VIEW;' +
+            'package=com.android.chrome;end;';
+          // 若 Chrome 未安裝，fallback 不跳，繼續顯示說明
+        }
+
+        // 顯示說明 overlay（iOS 必須手動操作；Android 若 intent 失敗也顯示）
+        document.addEventListener('DOMContentLoaded', function () {
+          var gate = document.getElementById('iab-gate');
+          if (!gate) return;
+
+          var appName = isLine ? 'LINE' : isFB ? 'Facebook' : isIG ? 'Instagram' : '通訊軟體';
+          var stepsHTML = isIOS
+            ? '<div class="iab-steps">' +
+              '① 點右上角 <strong>「 ⋯ 」</strong> 選單<br>' +
+              '② 選擇 <strong>「用瀏覽器開啟」</strong><br>' +
+              '&nbsp;&nbsp;&nbsp;&nbsp;或 <strong>"Open in Browser"</strong>' +
+              '</div>'
+            : '<div class="iab-steps">' +
+              '① 點右上角 <strong>「 ⋮ 」</strong> 選單<br>' +
+              '② 選擇 <strong>「在瀏覽器中開啟」</strong>' +
+              '</div>';
+
+          gate.innerHTML =
+            '<div class="iab-card">' +
+            '<img src="images/logo_禾青.png" class="iab-logo" />' +
+            '<div class="iab-title">請用瀏覽器開啟</div>' +
+            '<div class="iab-desc">此頁面需要麥克風與感應器權限，<br>' +
+            '在 ' + appName + ' 內無法正常使用。</div>' +
+            stepsHTML +
+            (isAndroid
+              ? '<a class="iab-btn" href="intent://heqinghealth.com/icope' +
+                '#Intent;scheme=https;action=android.intent.action.VIEW;' +
+                'package=com.android.chrome;end;">點此用 Chrome 開啟</a>'
+              : '<div style="font-size:13px;color:#90a4ae;margin-top:8px;">' +
+                '依照上方步驟即可正常使用</div>') +
+            '</div>';
+
+          gate.classList.add('show');
+        });
+      })();
+    </script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -1271,6 +1363,9 @@
       <source src="sounds/correct.mp3" type="audio/mpeg" />
     </audio>
     <audio id="audio4"><source src="sounds/619.mp4" type="audio/mp4" /></audio>
+
+    <!-- In-App Browser Gate -->
+    <div id="iab-gate"></div>
 
     <!-- License Gate Overlay -->
     <div id="license-gate" class="hidden">
