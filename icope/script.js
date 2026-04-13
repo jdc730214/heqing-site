@@ -608,26 +608,6 @@ function _permBtnClick() {
 
 DOM.permStartBtn.onclick = _permBtnClick;
 
-// ── 測試用：直接觸發 _recordUse 並在首頁顯示結果 ──
-document.getElementById('btnTestUse')?.addEventListener('click', async () => {
-  const out = document.getElementById('test-use-result');
-  if (out) out.textContent = '傳送中…';
-  const USE_URL_T = 'https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/icope/use';
-  try {
-    const cache = JSON.parse(localStorage.getItem('icope_license_v1') || 'null');
-    if (!cache?.code) { if (out) out.textContent = '❌ localStorage 無授權碼'; return; }
-    const res = await fetch(`${USE_URL_T}?code=${encodeURIComponent(cache.code)}`, { method: 'POST' });
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); } catch { data = { raw: text }; }
-    if (out) out.textContent = res.ok
-      ? (data.success ? `✅ ok — ${data.usedCount}/${data.maxUses ?? '∞'} 次` : `⚠️ ${data.reason}`)
-      : `❌ HTTP ${res.status}: ${text}`;
-  } catch (e) {
-    if (out) out.textContent = `❌ ${e.message}`;
-  }
-});
-
 // iOS 靜音模式提醒：硬體靜音鍵會完全停用 Web Audio 與 TTS，網頁端無法繞過
 // 在授權面板底部插入提示文字
 if (_isIOS) {
@@ -1080,27 +1060,14 @@ DOM.btnReListen.addEventListener('click', async () => {
 const USE_URL = 'https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/icope/use'
 
 async function _recordUse() {
-  const _dbg = (msg) => {
-    console.log('[recordUse]', msg)
-    const el = document.getElementById('result-use-debug')
-    if (el) el.textContent = msg
-  }
   try {
     const cache = JSON.parse(localStorage.getItem('icope_license_v1') || 'null')
-    if (!cache?.code) { _dbg('no cache.code'); return }
-    _dbg(`sending: ${cache.code}`)
+    if (!cache?.code) return
     const res = await fetch(`${USE_URL}?code=${encodeURIComponent(cache.code)}`, { method: 'POST' })
-    _dbg(`HTTP ${res.status}`)
-    if (!res.ok) { _dbg(`HTTP error ${res.status}`); return }
+    if (!res.ok) return
     const data = await res.json()
-    if (data.success) {
-      _dbg(`ok — used:${data.usedCount}/${data.maxUses ?? '∞'}`)
-    } else {
-      _dbg(`failed: ${data.reason}`)
-      console.warn('ICOPE use record failed:', data.reason)
-    }
+    if (!data.success) console.warn('ICOPE use record failed:', data.reason)
   } catch (e) {
-    _dbg(`error: ${e.message}`)
     console.warn('ICOPE use record error:', e)
   }
 }
