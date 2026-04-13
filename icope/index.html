@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/icope/" />
     <title>BodyGo X ICOPE</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -895,6 +894,85 @@
         width: 52px;
         height: 52px;
       }
+    /* ── License Gate ── */
+    #license-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(145deg, #0d2b6b 0%, #1565c0 50%, #004d40 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: opacity 0.5s;
+    }
+    #license-gate.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .lg-card {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 2rem 1.8rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+    .lg-logo { height: 2.4rem; margin-bottom: 1rem; }
+    .lg-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1565c0;
+      margin-bottom: 0.3rem;
+    }
+    .lg-sub {
+      font-size: 0.7rem;
+      color: #607d8b;
+      margin-bottom: 1.4rem;
+    }
+    .lg-input-wrap {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+    #lg-input {
+      flex: 1;
+      padding: 0.6rem 0.8rem;
+      border: 2px solid #90caf9;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      font-family: monospace;
+      letter-spacing: 0.08em;
+      outline: none;
+      text-transform: uppercase;
+    }
+    #lg-input:focus { border-color: #1565c0; }
+    #lg-btn {
+      padding: 0.6rem 1.1rem;
+      background: #1565c0;
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    #lg-btn:disabled { opacity: 0.6; cursor: default; }
+    .lg-status {
+      font-size: 0.72rem;
+      padding: 0.5rem 0.7rem;
+      border-radius: 0.4rem;
+      display: none;
+      text-align: left;
+    }
+    .lg-status.ok   { background: #e8f5e9; color: #2e7d32; }
+    .lg-status.error{ background: #fdecea; color: #c62828; }
+    .lg-footer {
+      font-size: 0.6rem;
+      color: #b0bec5;
+      margin-top: 1.2rem;
+    }
     </style>
   </head>
   <body>
@@ -1187,11 +1265,27 @@
     </audio>
     <audio id="audio4"><source src="sounds/619.mp4" type="audio/mp4" /></audio>
 
+    <!-- License Gate Overlay -->
+    <div id="license-gate" class="hidden">
+      <div class="lg-card">
+        <img src="images/logo_禾青.png" alt="Logo" class="lg-logo" />
+        <div class="lg-title">ICOPE 長者功能評估系統</div>
+        <div class="lg-sub">請輸入授權碼以繼續使用<br>Please enter your license code</div>
+        <div class="lg-input-wrap">
+          <input id="lg-input" type="text" placeholder="授權碼" autocomplete="off" spellcheck="false" />
+          <button id="lg-btn">確認</button>
+        </div>
+        <div id="lg-status" class="lg-status"></div>
+        <div class="lg-footer">禾青醫電 HEQING MEDICAL · 如有問題請聯絡管理員</div>
+      </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="shared-storage.js"></script>
     <script src="libs/audioProcessFromBrowser.js"></script>
     <script src="libs/motionDetection.js"></script>
+    <script src="license.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
