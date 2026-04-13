@@ -9,6 +9,10 @@
 // ─────────────────────────────────────────────
 const synth = window.speechSynthesis;
 
+// iOS 判斷：iPhone / iPad / iPod，或使用 Apple Silicon Mac (iPad UA)
+const _isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 
@@ -396,6 +400,36 @@ let userInCity = ''; // GPS 取得的縣市
 let _globalStream = null;
 let _globalAudioCtx = null;
 
+// ── Screen Wake Lock ─────────────────────────────────────────────────
+// 評估期間防止螢幕自動變暗（Chrome Android 84+ / Safari iOS 16.4+）
+let _wakeLock = null;
+
+async function _requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  if (_wakeLock) return; // 已持有
+  try {
+    _wakeLock = await navigator.wakeLock.request('screen');
+    _wakeLock.addEventListener('release', () => { _wakeLock = null; });
+  } catch (_) { /* 不支援或拒絕時靜默略過 */ }
+}
+
+function _releaseWakeLock() {
+  if (_wakeLock) { _wakeLock.release(); _wakeLock = null; }
+}
+
+// 頁面從背景回來時：重新取得 Wake Lock + 復活已死的 SR 引擎
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState !== 'visible') return;
+  // 1. Wake Lock 被瀏覽器在背景時自動釋放，重新申請
+  await _requestWakeLock();
+  // 2. 若 SR 應運行但引擎已被暫停，重建並重啟
+  //    visibilitychange=visible 由使用者手勢（點亮螢幕/切回分頁）觸發，
+  //    iOS 應允許此路徑呼叫 start()。
+  if (audioProcessorFromBrowser && !isStopRecognition) {
+    audioProcessorFromBrowser.reviveIfDead();
+  }
+});
+
 function _setBadge(id, cls, text) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -448,18 +482,25 @@ async function _initPermissions() {
 
   // Microphone + SpeechRecognition pre-warm
   try {
-    _globalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    // 取得麥克風授權後立刻釋放 getUserMedia stream，
-    // 避免與 SpeechRecognition 競用麥克風（在 iOS 上尤其重要）
-    _globalStream.getTracks().forEach(t => t.stop());
-    _globalStream = null;
+    if (!_isIOS) {
+      // Android/Desktop: 用 getUserMedia 預先取得麥克風授權，再釋放 stream，
+      // 接著由 SpeechRecognition 自行取用麥克風。
+      // iOS 不做此步驟：SR 自行處理麥克風授權；
+      //   且 getUserMedia 與已在運行的 SR 競用麥克風可能造成衝突。
+      _globalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      _globalStream.getTracks().forEach(t => t.stop());
+      _globalStream = null;
+    }
     _globalAudioCtx = new (window.AudioContext || window['webkitAudioContext'])();
-    // 建立辨識引擎（只建一次，class 由 libs/audioProcessFromBrowser.js 載入）
-    audioProcessorFromBrowser = new AudioProcessFromBrowser();
-    const ok = audioProcessorFromBrowser.initRecognition();
-    if (ok) {
-      audioProcessorFromBrowser.startRecognition();
-      isStopRecognition = true;
+    if (!audioProcessorFromBrowser) {
+      // iOS: 引擎已由 _permBtnClick() 在同步手勢路徑中建立並啟動，此處跳過。
+      // Android/Desktop: 在此建立引擎（非 iOS 無手勢限制）。
+      audioProcessorFromBrowser = new AudioProcessFromBrowser();
+      const ok = audioProcessorFromBrowser.initRecognition();
+      if (ok) {
+        audioProcessorFromBrowser.startRecognition();
+        isStopRecognition = true;
+      }
     }
     _permState.mic = true;
   } catch { _permState.mic = false; }
@@ -469,16 +510,38 @@ async function _initPermissions() {
   if (!(_permState.sensor && _permState.location && _permState.mic)) {
     DOM.permStartBtn.textContent = '重試授權';
     DOM.permStartBtn.disabled = false;
-    DOM.permStartBtn.onclick = _initPermissions;
+    DOM.permStartBtn.onclick = _permBtnClick;
   }
 }
 
-DOM.permStartBtn.onclick = _initPermissions;
+/**
+ * 授權按鈕的統一入口。
+ * iOS 需要在手勢的同步路徑中呼叫 SR.start()；任何 await 都會打斷手勢鏈
+ * 導致 not-allowed。因此在進入 async 的 _initPermissions() 之前，
+ * 先同步建立並啟動 SR 引擎（iOS only）。
+ */
+function _permBtnClick() {
+  if (_isIOS && !audioProcessorFromBrowser) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      audioProcessorFromBrowser = new AudioProcessFromBrowser();
+      if (audioProcessorFromBrowser.initRecognition()) {
+        audioProcessorFromBrowser.startRecognition();  // 同步，在手勢路徑中 ✓
+        isStopRecognition = true;
+      }
+    }
+  }
+  _initPermissions();
+}
+
+DOM.permStartBtn.onclick = _permBtnClick;
 
 function _startAssessment() {
   DOM.permStartBtn.disabled = true;
   // 清除上一次的答案，避免舊資料殘留到結果頁
   SharedStorage.clear();
+  // 申請螢幕常亮（評估期間不讓螢幕變暗）
+  _requestWakeLock();
   // 首頁 icon 飛散動畫後進入第一題
   _iconBurst(() => goToPage(1));
 }
@@ -877,6 +940,8 @@ async function _recordUse() {
 function _setupResult(_guard) {
   _hideNxt();
   DOM.btnReListen.style.display = 'none';
+  // 評估完成，釋放螢幕常亮鎖（結果頁不需要繼續佔用）
+  _releaseWakeLock();
   // 評估完成，記錄一次使用次數（非同步，不阻塞結果顯示）
   _recordUse();
 

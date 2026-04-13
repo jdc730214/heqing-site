@@ -1,17 +1,28 @@
 /**
  * AudioProcessFromBrowser — 語音辨識封裝
  *
- * 設計原則（Android Chrome 相容性）：
- *  1. 每題都建立全新的 SpeechRecognition 物件。
- *     Android Chrome 在 TTS 播放期間會強制停止 SR 引擎，
- *     若在 TTS 仍在播放時呼叫 start() 可能靜默失敗（不拋例外、不觸發 onend），
- *     導致引擎卡在 isRecognizing=true 但實際未運行的狀態。
- *     使用全新物件確保每次 start() 都是乾淨狀態。
- *  2. continuous: false — 每個語音段落結束後由 onend 自動重啟，
- *     比 continuous:true 在 Android 各版本上更相容。
- *  3. 每題開始時先 destroy 舊物件（nullify handlers 防止幽靈 callback），
- *     150ms 後啟動新物件，給舊引擎足夠時間完全停止。
+ * 平台差異處理：
+ *
+ * ── Android Chrome ──────────────────────────────────────────────────
+ *   問題：TTS 播放期間 Android 會強制停止 SR 引擎；在 TTS 仍在播放時
+ *         呼叫 start() 可能靜默失敗（不拋例外、不觸發 onend），導致
+ *         引擎卡在 isRecognizing=true 但實際未運行的狀態。
+ *   策略：continuous: false（每段語音結束後由 onend 自動重啟）；
+ *         每題建立全新 SR 物件確保乾淨狀態；_destroyCurrent() nullify
+ *         所有 handler 防止幽靈 callback。
+ *
+ * ── iOS Safari / WKWebView ──────────────────────────────────────────
+ *   問題：start() 必須在使用者手勢（同步呼叫路徑）中執行，任何 await
+ *         都會打斷手勢鏈導致 not-allowed 錯誤。換題時若重新 stop()+
+ *         start()，因不在手勢路徑中，iOS 會拒絕。
+ *   策略：continuous: true（引擎持續運行，不需要重啟）；
+ *         restartForQuestion() 在 iOS 僅切換 callback，不重建引擎；
+ *         初始 start() 必須由 script.js 在同步手勢 handler 中呼叫。
  */
+
+const _isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
 class AudioProcessFromBrowser {
   constructor() {
     this.speechRecognition = null;
@@ -26,7 +37,9 @@ class AudioProcessFromBrowser {
     const sr = new SR();
     sr.lang           = 'zh-TW';
     sr.interimResults = true;
-    sr.continuous     = false;   // 比 continuous:true 在 Android 更穩定
+    // iOS: continuous=true — 引擎持續運行，不需要在換題時有手勢才能重啟
+    // Android: continuous=false — 每段語音結束後由 onend 自動重啟，在 Android 各版本更穩定
+    sr.continuous     = _isIOS ? true : false;
 
     sr.onresult = (event) => {
       const finalTx   = Array.from(event.results).filter(r =>  r.isFinal).map(r => r[0].transcript).join('');
@@ -45,7 +58,7 @@ class AudioProcessFromBrowser {
     };
 
     sr.onend = () => {
-      // 引擎結束後自動重啟（等 100ms 讓舊引擎完全釋放）
+      // 引擎意外停止時自動重啟（等 100ms 讓舊引擎完全釋放）
       // 只在 isRecognizing=true 且仍是同一個 sr 物件時重啟，
       // 避免題目換頁後的幽靈重啟
       if (this.isRecognizing && this.speechRecognition === sr) {
@@ -76,7 +89,6 @@ class AudioProcessFromBrowser {
 
   /**
    * 檢查瀏覽器是否支援 SpeechRecognition。
-   * 不在此啟動引擎（避免在授權流程前佔用麥克風）。
    */
   initRecognition() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -85,8 +97,10 @@ class AudioProcessFromBrowser {
   }
 
   /**
-   * 授權後呼叫一次：建立引擎並啟動（取得麥克風授權、預熱）。
-   * 這個引擎在第一題的 restartForQuestion() 時會被取代。
+   * 建立引擎並啟動。
+   * ⚠️ iOS：此方法必須在使用者手勢的同步呼叫路徑中執行（不可在 await 之後）。
+   *    script.js 的 _permBtnClick() 確保這一點。
+   * Android：在 _initPermissions() async 流程中呼叫亦可（Android 無手勢限制）。
    */
   startRecognition() {
     this._destroyCurrent();
@@ -97,18 +111,46 @@ class AudioProcessFromBrowser {
     try { sr.start(); } catch (_) {}
   }
 
-  /** 停止辨識（離開語音題或評估結束時呼叫）*/
+  /** 停止辨識（評估結束時呼叫）*/
   stopRecognition() {
     this._destroyCurrent();
   }
 
   /**
-   * 每題開始前呼叫：銷毀舊引擎，150ms 後建立全新引擎並啟動。
-   * 150ms 緩衝讓舊引擎（可能正被 Android 強制停止中）完全釋放。
-   * callback 在新引擎啟動後執行。
+   * 頁面從背景回來後呼叫：若引擎已被瀏覽器暫停/終止，重建並重啟。
+   * visibilitychange=visible 由使用者點亮螢幕或切回分頁觸發（視為手勢），
+   * 因此 iOS 應允許此路徑呼叫 start()。
+   */
+  reviveIfDead() {
+    if (!this.isRecognizing) return; // 本來就不應運行，不做任何事
+    // 銷毀可能已死的引擎，重建一個全新的乾淨實例並啟動
+    this._destroyCurrent();
+    this.isRecognizing = true; // _destroyCurrent 會設為 false，手動還原意圖
+    const sr = this._buildEngine();
+    if (!sr) return;
+    this.speechRecognition = sr;
+    try { sr.start(); } catch (_) {}
+  }
+
+  /**
+   * 換題時呼叫。
+   *
+   * iOS：引擎保持運行，僅呼叫 callback。
+   *      script.js 的 _startRecognition() 已透過 removeEventListener /
+   *      addEventListener 確保新題只收到新的辨識結果。
+   *      （在 iOS 上停止引擎後，若無手勢則無法重啟。）
+   *
+   * Android/Desktop：銷毀舊引擎，150ms 後建立全新引擎並啟動。
+   *      150ms 緩衝讓舊引擎（可能正被 Android 強制停止中）完全釋放。
    */
   restartForQuestion(callback) {
-    this._destroyCurrent();   // isRecognizing = false, 舊物件 nullified
+    if (_isIOS) {
+      // iOS: 引擎持續運行，不做 stop/start，直接呼叫 callback
+      if (callback) callback();
+      return;
+    }
+    // Android/Desktop: 全新物件確保乾淨啟動
+    this._destroyCurrent();
     setTimeout(() => {
       const sr = this._buildEngine();
       if (!sr) { if (callback) callback(); return; }
