@@ -66,7 +66,40 @@ let _cntCurrent = 0;
 let _ttsGen     = 0;   // 每次 synth.cancel() 前遞增，防 onend callback 洩漏
 
 // ─────────────────────────────────────────────
-// 3.  CORE NAVIGATION
+// 3.  BUTTON CLICK SOUND  (按鍵音)
+// ─────────────────────────────────────────────
+let _clickCtx = null;
+
+function _playClickSound() {
+  try {
+    if (!_clickCtx || _clickCtx.state === 'closed') {
+      _clickCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    const ctx = _clickCtx;
+    if (ctx.state === 'suspended') ctx.resume();
+
+    // 短促頻率下掃的「叩」聲 / Short frequency-sweep "tap" tone
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1000, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.06);
+    gain.gain.setValueAtTime(0.22, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.1);
+  } catch (_) {}
+}
+
+// 捕獲階段監聽所有 <button> 點擊（含 license.js 的授權確認按鈕）
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button')) _playClickSound();
+}, true);
+
+// ─────────────────────────────────────────────
+// 4.  CORE NAVIGATION
 // ─────────────────────────────────────────────
 function goToNext() { goToPage(_pageIndex + 1); }
 
@@ -133,7 +166,7 @@ function _animateCards(outId, inId, done) {
 }
 
 // ─────────────────────────────────────────────
-// 4.  PAGE SETUP DISPATCHER
+// 5.  PAGE SETUP DISPATCHER
 // ─────────────────────────────────────────────
 function _setupPage(index, token) {
   const guard = () => token === _pageToken;
