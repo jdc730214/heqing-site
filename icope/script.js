@@ -732,7 +732,12 @@ async function _voicePage({ guard, question, hint, say, keywords, similar, saveK
     if (!guard()) return;
 
     if (playAudioId) {
-      await _playAudio(playAudioId, guard);
+      try {
+        await _playAudio(playAudioId, guard);
+      } catch (e) {
+        if (e === 'cancelled' || !guard()) return; // 真正取消（換頁），離開
+        // iOS autoplay 被拒或其他非取消錯誤 — 繼續執行題目，重聽按鈕仍可按
+      }
       if (!guard()) return;
       if (showReListen) DOM.btnReListen.style.display = 'flex';
     }

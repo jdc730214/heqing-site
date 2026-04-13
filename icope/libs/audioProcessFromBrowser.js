@@ -27,6 +27,9 @@ class AudioProcessFromBrowser {
   constructor() {
     this.speechRecognition = null;
     this.isRecognizing     = false;
+    // iOS continuous:true — event.results 跨題累積，需追蹤起算 index
+    this._iosResultBase   = 0;     // 目前題目的結果起始 index
+    this._iosPendingReset = false; // 換題時設為 true，下一個 onresult 更新 base
   }
 
   /** 建立全新引擎實例 */
@@ -45,8 +48,18 @@ class AudioProcessFromBrowser {
     let _pendingInterim = '';
 
     sr.onresult = (event) => {
-      const finalTx   = Array.from(event.results).filter(r =>  r.isFinal).map(r => r[0].transcript).join('');
-      const interimTx = Array.from(event.results).filter(r => !r.isFinal).map(r => r[0].transcript).join('');
+      // iOS: event.results 跨題累積所有結果 —
+      // 換題時設定 _iosPendingReset=true，在此以 event.resultIndex 重設起算點，
+      // 確保只輸出本題的辨識文字，不帶入前題或 TTS 殘留結果。
+      if (_isIOS && this._iosPendingReset) {
+        this._iosResultBase   = event.resultIndex;
+        this._iosPendingReset = false;
+      }
+      const allResults = Array.from(event.results);
+      const results    = _isIOS ? allResults.slice(this._iosResultBase) : allResults;
+
+      const finalTx   = results.filter(r =>  r.isFinal).map(r => r[0].transcript).join('');
+      const interimTx = results.filter(r => !r.isFinal).map(r => r[0].transcript).join('');
       const transcript = finalTx + interimTx;
       if (!transcript) return;
 
@@ -168,7 +181,9 @@ class AudioProcessFromBrowser {
    */
   restartForQuestion(callback) {
     if (_isIOS) {
-      // iOS: 引擎持續運行，不做 stop/start，直接呼叫 callback
+      // iOS: 引擎持續運行，不做 stop/start
+      // 設旗標讓下一個 onresult 重設結果起算點，排除前題累積的文字
+      this._iosPendingReset = true;
       if (callback) callback();
       return;
     }
