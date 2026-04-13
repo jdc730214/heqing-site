@@ -41,11 +41,18 @@ class AudioProcessFromBrowser {
     // Android: continuous=false — 每段語音結束後由 onend 自動重啟，在 Android 各版本更穩定
     sr.continuous     = _isIOS ? true : false;
 
+    // 追蹤最後一個尚未定案的 interim 結果（用於 onend flush）
+    let _pendingInterim = '';
+
     sr.onresult = (event) => {
       const finalTx   = Array.from(event.results).filter(r =>  r.isFinal).map(r => r[0].transcript).join('');
       const interimTx = Array.from(event.results).filter(r => !r.isFinal).map(r => r[0].transcript).join('');
       const transcript = finalTx + interimTx;
       if (!transcript) return;
+
+      // 記錄最後 interim；一旦有 final 就清掉（已定案，不需 flush）
+      if (!_isIOS) _pendingInterim = finalTx ? '' : interimTx;
+
       document.dispatchEvent(new CustomEvent('audioProcessed', {
         detail: { transcript, isFinal: !!finalTx && !interimTx },
       }));
@@ -58,6 +65,16 @@ class AudioProcessFromBrowser {
     };
 
     sr.onend = () => {
+      // Android：單字短音有時出現為 interim 但信心不足、不產生 final 就結束。
+      // 在重啟前把最後的 interim 強制送出，讓累積器能抓到這個字。
+      if (!_isIOS && _pendingInterim) {
+        const flushed = _pendingInterim;
+        _pendingInterim = '';
+        document.dispatchEvent(new CustomEvent('audioProcessed', {
+          detail: { transcript: flushed, isFinal: true },
+        }));
+      }
+
       // 引擎意外停止時自動重啟（等 100ms 讓舊引擎完全釋放）
       // 只在 isRecognizing=true 且仍是同一個 sr 物件時重啟，
       // 避免題目換頁後的幽靈重啟
