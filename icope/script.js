@@ -488,7 +488,16 @@ function _checkAllPerms() {
   if (sensor && location && mic) {
     DOM.permStartBtn.textContent = '開始評估 ▶';
     DOM.permStartBtn.disabled = false;
+    DOM.permStartBtn.classList.add('perm-ready');
     DOM.permStartBtn.onclick = _startAssessment;
+    // 語音提示：授權完成，引導使用者按下按鈕
+    try {
+      const u = new SpeechSynthesisUtterance('授權完成，請按下開始評估即可進行。');
+      u.lang = 'zh-TW';
+      u.rate = 0.9;
+      synth.cancel();   // 清掉任何殘留語音
+      synth.speak(u);
+    } catch (_) {}
   }
 }
 
@@ -613,6 +622,7 @@ if (_isIOS) {
 
 function _startAssessment() {
   DOM.permStartBtn.disabled = true;
+  DOM.permStartBtn.classList.remove('perm-ready');
   // 清除上一次的答案，避免舊資料殘留到結果頁
   SharedStorage.clear();
   // 申請螢幕常亮（評估期間不讓螢幕變暗）

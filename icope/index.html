@@ -514,6 +514,15 @@
         opacity: 0.6;
         cursor: not-allowed;
       }
+      #permStartBtn.perm-ready {
+        background: var(--primary-dark);
+        color: #fff;
+        animation: perm-pulse 1.8s ease-in-out infinite;
+      }
+      @keyframes perm-pulse {
+        0%, 100% { box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+        50%       { box-shadow: 0 0 0 7px rgba(255,255,255,0.25), 0 4px 20px rgba(0,0,0,0.28); }
+      }
 
       /* ══════════════════════════════════════
        VOICE CARD  (card-voice)
