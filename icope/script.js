@@ -330,9 +330,9 @@ function _startRecognition(guard, onResult) {
 
   _recHandler = (e) => {
     if (!guard() || isStopRecognition) return;
-    const { transcript } = e.detail;
+    const { transcript, isFinal } = e.detail;
     if (!transcript) return;
-    onResult(transcript);
+    onResult(transcript, !!isFinal);
   };
   document.addEventListener('audioProcessed', _recHandler);
 
@@ -676,9 +676,14 @@ async function _voicePage({ guard, question, hint, say, keywords, similar, saveK
   _typewrite(DOM.qText, question, 90);
   _typewrite(DOM.qHint, hint, 60);
 
-  // 跨次語音累積：iOS continuous:true 的 raw 本身就是累積的；
-  // Android continuous:false 每次重啟後 raw 只有當次，需手動疊加
+  // 跨次語音累積
+  // _accum      : 已定案（final）的所有文字，倒計時內永久保留
+  // _tempInterim: 當次 interim 暫存，僅用於顯示，不永久累積
+  // iOS continuous:true — event.results 自動累積，raw 本身就是完整文字，直接覆蓋 _accum
+  // Android continuous:false — onresult 每次只有當次文字：
+  //   interim 更新 _tempInterim（顯示用），final 才 append 進 _accum
   let _accum = '';
+  let _tempInterim = '';
 
   try {
     await _speak(say, 0.9, guard);
@@ -690,13 +695,21 @@ async function _voicePage({ guard, question, hint, say, keywords, similar, saveK
       if (showReListen) DOM.btnReListen.style.display = 'flex';
     }
 
-    _startRecognition(guard, (raw) => {
+    _startRecognition(guard, (raw, isFinal) => {
       if (_isIOS) {
-        _accum = raw;                             // iOS: browser 已累積
+        // iOS: event.results 內建累積，直接覆蓋即可，不會重複
+        _accum = raw;
+        _tempInterim = '';
+      } else if (isFinal) {
+        // Android final: 定案後才 append，避免多次 interim 產生重複
+        _accum = (_accum + ' ' + raw).trim();
+        _tempInterim = '';
       } else {
-        _accum = (_accum + ' ' + raw).trim();     // Android: 手動累積
+        // Android interim: 只更新暫存，不動 _accum
+        _tempInterim = raw;
       }
-      const t = _applySimilar(_normalize(_accum), similar);
+      const display = (_accum + (_tempInterim ? ' ' + _tempInterim : '')).trim();
+      const t = _applySimilar(_normalize(display), similar);
       _updateWhiteBox(_highlight(t, keywords));
 
       // 判斷答對（checkFn 存在用 checkFn，否則用 keywords 全匹配；兩者至少有一個才能自動跳）
