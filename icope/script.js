@@ -639,6 +639,13 @@ function _startAssessment() {
     try {
       if (_clickCtx && _clickCtx.state === 'suspended') _clickCtx.resume();
     } catch (_) {}
+    // 在手勢路徑中重新啟動 SR 引擎：
+    // _permBtnClick() 啟動後若使用者在首頁停留過久，iOS 可能終止引擎；
+    // 此處（"開始評估" click 仍在手勢中）重啟，確保評估開始時引擎是活的。
+    if (audioProcessorFromBrowser) {
+      audioProcessorFromBrowser.startRecognition();
+      isStopRecognition = true;
+    }
   }
   // 首頁 icon 飛散動畫後進入第一題
   _iconBurst(() => goToPage(1));

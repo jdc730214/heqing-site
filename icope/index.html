@@ -349,7 +349,9 @@
     ══════════════════════════════════════ */
       #card-home {
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         /* 深藍→青綠漸層，帶動態顏色流動 */
         background: linear-gradient(
           145deg,
@@ -436,7 +438,7 @@
 
       /* Permission panel */
       .perm-panel {
-        margin-top: 40px;
+        margin-top: auto;
         background: rgba(255, 255, 255, 0.1);
         border-radius: var(--radius);
         padding: 0.3rem 0.38rem;
