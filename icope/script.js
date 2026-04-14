@@ -1162,15 +1162,24 @@ DOM.btnReListen.addEventListener('click', async () => {
 const USE_URL = 'https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/icope/use'
 
 async function _recordUse() {
+  const _dbg = (msg) => {
+    const el = document.getElementById('use-debug');
+    if (el) el.textContent = msg;
+  };
   try {
     const cache = JSON.parse(localStorage.getItem('icope_license_v1') || 'null')
-    if (!cache?.code) return
+    if (!cache?.code) { _dbg('❌ 無授權碼 cache'); return; }
+    _dbg(`⏳ 送出… code=${cache.code}`);
     const res = await fetch(`${USE_URL}?code=${encodeURIComponent(cache.code)}`, { method: 'POST' })
-    if (!res.ok) return
+    if (!res.ok) { _dbg(`❌ HTTP ${res.status}`); return; }
     const data = await res.json()
-    if (!data.success) console.warn('ICOPE use record failed:', data.reason)
+    if (data.success) {
+      _dbg(`✅ 成功 ${data.usedCount}/${data.maxUses ?? '∞'}`);
+    } else {
+      _dbg(`⚠️ ${data.reason} ${data.usedCount ?? ''}/${data.maxUses ?? ''}`);
+    }
   } catch (e) {
-    console.warn('ICOPE use record error:', e)
+    _dbg(`❌ 錯誤: ${e.message}`);
   }
 }
 
