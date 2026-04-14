@@ -1162,29 +1162,16 @@ DOM.btnReListen.addEventListener('click', async () => {
 const USE_URL = 'https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/icope/use'
 
 async function _recordUse() {
-  const _dbg = (msg) => {
-    const el = document.getElementById('use-debug');
-    if (el) el.textContent = msg;
-  };
   try {
     const cache = JSON.parse(localStorage.getItem('icope_license_v1') || 'null')
     const code = cache?.code || sessionStorage.getItem('icope_session_code') || null;
-    if (!code) {
-      const why = localStorage.getItem('icope_debug_clear');
-      _dbg('❌ 無授權碼 cache' + (why ? ' | 清除原因: ' + why : ''));
-      return;
-    }
-    _dbg(`⏳ 送出… code=${code}${cache?.code ? '' : ' (session備用)'}`);
+    if (!code) return;
     const res = await fetch(`${USE_URL}?code=${encodeURIComponent(code)}`, { method: 'POST' })
-    if (!res.ok) { _dbg(`❌ HTTP ${res.status}`); return; }
+    if (!res.ok) return;
     const data = await res.json()
-    if (data.success) {
-      _dbg(`✅ 成功 ${data.usedCount}/${data.maxUses ?? '∞'}`);
-    } else {
-      _dbg(`⚠️ ${data.reason} ${data.usedCount ?? ''}/${data.maxUses ?? ''}`);
-    }
+    if (!data.success) console.warn('ICOPE use record failed:', data.reason)
   } catch (e) {
-    _dbg(`❌ 錯誤: ${e.message}`);
+    console.warn('ICOPE use record error:', e)
   }
 }
 
