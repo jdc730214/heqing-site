@@ -44,7 +44,10 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
   }
 
   // ── 放行：隱藏閘門 ───────────────────────────────────────────────
-  function unlock(expiryDate) {
+  function unlock(code, expiryDate) {
+    // sessionStorage 存一份 code，不受 clearCache 影響
+    // _recordUse() 找不到 localStorage 時的備用
+    try { sessionStorage.setItem('icope_session_code', code) } catch (_) {}
     showStatus(`授權有效，到期日：${expiryDate}`, 'ok')
     setTimeout(() => gate.classList.add('hidden'), 800)
   }
@@ -68,12 +71,12 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
 
     if (!needRecheck) {
       // 快取新鮮，直接放行
-      unlock(cache.expiryDate)
+      unlock(cache.code, cache.expiryDate)
       return
     }
 
     // 需要重新確認，但先放行畫面（背景驗證）
-    unlock(cache.expiryDate)
+    unlock(cache.code, cache.expiryDate)
     try {
       const data = await remoteValidate(cache.code)
       if (data.valid) {
@@ -111,7 +114,7 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
       const data = await remoteValidate(code)
       if (data.valid) {
         saveCache(code, data.expiryDate)
-        unlock(data.expiryDate)
+        unlock(code, data.expiryDate)
       } else {
         const msg = data.reason === 'EXPIRED'
           ? `此授權碼已於 ${data.expiryDate} 到期`

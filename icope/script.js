@@ -1168,13 +1168,14 @@ async function _recordUse() {
   };
   try {
     const cache = JSON.parse(localStorage.getItem('icope_license_v1') || 'null')
-    if (!cache?.code) {
+    const code = cache?.code || sessionStorage.getItem('icope_session_code') || null;
+    if (!code) {
       const why = localStorage.getItem('icope_debug_clear');
       _dbg('❌ 無授權碼 cache' + (why ? ' | 清除原因: ' + why : ''));
       return;
     }
-    _dbg(`⏳ 送出… code=${cache.code}`);
-    const res = await fetch(`${USE_URL}?code=${encodeURIComponent(cache.code)}`, { method: 'POST' })
+    _dbg(`⏳ 送出… code=${code}${cache?.code ? '' : ' (session備用)'}`);
+    const res = await fetch(`${USE_URL}?code=${encodeURIComponent(code)}`, { method: 'POST' })
     if (!res.ok) { _dbg(`❌ HTTP ${res.status}`); return; }
     const data = await res.json()
     if (data.success) {
