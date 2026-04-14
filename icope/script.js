@@ -1168,7 +1168,11 @@ async function _recordUse() {
   };
   try {
     const cache = JSON.parse(localStorage.getItem('icope_license_v1') || 'null')
-    if (!cache?.code) { _dbg('❌ 無授權碼 cache'); return; }
+    if (!cache?.code) {
+      const why = localStorage.getItem('icope_debug_clear');
+      _dbg('❌ 無授權碼 cache' + (why ? ' | 清除原因: ' + why : ''));
+      return;
+    }
     _dbg(`⏳ 送出… code=${cache.code}`);
     const res = await fetch(`${USE_URL}?code=${encodeURIComponent(cache.code)}`, { method: 'POST' })
     if (!res.ok) { _dbg(`❌ HTTP ${res.status}`); return; }

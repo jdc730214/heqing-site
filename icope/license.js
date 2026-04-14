@@ -80,6 +80,10 @@ const RECHECK_HOURS = 20  // 每 20 小時重新向後端確認一次
         saveCache(cache.code, data.expiryDate)
       } else {
         // 後端說無效（停用、刪除、次數耗盡）→ 清快取，下次開啟需重新輸入
+        // DEBUG: 記錄清除原因，供 _recordUse debug 顯示
+        localStorage.setItem('icope_debug_clear', JSON.stringify({
+          code: cache.code, reason: data.reason, time: new Date().toISOString()
+        }))
         clearCache()
       }
     } catch {
