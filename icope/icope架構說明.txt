@@ -1,0 +1,143 @@
+================================================================
+ICOPE 長者功能評估系統 — 架構說明
+版本日期：2026-04-14
+================================================================
+
+【系統概述】
+ICOPE（Integrated Care for Older People）是 WHO 推薦的長者功能評估工具。
+本系統為網頁版實作，部署於 https://heqinghealth.com/icope。
+評估涵蓋認知、行動、營養、視力、聽力、憂鬱六大面向。
+需要有效授權碼才能進入評估，完成後自動記錄使用次數。
+
+----------------------------------------------------------------
+【檔案結構】
+----------------------------------------------------------------
+icope/
+├── index.html              整個 SPA 主檔，所有 card 頁面 + CSS 均在此
+├── license.js              授權閘門，script.js 之前載入
+├── script.js               主程式（評估流程、語音、TTS、結果）
+├── shared-storage.js       題目答案跨函式存取工具
+├── CLAUDE.md               給 Claude Code 的開發說明
+├── libs/
+│   ├── audioProcessFromBrowser.js  語音辨識封裝（跨平台）
+│   ├── motionDetection.js          裝置運動感測（行動功能題）
+│   ├── service-worker.js           PWA 離線快取
+│   └── wav-encoder.js              音訊編碼工具
+└── sounds/
+    ├── 619.mp4             聽力題第一輪音檔
+    ├── 257.mp4             聽力題第二輪音檔
+    └── correct.mp3         答對音效
+
+----------------------------------------------------------------
+【評估頁面流程】
+----------------------------------------------------------------
+頁面索引  卡片ID          題目名稱
+0        card-home       首頁（授權）
+1        card-voice      A. 認知 — 記憶力（記住三樣物品）
+2        card-voice      A. 認知 — 定向力（今天日期）
+3        card-voice      A. 認知 — 定向力（現在地點）
+4        card-voice      A. 認知 — 記憶力（複述三樣物品）
+5        card-motion     B. 行動功能（起身走路）
+6        card-yesno      C. 營養狀況（是非題）
+7        card-yesno      D. 視力狀況（是非題）
+8        card-voice      E. 聽力狀況（聆聽數字）
+9        card-yesno      F. 憂鬱狀況（是非題）
+10       card-result     評估結果頁
+
+----------------------------------------------------------------
+【授權碼機制】
+----------------------------------------------------------------
+後端：https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net
+資料表：BodyGoDB.icope_Licenses
+欄位：LicenseCode, ExpiryDate, IsActive, MaxUses, UsedCount
+
+驗證 API：GET /api/icope/validate?code=XXX
+  回傳：{ valid, expiryDate, reason, usedCount, maxUses }
+  reason 值：EXPIRED / DISABLED / EXCEEDED / NOT_FOUND
+
+記錄使用：POST /api/icope/use?code=XXX
+  條件：IsActive=1 且 (MaxUses IS NULL 或 UsedCount < MaxUses)
+  操作：UsedCount 原子 +1
+
+本地快取（localStorage['icope_license_v1']）：
+  { code, expiryDate, lastValidated }
+  - 距上次驗證 < 20 小時：直接放行，不呼叫後端
+  - > 20 小時：先放行，背景重新驗證
+  - 後端說無效：清除快取（下次開啟重新輸入）
+
+Session 備用（sessionStorage['icope_session_code']）：
+  放行時同步寫入，供 _recordUse() 在 localStorage 被清除時使用
+
+URL 帶碼自動登入（LINE 分享用）：
+  格式：https://heqinghealth.com/icope?openExternalBrowser=1#授權碼
+  hash 優先，相容 path 和 query string 格式
+
+----------------------------------------------------------------
+【語音辨識架構】
+----------------------------------------------------------------
+封裝類別：AudioProcessFromBrowser（libs/audioProcessFromBrowser.js）
+
+平台差異：
+  iOS Safari
+    - continuous = true（引擎持續運行）
+    - start() 必須在使用者手勢同步路徑中（不可在 await 後）
+    - event.results 跨題累積，換題時以 _iosResultBase 切割起算點
+    - TTS 播放期間可能殺死 SR，onend 自動重啟
+
+  Android Chrome
+    - continuous = false（每次語音停頓後 onend 重啟）
+    - 每題建立全新 SR 物件（避免舊物件卡死）
+    - 單字 interim 未 finalize 時，onend 強制 flush
+
+語音辨識 API：
+  startRecognition()       建立並啟動引擎（必須在手勢路徑中，iOS）
+  stopRecognition()        完全銷毀引擎
+  restartForQuestion()     換題：iOS 僅重置結果起算點；Android 銷毀重建
+  reviveIfDead()           頁面從背景回來後重活引擎
+
+事件：
+  document → 'audioProcessed'  { transcript, isFinal }
+  document → 'srPermissionDenied'  SR 權限被拒（not-allowed / service-not-allowed）
+
+----------------------------------------------------------------
+【聽力題兩輪機制】
+----------------------------------------------------------------
+第一輪：播放 619.mp4，辨識「619」或「六一九」
+失敗（30秒倒計時到）→ 自動等 700ms → 第二輪
+第二輪：播放 257.mp4，辨識「257」或「二五七」
+失敗 → 顯示「下一題」按鈕
+
+重聽按鈕：兩輪共用，重播當前輪音檔 + 重啟辨識 + 重啟倒計時
+逾時行為與主流程一致（第一輪逾時 → 進第二輪）
+
+共用設定物件：_hearConfig { audioId, keywords, similar, checkFn, onTimeout }
+
+----------------------------------------------------------------
+【iOS 特殊處理】
+----------------------------------------------------------------
+1. 音訊解鎖
+   在 _startAssessment()（手勢中）對所有 <audio> 執行 play().then(pause)
+   解鎖 iOS autoplay 限制，確保後續音檔能自動播放
+
+2. TTS 解鎖
+   _permBtnClick() 和 _startAssessment() 中用無聲 utterance 解鎖 TTS session
+
+3. 截圖儲存
+   iOS 不支援 <a download>，改以浮層顯示截圖圖片
+   使用者長按圖片 → 選「加入照片」→ 存到相簿
+
+4. 語音辨識權限
+   SR 需要系統層級「語音辨識」權限（設定→隱私權→語音辨識→Safari）
+   獨立於麥克風權限，首次使用由系統自動詢問
+   拒絕後會觸發 service-not-allowed 錯誤 → 顯示設定引導
+
+----------------------------------------------------------------
+【結果頁】
+----------------------------------------------------------------
+- 各題結果從 SharedStorage 讀取
+- 評估日期自動填入
+- 各面向顯示「正常 / 需追蹤」badge
+- 截圖儲存按鈕（iOS 浮層長按，Android 直接下載）
+- 進入結果頁時呼叫 _recordUse() 記錄使用次數
+
+================================================================
