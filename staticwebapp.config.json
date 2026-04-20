@@ -49,6 +49,6 @@
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/.well-known/*", "/admin/*", "/icope/*", "/bodygo3_0/*"]
+    "exclude": ["/.well-known/*", "/admin/*", "/icope/*", "/bodygo3_0/**"]
   }
 }
