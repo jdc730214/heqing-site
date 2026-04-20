@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>禾青心訓 · HEQING HR Training</title>
+<style>
+:root {
+  --purple:#7C3AED; --purple2:#6D28D9; --purple-light:#A78BFA;
+  --emerald:#34D399; --amber:#FBBF24; --red:#F87171; --cyan:#38BDF8;
+  --blue:#60A5FA; --orange:#FB923C;
+  --bg:#0D0D1A; --card:#131326; --card2:#1A1A30; --card3:#1F1F3A;
+  --text:#F1F5F9; --muted:rgba(241,245,249,.55); --muted2:rgba(241,245,249,.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI','PingFang TC','Microsoft JhengHei',sans-serif;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(13,13,26,.85);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo img{height:36px;background:#fff;border-radius:8px;padding:3px 6px}
+.nav-brand{font-size:1rem;font-weight:800;
+  background:linear-gradient(135deg,var(--purple-light),var(--emerald));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;gap:24px}
+.nav-links a{color:var(--muted);font-size:.85rem;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+@media(max-width:600px){.nav-links{display:none}}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.18}
+.hero-bg::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 70% at 50% 0%,rgba(124,58,237,.5) 0%,transparent 65%),
+    linear-gradient(180deg,transparent 40%,var(--bg) 100%)}
+.hero-badge{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;
+  background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.5);
+  border-radius:999px;padding:6px 18px;font-size:.8rem;color:var(--purple-light);margin-bottom:24px}
+.badge-dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);
+  box-shadow:0 0 8px var(--emerald);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero h1{position:relative;z-index:1;
+  font-size:clamp(2.4rem,7vw,5.2rem);font-weight:900;line-height:1.05;letter-spacing:-1.5px;margin-bottom:10px}
+.hero h1 .g{background:linear-gradient(135deg,#A78BFA 0%,#34D399 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero h1 .en{display:block;font-size:.45em;font-weight:400;letter-spacing:3px;
+  color:var(--muted);-webkit-text-fill-color:var(--muted);margin-top:8px}
+.hero-desc{position:relative;z-index:1;max-width:580px;color:var(--muted);
+  font-size:clamp(.95rem,2.5vw,1.15rem);line-height:1.9;margin:20px auto 36px}
+.hero-desc strong{color:var(--emerald)}
+.hero-cta{position:relative;z-index:1;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:56px}
+.btn-p{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;border:none;
+  border-radius:14px;padding:15px 34px;font-size:.95rem;font-weight:700;
+  cursor:pointer;box-shadow:0 8px 28px rgba(124,58,237,.45);transition:.2s;text-decoration:none;display:inline-block}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(124,58,237,.55)}
+.btn-o{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;padding:15px 34px;font-size:.95rem;font-weight:600;cursor:pointer;
+  transition:.2s;text-decoration:none;display:inline-block}
+.btn-o:hover{border-color:var(--purple-light);color:var(--text)}
+.hero-pills{position:relative;z-index:1;display:flex;gap:20px;flex-wrap:wrap;justify-content:center}
+.pill{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:14px 22px;text-align:center;backdrop-filter:blur(8px)}
+.pill .pn{font-size:1.6rem;font-weight:800;
+  background:linear-gradient(135deg,var(--emerald),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pill .pl{font-size:.72rem;color:var(--muted);margin-top:3px}
+
+/* ── SECTION ── */
+section{padding:80px 24px}
+.container{max-width:1160px;margin:0 auto}
+.sec-label{font-size:.72rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--purple-light);margin-bottom:12px}
+.sec-title{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:800;line-height:1.2;margin-bottom:14px}
+.sec-en{color:var(--muted);font-size:.58em;font-weight:400;display:block;margin-top:6px}
+.sec-desc{color:var(--muted);font-size:1rem;line-height:1.85;max-width:560px}
+.divider{height:1px;background:rgba(255,255,255,.04)}
+
+/* ══════════════════════════════════════════
+   APP SCREENSHOTS — PHONE MOCKUP GALLERY
+══════════════════════════════════════════ */
+.phones-section{background:linear-gradient(180deg,transparent,rgba(124,58,237,.05) 40%,transparent)}
+.phones-scroll{display:flex;gap:20px;overflow-x:auto;padding:40px 0 20px;
+  scrollbar-width:thin;scrollbar-color:rgba(124,58,237,.4) transparent}
+.phones-scroll::-webkit-scrollbar{height:4px}
+.phones-scroll::-webkit-scrollbar-track{background:transparent}
+.phones-scroll::-webkit-scrollbar-thumb{background:rgba(124,58,237,.4);border-radius:2px}
+
+/* phone frame */
+.phone{flex-shrink:0;width:220px;background:#111;border-radius:32px;
+  border:2px solid rgba(255,255,255,.12);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6);
+  position:relative}
+.phone-notch{height:28px;background:#000;display:flex;align-items:center;justify-content:center}
+.phone-notch::after{content:'';width:60px;height:12px;background:#1a1a1a;border-radius:6px}
+.phone-screen{height:420px;overflow:hidden;position:relative}
+.phone-caption{padding:12px 0 16px;text-align:center;font-size:.72rem;color:var(--muted);
+  background:rgba(0,0,0,.3)}
+
+/* ── Screen: Home ── */
+.scr-home{background:var(--bg);height:100%}
+.home-hero{position:relative;height:200px;overflow:hidden}
+.home-hero img{width:100%;height:100%;object-fit:cover}
+.home-hero::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,rgba(13,13,26,.9) 100%)}
+.home-topbar{position:absolute;top:0;left:0;right:0;padding:10px 12px;
+  display:flex;align-items:center;justify-content:space-between;z-index:2}
+.home-appname{font-size:.65rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:5px}
+.home-dot{width:5px;height:5px;border-radius:50%;background:var(--purple-light)}
+.home-stats-overlay{position:absolute;bottom:10px;left:0;right:0;
+  padding:0 12px;display:flex;justify-content:space-between;z-index:2}
+.hso-item{display:flex;align-items:center;gap:4px}
+.hso-val{font-size:.9rem;font-weight:800;color:#fff}
+.hso-label{font-size:.5rem;color:rgba(255,255,255,.6);line-height:1.2}
+.home-body{padding:10px 12px}
+.home-profile{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.home-pname{font-size:.8rem;font-weight:700}
+.home-pbio{font-size:.55rem;color:var(--muted)}
+.home-edit-btn{font-size:.5rem;color:var(--purple-light);
+  background:rgba(124,58,237,.15);border-radius:6px;padding:3px 7px}
+.home-rhr{background:rgba(161,107,0,.15);border:1px solid rgba(251,191,36,.25);
+  border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rhr-icon{width:26px;height:26px;border-radius:8px;background:rgba(251,191,36,.2);
+  display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.rhr-title{font-size:.65rem;font-weight:700}
+.rhr-val{font-size:.55rem;color:var(--amber)}
+.home-train-btn{background:linear-gradient(135deg,var(--purple),var(--cyan));
+  border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.train-icon{font-size:14px}
+.train-text{font-size:.65rem;font-weight:700}
+.train-en{font-size:.45rem;color:rgba(255,255,255,.6)}
+.home-hist-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:7px 10px;font-size:.6rem;color:var(--muted);text-align:center}
+
+/* ── Screen: Wait HR ── */
+.scr-wait{background:var(--bg);height:100%;display:flex;flex-direction:column;padding:14px 12px}
+.scr-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.back-btn{font-size:12px;color:var(--muted)}
+.scr-title{font-size:.75rem;font-weight:700}
+.heart-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.big-heart{font-size:48px;filter:drop-shadow(0 0 12px var(--purple))}
+.wait-text{font-size:.7rem;font-weight:700;text-align:center}
+.wait-sub{font-size:.5rem;color:var(--muted);text-align:center;line-height:1.4}
+.zone-pill{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);
+  border-radius:8px;padding:5px 10px;font-size:.6rem;color:var(--red);
+  display:flex;align-items:center;gap:4px;margin-top:8px}
+.wait-tips{font-size:.5rem;color:var(--muted2);text-align:center;line-height:1.6;margin-top:6px}
+.wait-btns{display:flex;flex-direction:column;gap:6px;margin-top:auto}
+.wb1{background:rgba(255,255,255,.07);border-radius:10px;padding:7px;
+  text-align:center;font-size:.6rem;color:var(--muted);border:1px solid rgba(255,255,255,.1)}
+.wb2{background:linear-gradient(135deg,var(--purple),var(--cyan));border-radius:10px;
+  padding:8px;text-align:center;font-size:.65rem;font-weight:700}
+
+/* ── Screen: Pre-exercise measure ── */
+.scr-pre{background:var(--bg);height:100%;display:flex;flex-direction:column;padding:14px 12px}
+.pre-circle{width:110px;height:110px;border-radius:50%;border:2px solid rgba(124,58,237,.4);
+  background:rgba(124,58,237,.08);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;margin:0 auto 14px}
+.pre-bpm{font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,#C4B5FD,#A78BFA);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pre-bpm-label{font-size:.45rem;color:var(--muted);letter-spacing:2px}
+.countdown-card{background:var(--card);border-radius:10px;padding:8px 10px;margin-bottom:8px}
+.cd-label{font-size:.5rem;color:var(--cyan);margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.cd-num{font-size:1.2rem;font-weight:800;color:var(--cyan)}
+.cd-bar{height:3px;background:rgba(56,189,248,.2);border-radius:2px;margin-top:4px;overflow:hidden}
+.cd-bar-fill{height:100%;width:82%;background:var(--cyan);border-radius:2px}
+.waveform{display:flex;align-items:center;gap:2px;justify-content:center;padding:8px 0}
+.wv{width:3px;border-radius:2px;background:var(--purple-light);animation:wave var(--d,1s) ease-in-out infinite alternate}
+@keyframes wave{0%{height:4px}100%{height:var(--h,20px)}}
+.pre-hint{background:var(--card);border-radius:10px;padding:8px 10px;
+  display:flex;align-items:center;gap:6px;font-size:.55rem;color:var(--muted)}
+.hint-icon{font-size:16px}
+.pre-restart{background:linear-gradient(135deg,var(--purple),var(--cyan));border-radius:10px;
+  padding:7px;text-align:center;font-size:.6rem;font-weight:700;margin-top:auto;
+  display:flex;align-items:center;justify-content:center;gap:4px}
+
+/* ── Screen: Training ── */
+.scr-train{background:#0A0A16;height:100%;display:flex;flex-direction:column}
+.train-topbar{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.train-badge{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.4);
+  border-radius:999px;padding:2px 8px;font-size:.5rem;color:var(--emerald);
+  display:flex;align-items:center;gap:3px}
+.train-badge::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--emerald)}
+/* HR zone card */
+.hr-card{margin:0 10px 8px;background:var(--card);border-radius:12px;padding:10px 12px;flex-shrink:0}
+.hr-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.hr-card-label{font-size:.6rem;font-weight:700;display:flex;align-items:center;gap:4px}
+.hr-num{font-size:1.4rem;font-weight:900;color:#FCA5A5}
+.hr-unit{font-size:.6rem;color:var(--muted)}
+.bloodbar{position:relative;height:10px;border-radius:5px;margin-bottom:6px;
+  background:linear-gradient(90deg,#FBBF24 0%,#34D399 35%,#F87171 70%,#DC2626 100%)}
+.bb-cursor{position:absolute;top:-4px;width:3px;height:18px;background:#fff;border-radius:2px;
+  box-shadow:0 0 6px rgba(255,255,255,.7);left:40%;animation:bbcursor 3s ease-in-out infinite alternate}
+@keyframes bbcursor{0%{left:30%}100%{left:55%}}
+.bb-labels{display:flex;gap:16px}
+.bb-lbl{font-size:.48rem;color:var(--amber)}
+.hr-legend{display:flex;gap:8px;margin-top:4px}
+.hl-item{display:flex;align-items:center;gap:3px;font-size:.45rem;color:var(--muted)}
+.hl-dot{width:6px;height:6px;border-radius:1px}
+/* 3 stat cards */
+.stat3{display:flex;gap:6px;margin:0 10px 8px;flex-shrink:0}
+.s3c{flex:1;border-radius:10px;padding:8px;min-width:0}
+.s3c.cg{background:linear-gradient(135deg,rgba(5,150,105,.3),rgba(6,95,70,.2))}
+.s3c.cp{background:linear-gradient(135deg,rgba(109,40,217,.3),rgba(76,29,149,.2))}
+.s3c.cw{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(49,46,129,.2))}
+.s3c-label{font-size:.42rem;color:var(--muted);line-height:1.3;margin-bottom:3px}
+.s3c-val{font-size:.85rem;font-weight:800}
+.s3c.cg .s3c-val{color:var(--emerald)}
+.s3c.cp .s3c-val{color:var(--purple-light)}
+.s3c.cw .s3c-val{color:var(--text)}
+.s3c-sub{font-size:.4rem;color:var(--muted);margin-top:1px}
+/* toggles */
+.toggles{display:flex;gap:6px;margin:0 10px 8px;flex-shrink:0}
+.tg{flex:1;background:var(--card);border-radius:10px;padding:7px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:4px}
+.tg-icon{font-size:10px}
+.tg-track{width:24px;height:12px;border-radius:6px;background:var(--purple);
+  position:relative;flex-shrink:0}
+.tg-thumb{width:10px;height:10px;border-radius:50%;background:#fff;
+  position:absolute;top:1px;right:1px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.tg-label{font-size:.42rem;color:var(--muted);text-align:center}
+/* metronome */
+.metro-card{margin:0 10px;background:var(--card);border-radius:10px;padding:8px 12px;flex-shrink:0}
+.metro-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.metro-label{font-size:.55rem;font-weight:700;display:flex;align-items:center;gap:4px}
+.metro-badge{background:rgba(124,58,237,.25);border-radius:999px;
+  padding:2px 8px;font-size:.5rem;color:var(--purple-light)}
+.metro-dots{display:flex;justify-content:center;gap:8px;padding:4px 0}
+.md{width:4px;height:4px;border-radius:50%;background:rgba(124,58,237,.4)}
+.md.active{background:var(--purple-light);box-shadow:0 0 6px var(--purple-light)}
+.end-btn{margin:8px 10px 10px;background:rgba(185,28,28,.25);
+  border:1px solid rgba(248,113,113,.2);border-radius:10px;padding:7px;
+  text-align:center;font-size:.6rem;color:var(--red);
+  display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0}
+
+/* ── Screen: Rest Measurement ── */
+.scr-rest{background:#000;height:100%;display:flex;flex-direction:column;padding:14px 12px;
+  position:relative;overflow:hidden}
+.rest-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;position:relative;z-index:2}
+.rest-connected{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);
+  border-radius:999px;padding:2px 8px;font-size:.5rem;color:var(--emerald);
+  display:flex;align-items:center;gap:3px}
+.rest-connected::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--emerald)}
+.rest-prog{height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:8px;position:relative;z-index:2}
+.rest-prog-fill{height:100%;width:40%;background:linear-gradient(90deg,var(--emerald),var(--cyan));border-radius:2px}
+.rest-measuring{display:flex;justify-content:space-between;font-size:.5rem;color:var(--muted);
+  margin-bottom:6px;position:relative;z-index:2}
+/* floating BPM numbers */
+.bpm-floats{position:absolute;inset:0;overflow:hidden}
+.bpm-float{position:absolute;color:var(--emerald);font-size:.85rem;font-weight:700;
+  opacity:.6;text-shadow:0 0 10px var(--emerald)}
+.bpm-float.f1{top:20%;left:8%;animation:float1 3s ease-in-out infinite}
+.bpm-float.f2{top:15%;left:20%;animation:float2 2.5s ease-in-out infinite}
+.bpm-float.f3{top:18%;right:18%;animation:float1 3.5s ease-in-out infinite reverse}
+.bpm-float.f4{top:30%;right:8%;animation:float2 2.8s ease-in-out infinite}
+.bpm-float.f5{bottom:30%;left:12%;opacity:.4;animation:float1 3.2s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes float2{0%{transform:translateY(-6px)}100%{transform:translateY(6px)}}
+.bpm-stems{position:absolute;bottom:80px;left:0;right:0;display:flex;
+  justify-content:center;gap:10px;align-items:flex-end}
+.stem{width:2px;border-radius:1px;background:linear-gradient(0deg,var(--emerald),transparent);
+  animation:grow var(--dur,2s) ease-in-out infinite alternate}
+@keyframes grow{0%{height:20px;opacity:.4}100%{height:var(--h,60px);opacity:.8}}
+.bpm-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;
+  text-align:center;background:rgba(20,20,20,.85);border-radius:16px;
+  padding:14px 20px;border:1px solid rgba(255,255,255,.08)}
+.bpm-center-num{font-size:2.2rem;font-weight:900;color:#fff}
+.bpm-center-unit{font-size:.55rem;color:var(--muted);letter-spacing:3px;margin-top:2px}
+
+/* ── Screen: Report ── */
+.scr-report{height:100%;overflow:hidden;position:relative}
+.report-aurora{position:absolute;inset:0;
+  background:radial-gradient(ellipse 150% 80% at 50% -20%,rgba(88,28,135,.9) 0%,rgba(13,13,26,.95) 60%),
+    radial-gradient(ellipse 80% 60% at 80% 100%,rgba(15,118,110,.4) 0%,transparent 60%),
+    radial-gradient(ellipse 70% 50% at 0% 80%,rgba(30,27,75,.6) 0%,transparent 60%)}
+.report-content{position:relative;z-index:1;padding:10px 10px 10px;height:100%;overflow-y:auto;
+  scrollbar-width:none}
+.report-content::-webkit-scrollbar{display:none}
+.report-date{font-size:.45rem;color:rgba(255,255,255,.35);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.report-score-big{font-size:2.6rem;font-weight:900;color:#FBBF24;line-height:1}
+.report-score-label{font-size:.55rem;color:rgba(255,255,255,.6);margin:2px 0 12px}
+/* non-linear bar */
+.nl-bar{position:relative;height:8px;border-radius:4px;margin-bottom:4px;
+  background:linear-gradient(90deg,#7F1D1D 0%,#DC2626 12%,#F87171 22%,#FBBF24 38%,#34D399 50%,#FBBF24 65%,#F97316 82%,#DC2626 100%)}
+.nl-cursor{position:absolute;top:-4px;width:3px;height:16px;background:#fff;
+  border-radius:2px;box-shadow:0 0 6px rgba(255,255,255,.8);left:12%}
+.nl-ticks{display:flex;justify-content:space-between;font-size:.42rem;color:var(--muted);margin-bottom:4px}
+.nl-warn{font-size:.48rem;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:3px}
+/* 3 stat cards in report */
+.r3{display:flex;gap:5px;margin-bottom:8px}
+.r3c{flex:1;background:rgba(255,255,255,.06);border-radius:8px;padding:6px;text-align:center}
+.r3c-icon{font-size:10px;margin-bottom:2px}
+.r3c-label{font-size:.42rem;color:var(--muted);line-height:1.3;margin-bottom:2px}
+.r3c-val{font-size:.9rem;font-weight:800}
+.r3c.cre .r3c-val{color:var(--red)}
+.r3c.cam .r3c-val{color:var(--amber)}
+.r3c.ccn .r3c-val{color:var(--cyan)}
+/* time+session card */
+.r-time-row{display:flex;gap:6px;margin-bottom:8px}
+.r-time-left{flex:1;background:rgba(255,255,255,.05);border-radius:8px;padding:7px}
+.rtl-item{margin-bottom:4px}
+.rtl-label{font-size:.42rem;color:var(--muted)}
+.rtl-val{font-size:.75rem;font-weight:700}
+.r-time-right{width:64px;background:linear-gradient(135deg,rgba(124,58,237,.4),rgba(76,29,149,.3));
+  border-radius:8px;padding:6px;text-align:center;display:flex;flex-direction:column;
+  align-items:center;justify-content:center}
+.rtr-label{font-size:.4rem;color:var(--muted);line-height:1.3;margin-bottom:3px}
+.rtr-val{font-size:1rem;font-weight:800;color:var(--purple-light)}
+/* mini chart in report */
+.r-chart{background:rgba(0,0,0,.3);border-radius:8px;padding:6px}
+.r-chart-legend{display:flex;gap:8px;margin-bottom:4px}
+.rcl-item{display:flex;align-items:center;gap:3px;font-size:.4rem;color:var(--muted)}
+.rcl-sq{width:6px;height:6px;border-radius:1px}
+
+/* ══════════════════════════════════════════
+   ADMIN PANEL MOCKUP
+══════════════════════════════════════════ */
+.admin-section{background:linear-gradient(180deg,transparent,rgba(52,211,153,.04) 50%,transparent)}
+.browser-frame{background:var(--card);border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 24px 64px rgba(0,0,0,.5);margin-top:40px}
+.browser-chrome{background:#1A1A2E;padding:10px 16px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.browser-dots{display:flex;gap:5px}
+.bd{width:9px;height:9px;border-radius:50%}
+.bd.r{background:#EF4444}.bd.y{background:#F59E0B}.bd.g{background:#10B981}
+.browser-url{flex:1;background:rgba(255,255,255,.05);border-radius:6px;padding:4px 10px;
+  font-size:.72rem;color:var(--muted);font-family:monospace}
+.admin-layout{display:grid;grid-template-columns:200px 1fr;height:460px}
+@media(max-width:768px){.admin-layout{grid-template-columns:1fr;height:auto}}
+/* sidebar */
+.admin-sidebar{background:#0F0F1E;border-right:1px solid rgba(255,255,255,.06);padding:16px 0}
+.sidebar-logo{padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px}
+.sidebar-logo img{height:24px;background:#fff;border-radius:5px;padding:2px 3px}
+.sidebar-brand{font-size:.72rem;font-weight:700;
+  background:linear-gradient(135deg,var(--purple-light),var(--emerald));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sidebar-menu-label{font-size:.6rem;color:var(--muted2);padding:0 16px;margin-bottom:6px;letter-spacing:1px}
+.sidebar-item{padding:8px 16px;font-size:.75rem;color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;gap:8px;border-radius:6px;margin:0 6px}
+.sidebar-item.active{background:rgba(124,58,237,.2);color:var(--text)}
+.sidebar-bottom{position:absolute;bottom:0;width:200px;padding:16px;
+  border-top:1px solid rgba(255,255,255,.06);font-size:.65rem;color:var(--muted)}
+/* admin content */
+.admin-content{padding:20px;overflow-y:auto}
+.admin-content-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.admin-breadcrumb{font-size:.7rem;color:var(--muted)}
+.admin-breadcrumb span{color:var(--text)}
+.admin-actions{display:flex;gap:8px}
+.aa-btn{padding:5px 12px;border-radius:8px;font-size:.65rem;font-weight:600;cursor:pointer;border:none}
+.aa-btn.export{background:rgba(52,211,153,.15);color:var(--emerald);border:1px solid rgba(52,211,153,.3)}
+.aa-btn.clear{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.25)}
+.aa-btn.add{background:var(--purple);color:#fff}
+/* tag filter bar */
+.tag-filter{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tf-label{font-size:.65rem;color:var(--muted);}
+.tf-tag{padding:3px 10px;border-radius:999px;font-size:.62rem;font-weight:600;cursor:pointer}
+.tf-tag.t1{background:rgba(52,211,153,.15);color:var(--emerald);border:1px solid rgba(52,211,153,.3)}
+.tf-tag.t2{background:rgba(251,191,36,.12);color:var(--amber);border:1px solid rgba(251,191,36,.25)}
+.tf-tag.t3{background:rgba(167,139,250,.12);color:var(--purple-light);border:1px solid rgba(167,139,250,.25)}
+.tf-tag.t4{background:rgba(56,189,248,.12);color:var(--cyan);border:1px solid rgba(56,189,248,.25)}
+/* table */
+.admin-table{width:100%;border-collapse:collapse;font-size:.68rem}
+.admin-table th{padding:6px 8px;text-align:left;color:var(--muted);font-weight:600;
+  border-bottom:1px solid rgba(255,255,255,.06);white-space:nowrap}
+.admin-table td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.04);
+  color:var(--text);vertical-align:middle}
+.admin-table tr:hover td{background:rgba(255,255,255,.02)}
+.tbl-id{font-weight:700}
+.tbl-tag{display:inline-block;padding:2px 7px;border-radius:999px;
+  font-size:.55rem;font-weight:600;margin:1px}
+.t-t1{background:rgba(52,211,153,.15);color:var(--emerald)}
+.t-t2{background:rgba(251,191,36,.12);color:var(--amber)}
+.t-t3{background:rgba(167,139,250,.12);color:var(--purple-light)}
+.t-t4{background:rgba(56,189,248,.12);color:var(--cyan)}
+.bpm-badge{background:rgba(248,113,113,.12);color:var(--red);border:1px solid rgba(248,113,113,.25);
+  border-radius:8px;padding:2px 8px;font-size:.6rem;font-weight:700;white-space:nowrap}
+.bpm-badge.b1{background:rgba(251,191,36,.1);color:var(--amber);border-color:rgba(251,191,36,.2)}
+.bpm-badge.b2{background:rgba(52,211,153,.1);color:var(--emerald);border-color:rgba(52,211,153,.2)}
+.status-on{background:rgba(52,211,153,.15);color:var(--emerald);
+  border-radius:6px;padding:2px 8px;font-size:.58rem}
+.tbl-actions{display:flex;gap:4px}
+.ta-btn{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;border:none;cursor:pointer}
+.ta-btn.edit{background:rgba(167,139,250,.15);color:var(--purple-light)}
+.ta-btn.del{background:rgba(248,113,113,.12);color:var(--red)}
+
+/* history layout */
+.hist-layout{display:grid;grid-template-columns:200px 1fr;height:460px}
+@media(max-width:768px){.hist-layout{grid-template-columns:1fr;height:auto}}
+.hist-left{padding:14px;border-right:1px solid rgba(255,255,255,.06);overflow-y:auto}
+.hist-title{font-size:.72rem;font-weight:700;margin-bottom:12px;
+  display:flex;align-items:center;gap:6px}
+.hist-item{border-radius:8px;padding:8px 10px;cursor:pointer;margin-bottom:4px}
+.hist-item.active{background:rgba(124,58,237,.25)}
+.hist-item:not(.active){background:var(--card2)}
+.hi-date{font-size:.65rem;font-weight:700;margin-bottom:2px}
+.hi-dur{font-size:.55rem;color:var(--muted)}
+.hi-meta{font-size:.5rem;color:var(--muted2);line-height:1.5}
+.hist-right{padding:16px;overflow-y:auto}
+.hist-chart-title{font-size:.75rem;font-weight:700;margin-bottom:14px;
+  display:flex;align-items:center;gap:6px}
+.hist-chart-legend{display:flex;gap:14px;margin-bottom:10px}
+.hcl{display:flex;align-items:center;gap:5px;font-size:.62rem;color:var(--muted)}
+.hcl-sq{width:10px;height:10px;border-radius:2px}
+.hist-chart-svg{width:100%;height:180px}
+.hist-stats{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.hstat{font-size:.62rem;color:var(--muted);display:flex;align-items:center;gap:4px}
+.hstat strong{color:var(--text)}
+
+/* ══════════════════════════════════════════
+   FEATURES GRID
+══════════════════════════════════════════ */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:44px}
+.fc{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:20px;
+  padding:26px;transition:.3s;position:relative;overflow:hidden}
+.fc::before{content:'';position:absolute;top:-40px;right:-40px;width:100px;height:100px;
+  border-radius:50%;opacity:.08;transition:opacity .3s}
+.fc:hover{border-color:rgba(124,58,237,.3);transform:translateY(-4px)}
+.fc:hover::before{opacity:.15}
+.fc.cp::before{background:var(--purple)}
+.fc.ce::before{background:var(--emerald)}
+.fc.ca::before{background:var(--amber)}
+.fc.cc::before{background:var(--cyan)}
+.fc.cr::before{background:var(--red)}
+.fc.cb::before{background:var(--blue)}
+.fc-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;margin-bottom:18px}
+.fc.cp .fc-icon{background:rgba(124,58,237,.2)}
+.fc.ce .fc-icon{background:rgba(52,211,153,.2)}
+.fc.ca .fc-icon{background:rgba(251,191,36,.2)}
+.fc.cc .fc-icon{background:rgba(56,189,248,.2)}
+.fc.cr .fc-icon{background:rgba(248,113,113,.2)}
+.fc.cb .fc-icon{background:rgba(96,165,250,.2)}
+.fc h3{font-size:1rem;font-weight:700;margin-bottom:4px}
+.fc-en{font-size:.72rem;color:var(--muted);font-style:italic;margin-bottom:10px}
+.fc p{color:var(--muted);font-size:.88rem;line-height:1.7}
+.fc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+.fc-tag{padding:2px 10px;border-radius:999px;font-size:.68rem;font-weight:600}
+.fc.cp .fc-tag{background:rgba(124,58,237,.15);color:var(--purple-light)}
+.fc.ce .fc-tag{background:rgba(52,211,153,.12);color:var(--emerald)}
+.fc.ca .fc-tag{background:rgba(251,191,36,.1);color:var(--amber)}
+.fc.cc .fc-tag{background:rgba(56,189,248,.1);color:var(--cyan)}
+.fc.cr .fc-tag{background:rgba(248,113,113,.1);color:var(--red)}
+.fc.cb .fc-tag{background:rgba(96,165,250,.1);color:var(--blue)}
+
+/* ══════════════════════════════════════════
+   FLOW STEPS
+══════════════════════════════════════════ */
+.flow-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:0;margin-top:44px;position:relative}
+.flow-steps::before{content:'';position:absolute;top:30px;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(124,58,237,.3),rgba(52,211,153,.3),transparent)}
+.fs{text-align:center;padding:0 12px;position:relative;z-index:1}
+.fs-num{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:20px;margin:0 auto 16px;border:2px solid;background:var(--bg)}
+.s1{border-color:rgba(124,58,237,.5)}.s2{border-color:rgba(251,191,36,.5)}
+.s3{border-color:rgba(56,189,248,.5)}.s4{border-color:rgba(52,211,153,.5)}
+.s5{border-color:rgba(248,113,113,.5)}.s6{border-color:rgba(167,139,250,.5)}
+.fs h4{font-size:.9rem;font-weight:700;margin-bottom:5px}
+.fs p{font-size:.75rem;color:var(--muted);line-height:1.5}
+
+/* ══════════════════════════════════════════
+   SCORE SECTION
+══════════════════════════════════════════ */
+.score-demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-top:40px}
+@media(max-width:768px){.score-demo-grid{grid-template-columns:1fr}}
+.score-card{background:var(--card2);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:24px}
+.sc-score{font-size:3.5rem;font-weight:900;
+  background:linear-gradient(135deg,#FBBF24,#34D399);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.sc-label{font-size:.85rem;color:var(--muted);margin:4px 0 18px}
+.sc-bar{position:relative;height:10px;border-radius:5px;margin-bottom:6px;
+  background:linear-gradient(90deg,#7F1D1D 0%,#DC2626 15%,#EF4444 25%,#FBBF24 38%,#34D399 50%,#FBBF24 65%,#F97316 82%,#DC2626 100%)}
+.sc-cursor{position:absolute;top:-4px;width:3px;height:18px;background:#fff;
+  border-radius:2px;box-shadow:0 0 8px rgba(255,255,255,.8);left:12%}
+.sc-ticks{display:flex;justify-content:space-between;font-size:.68rem;color:var(--muted);margin-bottom:14px}
+.sc-warn{font-size:.78rem;color:var(--red);display:flex;align-items:center;gap:5px}
+
+/* audience */
+.audience-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:36px}
+.ac{background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(52,211,153,.05));
+  border:1px solid rgba(124,58,237,.18);border-radius:16px;padding:24px 18px;text-align:center}
+.ac-icon{font-size:2.2rem;margin-bottom:12px}
+.ac h4{font-size:.95rem;font-weight:700;margin-bottom:5px}
+.ac p{font-size:.78rem;color:var(--muted);line-height:1.5}
+
+/* platform pills */
+.plat-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:32px}
+.plat-pill{background:var(--card);border:1px solid rgba(255,255,255,.08);
+  border-radius:999px;padding:9px 20px;font-size:.85rem;color:var(--muted);
+  display:flex;align-items:center;gap:7px}
+
+/* CTA */
+.cta-sec{text-align:center;background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(52,211,153,.06));
+  border-top:1px solid rgba(124,58,237,.12);border-bottom:1px solid rgba(52,211,153,.08)}
+.cta-feats{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin:28px 0 36px}
+.cta-feat{display:flex;align-items:center;gap:6px;font-size:.88rem;color:var(--muted)}
+.cta-feat .ck{color:var(--emerald)}
+
+/* footer */
+footer{padding:40px 24px;text-align:center;color:var(--muted);
+  font-size:.8rem;border-top:1px solid rgba(255,255,255,.04)}
+.ft-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
+.ft-logo img{height:28px;background:#fff;border-radius:6px;padding:2px 4px}
+.ft-brand{font-size:1.05rem;font-weight:800;
+  background:linear-gradient(135deg,var(--purple-light),var(--emerald));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* FADE IN */
+.fi{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
+.fi.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <img src="images/logo3.png" alt="禾青醫電 Logo">
+    <div>
+      <div class="nav-brand">禾青心訓</div>
+      <div style="font-size:.6rem;color:var(--muted)">HEQING HR Training</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="#screenshots">App 畫面</a>
+    <a href="#admin">後台管理</a>
+    <a href="#features">功能特色</a>
+    <a href="#cta">聯絡我們</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"><img src="images/hero_dark.png" alt=""></div>
+  <div class="hero-badge"><span class="badge-dot"></span>專為醫療機構設計 · Healthcare Edition</div>
+  <h1>
+    <span class="g">禾青心訓</span>
+    <span class="en">HEQING HR TRAINING PLATFORM</span>
+  </h1>
+  <p class="hero-desc">
+    結合 <strong>BLE 心率裝置</strong>、<strong>智能訓練區間</strong>與<strong>後台管理系統</strong>，
+    讓醫師即時掌握每位患者的心率訓練成效。<br>
+    <span style="font-size:.9em;color:var(--muted2)">BLE heart rate monitoring · Smart training zones · Clinical supervision dashboard</span>
+  </p>
+  <div class="hero-cta">
+    <a href="#screenshots" class="btn-p">查看 App 畫面 · View App</a>
+    <a href="#admin" class="btn-o">後台管理 · Admin Panel</a>
+  </div>
+  <div class="hero-pills">
+    <div class="pill"><div class="pn">BLE</div><div class="pl">即時心率 · Live HR</div></div>
+    <div class="pill"><div class="pn">6</div><div class="pl">訓練階段 · Phases</div></div>
+    <div class="pill"><div class="pn">TTS</div><div class="pl">語音播報 · Voice Guide</div></div>
+    <div class="pill"><div class="pn">iOS+Android</div><div class="pl">跨平台 · Cross-platform</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ APP SCREENSHOTS ══ -->
+<section id="screenshots" class="phones-section">
+  <div class="container">
+    <p class="sec-label fi">App 實際畫面 · Mobile App Screens</p>
+    <h2 class="sec-title fi">精心設計的每個訓練畫面<span class="sec-en">Every screen crafted for the training experience</span></h2>
+    <p class="sec-desc fi" style="margin-bottom:0">以下畫面完整呈現從連線到完成報告的全流程，左右滑動查看所有畫面。</p>
+  </div>
+  <div class="phones-scroll" style="padding-left:max(24px,calc(50vw - 580px));padding-right:24px;margin-top:40px">
+
+    <!-- Phone 1: Home -->
+    <div class="phone fi">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="scr-home">
+          <div class="home-hero">
+            <img src="images/hero_dark.png" alt="">
+            <div class="home-topbar">
+              <div class="home-appname"><span class="home-dot"></span>禾青心訓 v1.0.1</div>
+              <div style="display:flex;gap:8px">⚙️<span style="font-size:12px">→</span></div>
+            </div>
+            <div class="home-stats-overlay">
+              <div class="hso-item">
+                <div>
+                  <div class="hso-val" style="color:#F87171">❤ 86 BPM</div>
+                  <div class="hso-label">上一次運動前心率</div>
+                </div>
+              </div>
+              <div class="hso-item" style="text-align:right">
+                <div>
+                  <div class="hso-val" style="color:var(--emerald)">↗ 15.8</div>
+                  <div class="hso-label">週心訓健康點數<br>還剩 5…</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="home-body">
+            <div class="home-profile">
+              <div>
+                <div class="home-pname">👤 JD</div>
+                <div class="home-pbio">1984/02/10 · 男</div>
+              </div>
+              <div class="home-edit-btn">修改個人資料</div>
+            </div>
+            <div class="home-rhr">
+              <div class="rhr-icon">💛</div>
+              <div>
+                <div class="rhr-title">休息心率 Resting HR</div>
+                <div class="rhr-val">89 BPM · 2026/04/18</div>
+              </div>
+              <div style="margin-left:auto;color:var(--muted);font-size:14px">›</div>
+            </div>
+            <div style="font-size:.55rem;color:var(--muted2);margin-bottom:6px">活動模式 · Activity Mode</div>
+            <div class="home-train-btn">
+              <div class="train-icon">👣</div>
+              <div>
+                <div class="train-text">進入心訓</div>
+                <div class="train-en">Heart Rate Training</div>
+              </div>
+              <div style="margin-left:auto;font-size:14px">›</div>
+            </div>
+            <div class="home-hist-btn">↗ 觀看心率歷程</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">首頁 · Home</div>
+    </div>
+
+    <!-- Phone 2: Wait HR -->
+    <div class="phone fi">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="scr-wait">
+          <div class="scr-topbar">
+            <div class="back-btn">‹ 返回</div>
+            <div class="scr-title">等待連線</div>
+            <div class="rhr-icon">❤️</div>
+          </div>
+          <div class="heart-center">
+            <div class="big-heart">💜</div>
+            <div class="wait-text">等待心率錶連線中</div>
+            <div class="wait-sub">連線狀態：<br>BluetoothConnectionState.connected</div>
+            <div class="zone-pill">♡ 訓練區間 70–85 bpm</div>
+            <div class="wait-tips">使用過程中：<br>1. 手機不能超過 10 公尺<br>2. 螢幕關掉仍可繼續監測</div>
+          </div>
+          <div class="wait-btns">
+            <div class="wb1">↺ 重新連線</div>
+            <div class="wb2">開始訓練</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">等待連線 · Wait HR</div>
+    </div>
+
+    <!-- Phone 3: Pre-exercise -->
+    <div class="phone fi">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="scr-pre">
+          <div class="scr-topbar">
+            <div class="back-btn">‹</div>
+            <div class="scr-title">運動前心率量測</div>
+            <div></div>
+          </div>
+          <div class="pre-circle">
+            <div class="pre-bpm">91</div>
+            <div class="pre-bpm-label">B P M</div>
+          </div>
+          <div class="countdown-card">
+            <div class="cd-label">⏱ 倒數計時 Countdown</div>
+            <div class="cd-num">01:57</div>
+            <div class="cd-bar"><div class="cd-bar-fill"></div></div>
+          </div>
+          <div class="waveform">
+            <div class="wv" style="--d:.8s;--h:22px"></div>
+            <div class="wv" style="--d:.6s;--h:30px"></div>
+            <div class="wv" style="--d:1.1s;--h:18px"></div>
+            <div class="wv" style="--d:.7s;--h:26px"></div>
+            <div class="wv" style="--d:.9s;--h:34px"></div>
+            <div class="wv" style="--d:.65s;--h:28px"></div>
+            <div class="wv" style="--d:1.0s;--h:20px"></div>
+            <div class="wv" style="--d:.75s;--h:32px"></div>
+            <div class="wv" style="--d:.85s;--h:24px"></div>
+            <div class="wv" style="--d:.55s;--h:16px"></div>
+          </div>
+          <div class="pre-hint">
+            <div class="hint-icon">🌬</div>
+            <div>
+              <div style="font-weight:700;font-size:.6rem">請休息，保持放鬆</div>
+              <div style="color:var(--muted2);font-size:.5rem">Please stay still and relax</div>
+            </div>
+          </div>
+          <div class="pre-restart">↺ 重新運動前心率量測</div>
+        </div>
+      </div>
+      <div class="phone-caption">運動前量測 · Pre-Exercise</div>
+    </div>
+
+    <!-- Phone 4: Training -->
+    <div class="phone fi">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="scr-train">
+          <div class="train-topbar">
+            <div class="back-btn">‹ 訓練頁面</div>
+            <div class="train-badge">訓練中</div>
+          </div>
+          <!-- HR zone card -->
+          <div class="hr-card">
+            <div class="hr-card-top">
+              <div class="hr-card-label">❤️ 心率趨勢 · HR Trend</div>
+              <div><span class="hr-num" id="liveHr">94</span><span class="hr-unit"> BPM</span></div>
+            </div>
+            <div class="bloodbar">
+              <div class="bb-cursor" id="bbCursor"></div>
+            </div>
+            <div class="bb-labels">
+              <span class="bb-lbl">70</span>
+              <span class="bb-lbl">85</span>
+            </div>
+            <div class="hr-legend">
+              <div class="hl-item"><div class="hl-dot" style="background:var(--amber)"></div>低於訓練區間</div>
+              <div class="hl-item"><div class="hl-dot" style="background:var(--emerald)"></div>訓練區間</div>
+              <div class="hl-item"><div class="hl-dot" style="background:var(--red)"></div>高於訓練區間</div>
+            </div>
+          </div>
+          <!-- 3 stat cards -->
+          <div class="stat3">
+            <div class="s3c cg">
+              <div class="s3c-label">↗ 週心訓<br>健康點數</div>
+              <div class="s3c-val">15.8</div>
+              <div class="s3c-sub">還剩 5 天</div>
+            </div>
+            <div class="s3c cp">
+              <div class="s3c-label">❤ 本次心訓<br>健康點數</div>
+              <div class="s3c-val">0.1</div>
+              <div class="s3c-sub">本次累計</div>
+            </div>
+            <div class="s3c cw">
+              <div class="s3c-label">⏱ 運動<br>時間</div>
+              <div class="s3c-val" style="font-size:.7rem" id="trainTime">00:05</div>
+              <div class="s3c-sub">&nbsp;</div>
+            </div>
+          </div>
+          <!-- toggles -->
+          <div class="toggles">
+            <div class="tg">
+              <div class="tg-icon">⏱</div>
+              <div class="tg-track"><div class="tg-thumb"></div></div>
+              <div class="tg-label">步頻節拍</div>
+            </div>
+            <div class="tg">
+              <div class="tg-icon">⚡</div>
+              <div class="tg-track"><div class="tg-thumb"></div></div>
+              <div class="tg-label">閃光燈</div>
+            </div>
+            <div class="tg">
+              <div class="tg-icon">📢</div>
+              <div class="tg-track"><div class="tg-thumb"></div></div>
+              <div class="tg-label">播報心率</div>
+            </div>
+          </div>
+          <!-- metronome -->
+          <div class="metro-card">
+            <div class="metro-top">
+              <div class="metro-label">👣 步頻節拍指引</div>
+              <div class="metro-badge">180 步/分</div>
+            </div>
+            <div class="metro-dots">
+              <div class="md"></div><div class="md active"></div>
+              <div class="md"></div><div class="md active"></div>
+              <div class="md"></div><div class="md active"></div>
+              <div class="md"></div>
+            </div>
+          </div>
+          <div class="end-btn">□ 結束訓練</div>
+        </div>
+      </div>
+      <div class="phone-caption">訓練頁面 · Training</div>
+    </div>
+
+    <!-- Phone 5: Rest measurement -->
+    <div class="phone fi">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="scr-rest">
+          <div class="rest-topbar">
+            <div class="back-btn">‹</div>
+            <div class="scr-title">休息心率量測</div>
+            <div class="rest-connected">已連線</div>
+          </div>
+          <div class="rest-prog"><div class="rest-prog-fill"></div></div>
+          <div class="rest-measuring"><span>量測中 Measuring</span><span>04:52</span></div>
+          <!-- floating BPM -->
+          <div class="bpm-floats">
+            <div class="bpm-float f1">95</div>
+            <div class="bpm-float f2">95</div>
+            <div class="bpm-float f3">95</div>
+            <div class="bpm-float f4">95</div>
+            <div class="bpm-float f5">95</div>
+            <div class="bpm-stems">
+              <div class="stem" style="--dur:1.8s;--h:50px"></div>
+              <div class="stem" style="--dur:2.4s;--h:70px"></div>
+              <div class="stem" style="--dur:1.5s;--h:40px"></div>
+              <div class="stem" style="--dur:2.1s;--h:65px"></div>
+              <div class="stem" style="--dur:1.9s;--h:55px"></div>
+              <div class="stem" style="--dur:2.6s;--h:45px"></div>
+            </div>
+          </div>
+          <div class="bpm-center">
+            <div class="bpm-center-num">95</div>
+            <div class="bpm-center-unit">B P M</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">休息心率量測 · Resting HR</div>
+    </div>
+
+    <!-- Phone 6: Report -->
+    <div class="phone fi">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="scr-report">
+          <div class="report-aurora"></div>
+          <div class="report-content">
+            <div class="report-date">JD 於 2026/04/18 21:25 禾青心訓的訓練</div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+              <div>
+                <div class="report-score-big">15.8</div>
+                <div class="report-score-label">週心訓健康點數 · 還剩 0 天</div>
+              </div>
+              <img src="images/logo3.png" alt="" style="height:28px;background:#fff;border-radius:5px;padding:2px 3px;opacity:.8">
+            </div>
+            <!-- non-linear bar -->
+            <div class="nl-bar"><div class="nl-cursor"></div></div>
+            <div class="nl-ticks"><span>0</span><span>30</span><span>100</span><span>200</span><span>400</span></div>
+            <div class="nl-warn">⚠ 留意運動量不足</div>
+            <!-- 3 stats -->
+            <div class="r3">
+              <div class="r3c cre">
+                <div class="r3c-icon">❤️</div>
+                <div class="r3c-label">運動前<br>心率</div>
+                <div class="r3c-val">86</div>
+              </div>
+              <div class="r3c cam">
+                <div class="r3c-icon">↑</div>
+                <div class="r3c-label">最高<br>心率</div>
+                <div class="r3c-val">90</div>
+              </div>
+              <div class="r3c ccn">
+                <div class="r3c-icon">～</div>
+                <div class="r3c-label">平均<br>心率</div>
+                <div class="r3c-val">87</div>
+              </div>
+            </div>
+            <!-- time row -->
+            <div class="r-time-row">
+              <div class="r-time-left">
+                <div class="rtl-item">
+                  <div class="rtl-label">本次有效時間</div>
+                  <div class="rtl-val">1 分 4 秒</div>
+                </div>
+                <div style="height:1px;background:rgba(255,255,255,.06);margin:4px 0"></div>
+                <div class="rtl-item">
+                  <div class="rtl-label">本次總運動時間</div>
+                  <div class="rtl-val">1 分 4 秒</div>
+                </div>
+              </div>
+              <div class="r-time-right">
+                <div class="rtr-label">本次心訓<br>健康點數</div>
+                <div class="rtr-val">0.7</div>
+              </div>
+            </div>
+            <!-- mini chart -->
+            <div class="r-chart">
+              <div class="r-chart-legend">
+                <div class="rcl-item"><div class="rcl-sq" style="background:#60A5FA"></div>低於目標</div>
+                <div class="rcl-item"><div class="rcl-sq" style="background:#34D399"></div>有效訓練</div>
+                <div class="rcl-item"><div class="rcl-sq" style="background:#FBBF24"></div>恢復期</div>
+              </div>
+              <svg viewBox="0 0 200 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0" y1="20" x2="200" y2="20" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                <line x1="0" y1="40" x2="200" y2="40" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                <line x1="0" y1="15" x2="200" y2="15" stroke="rgba(255,255,255,.15)" stroke-dasharray="3,3" stroke-width="1"/>
+                <line x1="0" y1="35" x2="200" y2="35" stroke="rgba(255,255,255,.1)" stroke-dasharray="3,3" stroke-width="1"/>
+                <path d="M0,40 C20,38 40,36 55,35 C70,28 90,18 110,14 C130,12 150,13 165,14 C180,20 190,35 200,42 L200,65 L0,65Z" fill="rgba(52,211,153,.2)"/>
+                <path d="M0,40 C20,38 40,36 55,35 C70,28 90,18 110,14 C130,12 150,13 165,14 C180,20 190,35 200,42" stroke="#34D399" stroke-width="1.5" fill="none"/>
+                <text x="196" y="33" fill="rgba(255,255,255,.3)" font-size="6" text-anchor="end">85</text>
+                <text x="196" y="14" fill="rgba(255,255,255,.25)" font-size="6" text-anchor="end">70</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">訓練報告 · Report</div>
+    </div>
+
+  </div><!-- end phones-scroll -->
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ ADMIN PANEL ══ -->
+<section id="admin" class="admin-section">
+  <div class="container">
+    <p class="sec-label fi">後台管理系統 · Admin Dashboard</p>
+    <h2 class="sec-title fi">醫師與教練的全方位掌控中心<span class="sec-en">Complete supervision center for clinicians &amp; trainers</span></h2>
+    <p class="sec-desc fi">後台管理面板提供群組管理、使用者標籤分類、訓練歷程查閱，讓醫療機構高效管理大量患者訓練紀錄。</p>
+
+    <!-- Group Users Tab -->
+    <div class="browser-frame fi">
+      <div class="browser-chrome">
+        <div class="browser-dots"><div class="bd r"></div><div class="bd y"></div><div class="bd g"></div></div>
+        <div class="browser-url">heqinghealth.com/admin/#/groups/1/users</div>
+      </div>
+      <div class="admin-layout">
+        <div class="admin-sidebar">
+          <div class="sidebar-logo">
+            <img src="images/logo3.png" alt="">
+            <div class="sidebar-brand">禾青醫電後台</div>
+          </div>
+          <div class="sidebar-menu-label">主選單</div>
+          <div class="sidebar-item active">👥 群組管理</div>
+        </div>
+        <div class="admin-content">
+          <div class="admin-content-topbar">
+            <div>
+              <div class="admin-breadcrumb">群組管理 / <span>群組使用者</span></div>
+              <div style="font-size:.72rem;color:var(--muted);margin-top:3px">👥 群組使用者 &nbsp;|&nbsp; 🗒 66 次訓練 · 39,853 筆心率 · 約 3.5 MB</div>
+            </div>
+            <div class="admin-actions">
+              <button class="aa-btn export">⬇ 匯出 CSV</button>
+              <button class="aa-btn clear">🗑 清除資料</button>
+              <button class="aa-btn add">+ 新增使用者</button>
+            </div>
+          </div>
+          <div class="tag-filter">
+            <span class="tf-label">標籤篩選：</span>
+            <span class="tf-tag t1">長庚-復健科</span>
+            <span class="tf-tag t2">開發測試</span>
+            <span class="tf-tag t3">JD家</span>
+            <span class="tf-tag t4">健康控制組</span>
+            <span class="tf-tag" style="background:rgba(56,189,248,.12);color:#7DD3FC;border:1px solid rgba(56,189,248,.2)">healthy control</span>
+            <button class="aa-btn" style="background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.08);font-size:.6rem;padding:3px 10px;border-radius:6px">🏷 管理標籤</button>
+          </div>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>登入碼（病歷號）</th><th>備註</th><th>標籤</th><th>生日</th><th>性別</th>
+                <th>訓練區間 (BPM)</th><th>本週有效時間</th><th>狀態</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tbl-id">20267171</td>
+                <td>黃醫師</td>
+                <td>
+                  <span class="tbl-tag t-t4">健康控制組</span>
+                  <span class="tbl-tag" style="background:rgba(56,189,248,.1);color:#7DD3FC">healthy control</span>
+                </td>
+                <td>1978/7/11</td><td>男</td>
+                <td><span class="bpm-badge b2">115–130</span></td>
+                <td style="color:var(--emerald);font-weight:600">3 分 15 秒</td>
+                <td><span class="status-on">啟用</span></td>
+                <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td class="tbl-id">888888</td>
+                <td>JD_爸</td>
+                <td><span class="tbl-tag t-t3">JD家</span></td>
+                <td>1952/11/6</td><td>-</td>
+                <td><span class="bpm-badge">107–125</span></td>
+                <td style="color:var(--emerald);font-weight:600">52 分 52 秒</td>
+                <td><span class="status-on">啟用</span></td>
+                <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td class="tbl-id">A12345677</td>
+                <td>JD</td>
+                <td><span class="tbl-tag t-t3">JD家</span><span class="tbl-tag t-t2">開發測試</span></td>
+                <td>1984/2/10</td><td>男</td>
+                <td><span class="bpm-badge b1">70–85</span></td>
+                <td style="color:var(--muted)">—</td>
+                <td><span class="status-on">啟用</span></td>
+                <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td class="tbl-id">99186134</td>
+                <td>Roger女友</td>
+                <td><span class="tbl-tag t-t1">長庚-復健科</span></td>
+                <td>2002/12/11</td><td>女</td>
+                <td><span class="bpm-badge">140–190</span></td>
+                <td style="color:var(--muted)">—</td>
+                <td><span class="status-on">啟用</span></td>
+                <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
+              </tr>
+              <tr>
+                <td class="tbl-id">Test_1</td>
+                <td>apple 評證</td>
+                <td><span class="tbl-tag t-t2">開發測試</span></td>
+                <td>1995/5/4</td><td>-</td>
+                <td><span style="font-size:.62rem;color:var(--muted)">公式計算</span></td>
+                <td style="color:var(--muted)">—</td>
+                <td><span class="status-on">啟用</span></td>
+                <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Training History Tab -->
+    <div class="browser-frame fi" style="margin-top:24px">
+      <div class="browser-chrome">
+        <div class="browser-dots"><div class="bd r"></div><div class="bd y"></div><div class="bd g"></div></div>
+        <div class="browser-url">heqinghealth.com/admin/#/groups/1/users/20267171/history</div>
+      </div>
+      <div class="hist-layout">
+        <div class="hist-left" style="background:#0F0F1E">
+          <div class="hist-title">☰ 訓練紀錄</div>
+          <div class="hist-item active">
+            <div class="hi-date">2026/4/19</div>
+            <div class="hi-dur" style="text-align:right;color:var(--muted)">8 分鐘</div>
+            <div class="hi-meta">下午07:39 · 運動前 68 bpm<br>· 休息 73 bpm · 301 筆</div>
+          </div>
+          <div class="hist-item">
+            <div class="hi-date">2026/4/16</div>
+            <div class="hi-dur" style="text-align:right;color:var(--muted)">129 分鐘</div>
+            <div class="hi-meta">下午05:07 · 運動前 72 bpm · 休息 73 bpm</div>
+          </div>
+          <div class="hist-item">
+            <div class="hi-date">2026/4/8</div>
+            <div class="hi-dur" style="text-align:right;color:var(--muted)">24 分鐘</div>
+            <div class="hi-meta">下午10:49 · 運動前 81 bpm · 886 筆</div>
+          </div>
+          <div class="hist-item">
+            <div class="hi-date">2026/4/6</div>
+            <div class="hi-dur" style="text-align:right;color:var(--muted)">110 分鐘</div>
+            <div class="hi-meta">下午03:36 · 運動前 85 bpm · 3306 筆</div>
+          </div>
+        </div>
+        <div class="hist-right">
+          <div class="hist-chart-title">↗ 2026/4/19 下午07:39 訓練心率圖</div>
+          <div class="hist-chart-legend">
+            <div class="hcl"><div class="hcl-sq" style="background:#60A5FA"></div>低於目標</div>
+            <div class="hcl"><div class="hcl-sq" style="background:#34D399"></div>有效訓練</div>
+            <div class="hcl"><div class="hcl-sq" style="background:#FBBF24"></div>恢復期</div>
+          </div>
+          <svg class="hist-chart-svg" viewBox="0 0 600 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gG" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#34D399" stop-opacity=".45"/>
+                <stop offset="100%" stop-color="#34D399" stop-opacity=".05"/>
+              </linearGradient>
+              <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#60A5FA" stop-opacity=".4"/>
+                <stop offset="100%" stop-color="#60A5FA" stop-opacity=".05"/>
+              </linearGradient>
+              <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FBBF24" stop-opacity=".4"/>
+                <stop offset="100%" stop-color="#FBBF24" stop-opacity=".05"/>
+              </linearGradient>
+            </defs>
+            <!-- grid -->
+            <line x1="0" y1="30" x2="600" y2="30" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+            <line x1="0" y1="60" x2="600" y2="60" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+            <line x1="0" y1="90" x2="600" y2="90" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+            <line x1="0" y1="120" x2="600" y2="120" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+            <!-- thrLow -->
+            <line x1="0" y1="70" x2="600" y2="70" stroke="rgba(255,255,255,.2)" stroke-dasharray="6,4" stroke-width="1"/>
+            <!-- thrHigh -->
+            <line x1="0" y1="38" x2="600" y2="38" stroke="rgba(255,255,255,.15)" stroke-dasharray="6,4" stroke-width="1"/>
+            <!-- blue area (below zone) -->
+            <path d="M0,130 C30,125 60,122 90,118 C120,115 150,112 180,108 L180,165 L0,165Z" fill="url(#gB)"/>
+            <path d="M0,130 C30,125 60,122 90,118 C120,115 150,112 180,108" stroke="#60A5FA" stroke-width="2" fill="none"/>
+            <!-- green area (in zone) -->
+            <path d="M180,108 C210,98 240,78 270,60 C300,46 330,40 360,38 C390,37 420,38 450,40 L450,165 L180,165Z" fill="url(#gG)"/>
+            <path d="M180,108 C210,98 240,78 270,60 C300,46 330,40 360,38 C390,37 420,38 450,40" stroke="#34D399" stroke-width="2" fill="none"/>
+            <!-- amber area (recovery) -->
+            <path d="M450,40 C480,45 510,65 540,90 C560,108 575,125 590,138 L590,165 L450,165Z" fill="url(#gA)"/>
+            <path d="M450,40 C480,45 510,65 540,90 C560,108 575,125 590,138" stroke="#FBBF24" stroke-width="2" fill="none"/>
+            <!-- axis labels -->
+            <text x="595" y="36" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="end">130</text>
+            <text x="595" y="68" fill="rgba(255,255,255,.3)" font-size="9" text-anchor="end">115</text>
+            <text x="595" y="132" fill="rgba(255,255,255,.25)" font-size="8" text-anchor="end">70</text>
+            <!-- x axis labels -->
+            <text x="2" y="175" fill="rgba(255,255,255,.2)" font-size="8">0:00</text>
+            <text x="120" y="175" fill="rgba(255,255,255,.2)" font-size="8">2:00</text>
+            <text x="240" y="175" fill="rgba(255,255,255,.2)" font-size="8">4:00</text>
+            <text x="360" y="175" fill="rgba(255,255,255,.2)" font-size="8">6:00</text>
+            <text x="480" y="175" fill="rgba(255,255,255,.2)" font-size="8">8:00</text>
+          </svg>
+          <div class="hist-stats">
+            <div class="hstat">⏱ 時長 <strong>8 分鐘</strong></div>
+            <div class="hstat">♡ 平均 <strong>105 bpm</strong></div>
+            <div class="hstat">↑ 最高 <strong>140 bpm</strong></div>
+            <div class="hstat">❤ 運動前 <strong>68 bpm</strong></div>
+            <div class="hstat">💤 休息率 <strong>73 bpm</strong></div>
+            <div class="hstat">✓ 有效時間 <strong>3 分 15 秒</strong></div>
+          </div>
+          <div style="margin-top:10px;padding:8px 10px;background:rgba(124,58,237,.1);border-radius:8px;font-size:.7rem;color:var(--muted)">
+            📅 4/19(週日)–4/19(週日) 本週有效時間：<strong style="color:var(--text)">3 分 15 秒</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ FEATURES ══ -->
+<section id="features">
+  <div class="container">
+    <p class="sec-label fi">核心功能 · Core Features</p>
+    <h2 class="sec-title fi">每個細節都為訓練效果而設計<span class="sec-en">Every detail engineered for training outcomes</span></h2>
+    <div class="features-grid">
+      <div class="fc cp fi">
+        <div class="fc-icon">💓</div>
+        <h3>BLE 即時心率監測</h3>
+        <div class="fc-en">Bluetooth Low Energy Heart Rate</div>
+        <p>自動掃描符合 Heart Rate Service 0x180D 規格的心率錶，斷線後 2 秒自動重連。EMA (α=0.25) 平滑每 2 秒採樣，全程無感監測。</p>
+        <div class="fc-tags"><span class="fc-tag">自動重連</span><span class="fc-tag">EMA 平滑</span><span class="fc-tag">每 2 秒採樣</span></div>
+      </div>
+      <div class="fc ce fi">
+        <div class="fc-icon">🎯</div>
+        <h3>個人化訓練區間</h3>
+        <div class="fc-en">Personalized Training Zones</div>
+        <p>醫師可手動設定最低/最高心率，或採用 Karvonen 公式自動計算（儲備心率法 40%–59%）。進出區間有 10 秒遲滯防抖，避免誤判。</p>
+        <div class="fc-tags"><span class="fc-tag">Karvonen 公式</span><span class="fc-tag">醫師自訂</span><span class="fc-tag">遲滯防抖</span></div>
+      </div>
+      <div class="fc ca fi">
+        <div class="fc-icon">📊</div>
+        <h3>週心訓健康點數</h3>
+        <div class="fc-en">Weekly HR Health Score</div>
+        <p>創新 HR 加權演算法：每分鐘在目標區間的心跳次數 × 時間累積，比純粹計時更精準反映心臟負荷。設有「運動不足」與「過度訓練」雙向警示。</p>
+        <div class="fc-tags"><span class="fc-tag">HR 加權</span><span class="fc-tag">每週重置</span><span class="fc-tag">雙向警示</span></div>
+      </div>
+      <div class="fc cc fi">
+        <div class="fc-icon">🗣️</div>
+        <h3>TTS 語音播報</h3>
+        <div class="fc-en">Text-to-Speech Coaching</div>
+        <p>預先生成 2254 個中文語音片段（Edge TTS HsiaoChenNeural），每 60 秒播報心率與本週健康點數，心率過高立即語音警示，離線可用。</p>
+        <div class="fc-tags"><span class="fc-tag">2254 音頻</span><span class="fc-tag">即時警示</span><span class="fc-tag">離線播放</span></div>
+      </div>
+      <div class="fc cr fi">
+        <div class="fc-icon">🥁</div>
+        <h3>步頻節拍指引</h3>
+        <div class="fc-en">Metronome Step Cadence</div>
+        <p>三階段節拍音樂（90 / 130 / 180 BPM）引導步頻，閃光燈視覺提示協助節奏，可個別開關步頻節拍、閃光燈、播報心率，滿足不同使用偏好。</p>
+        <div class="fc-tags"><span class="fc-tag">90/130/180 BPM</span><span class="fc-tag">閃光燈</span><span class="fc-tag">可自訂</span></div>
+      </div>
+      <div class="fc cb fi">
+        <div class="fc-icon">📈</div>
+        <h3>Chart.js 心率趨勢圖</h3>
+        <div class="fc-en">Unified HR Trend Chart</div>
+        <p>App 與後台使用同一套 Chart.js v4 繪圖邏輯，三色區域（藍=低於目標、綠=有效訓練、黃=恢復期），支援 7 天歷史瀏覽，可截圖分享。</p>
+        <div class="fc-tags"><span class="fc-tag">前後台統一</span><span class="fc-tag">7 天歷史</span><span class="fc-tag">截圖分享</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ FLOW ══ -->
+<section style="background:linear-gradient(180deg,transparent,rgba(124,58,237,.05) 40%,transparent)">
+  <div class="container">
+    <p class="sec-label fi">完整訓練流程 · Training Flow</p>
+    <h2 class="sec-title fi">六階段引導，從連線到報告<span class="sec-en">6 guided phases — connection to report</span></h2>
+    <div class="flow-steps">
+      <div class="fs fi"><div class="fs-num s1">🔵</div><h4>等待連線<br><small style="color:var(--muted);font-weight:400">Wait HR</small></h4><p>自動掃描 BLE 心率錶，預覽訓練區間</p></div>
+      <div class="fs fi"><div class="fs-num s2">💛</div><h4>運動前量測<br><small style="color:var(--muted);font-weight:400">Pre-Exercise HR</small></h4><p>120 秒靜息，中位數作為基準心率</p></div>
+      <div class="fs fi"><div class="fs-num s3">🔷</div><h4>計算目標<br><small style="color:var(--muted);font-weight:400">Compute Targets</small></h4><p>Karvonen 或醫師設定，決定上下限</p></div>
+      <div class="fs fi"><div class="fs-num s4">💚</div><h4>訓練進行中<br><small style="color:var(--muted);font-weight:400">Training</small></h4><p>三階段節拍漸進，即時血條顯示</p></div>
+      <div class="fs fi"><div class="fs-num s5">🟠</div><h4>運動後恢復<br><small style="color:var(--muted);font-weight:400">Post Rest</small></h4><p>量測心率回落時間，記錄恢復秒數</p></div>
+      <div class="fs fi"><div class="fs-num s6">🔮</div><h4>訓練報告<br><small style="color:var(--muted);font-weight:400">Report</small></h4><p>週健康點數、非線性血條、趨勢圖</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ SCORE SYSTEM ══ -->
+<section style="background:var(--card)">
+  <div class="container">
+    <p class="sec-label fi">創新評量系統 · Innovative Scoring</p>
+    <h2 class="sec-title fi">非線性血條 × HR 加權點數<span class="sec-en">Non-linear score bar × HR-weighted accumulation</span></h2>
+    <div class="score-demo-grid">
+      <div class="fi">
+        <p style="color:var(--muted);font-size:.98rem;line-height:1.85;margin-bottom:24px">
+          傳統「達成率」只計時間，<strong style="color:var(--amber)">禾青心訓健康點數</strong>改用心跳×分鐘加權，
+          高強度訓練獲得更多積分，更真實反映心臟負荷。<br><br>
+          血條採非線性刻度：0–100 分佔 60% 寬、100–200 分佔 20%、200–400 分佔 20%，
+          讓低分段差異一目了然，同時防止過度訓練被忽視。
+        </p>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <div style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:10px;padding:10px 16px">
+            <div style="font-size:.7rem;color:var(--muted)">低於 30 分</div>
+            <div style="font-size:.85rem;color:var(--red);font-weight:700">⚠ 留意運動量不足</div>
+          </div>
+          <div style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:10px;padding:10px 16px">
+            <div style="font-size:.7rem;color:var(--muted)">高於 200 分</div>
+            <div style="font-size:.85rem;color:var(--orange);font-weight:700">⚠ 留意過度訓練</div>
+          </div>
+        </div>
+      </div>
+      <div class="fi">
+        <div class="score-card">
+          <div class="sc-score" id="demoScore">42.3</div>
+          <div class="sc-label">週心訓健康點數 · Weekly HR Score</div>
+          <div class="sc-bar"><div class="sc-cursor" id="demoCursor"></div></div>
+          <div class="sc-ticks"><span>0</span><span>30</span><span>100</span><span>200</span><span>400</span></div>
+          <div class="sc-warn">⚠ 留意運動量不足 · Insufficient exercise</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ AUDIENCE ══ -->
+<section>
+  <div class="container" style="text-align:center">
+    <p class="sec-label fi" style="text-align:center">適用對象 · Target Users</p>
+    <h2 class="sec-title fi" style="margin:0 auto 16px">從醫療機構到個人健康管理<span class="sec-en">From clinical settings to personal wellness</span></h2>
+    <div class="audience-grid">
+      <div class="ac fi"><div class="ac-icon">🏥</div><h4>復健科 / 心臟科醫師</h4><p>設定個人心率區間，追蹤患者每週訓練量，依據數據調整處方</p></div>
+      <div class="ac fi"><div class="ac-icon">🧑‍💼</div><h4>健康管理教練</h4><p>透過後台標籤分組管理多位學員，即時查看本週有效訓練成效</p></div>
+      <div class="ac fi"><div class="ac-icon">🏃</div><h4>心血管疾病患者</h4><p>在安全心率範圍內進行有氧運動，語音即時提醒避免過度訓練</p></div>
+      <div class="ac fi"><div class="ac-icon">👴</div><h4>銀髮族健康促進</h4><p>大字體設計、TTS 語音引導、步頻節拍協助安全有效的銀髮運動</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ CTA ══ -->
+<section id="cta" class="cta-sec">
+  <div class="container">
+    <p class="sec-label fi" style="text-align:center">開始使用 · Get Started</p>
+    <h2 class="sec-title fi" style="text-align:center;margin:0 auto 14px">讓數據驅動更精準的心率訓練<span class="sec-en">Let data drive more precise heart rate training</span></h2>
+    <div class="cta-feats fi">
+      <div class="cta-feat"><span class="ck">✓</span> BLE 心率裝置自動連線</div>
+      <div class="cta-feat"><span class="ck">✓</span> Karvonen 或醫師自訂區間</div>
+      <div class="cta-feat"><span class="ck">✓</span> 後台多使用者群組管理</div>
+      <div class="cta-feat"><span class="ck">✓</span> TTS 中文語音即時播報</div>
+      <div class="cta-feat"><span class="ck">✓</span> Chart.js 心率趨勢視覺化</div>
+      <div class="cta-feat"><span class="ck">✓</span> iOS + Android 跨平台</div>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center" class="fi">
+      <a href="#screenshots" class="btn-p">查看 App 畫面 · View App</a>
+      <a href="#admin" class="btn-o">後台系統介紹 · Admin Demo</a>
+    </div>
+    <div class="plat-row fi" style="margin-top:32px">
+      <div class="plat-pill">📱 Android App</div>
+      <div class="plat-pill">🍎 iOS App Store</div>
+      <div class="plat-pill">☁️ Azure Functions</div>
+      <div class="plat-pill">🗄️ Azure SQL</div>
+      <div class="plat-pill">🌐 Web Admin Panel</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-logo">
+    <img src="images/logo3.png" alt="禾青醫電">
+    <span class="ft-brand">禾青醫電 · HEQING MEDICAL</span>
+  </div>
+  <p>禾青心訓 HR Training Platform &nbsp;·&nbsp; Powered by Azure · Flutter · BLE</p>
+  <p style="margin-top:8px;color:rgba(255,255,255,.18);font-size:.72rem">© 2026 HEQING MEDICAL. All rights reserved. &nbsp;·&nbsp; heqinghealth.com</p>
+</footer>
+
+<script>
+// Scroll fade-in
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target)} });
+},{threshold:.1});
+document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+
+// Animate score demo
+let score = 28, dir = 1;
+setInterval(() => {
+  score += dir * 0.5;
+  if(score > 88) dir = -1;
+  if(score < 10) dir = 1;
+  document.getElementById('demoScore').textContent = score.toFixed(1);
+  let pct = score <= 100 ? score/100*60 : score <= 200 ? 60+(score-100)/100*20 : 80+(score-200)/200*20;
+  document.getElementById('demoCursor').style.left = Math.min(pct,96)+'%';
+},110);
+
+// Metronome dots animation
+const dots = document.querySelectorAll('.md');
+let dotIdx = 0;
+setInterval(() => {
+  dots.forEach(d => d.classList.remove('active'));
+  if(dots[dotIdx]) dots[dotIdx].classList.add('active');
+  dotIdx = (dotIdx+1) % dots.length;
+},180);
+
+// Training timer
+let sec = 5;
+setInterval(() => {
+  sec++;
+  const m = String(Math.floor(sec/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  const el = document.getElementById('trainTime');
+  if(el) el.textContent = m+':'+s;
+},1000);
+
+// Live HR in training screen
+let lhr = 94, lhrDir = 1;
+setInterval(() => {
+  lhr += lhrDir*(Math.random()>.7?1:0.3);
+  if(lhr > 98) lhrDir = -1;
+  if(lhr < 85) lhrDir = 1;
+  const el = document.getElementById('liveHr');
+  if(el) el.textContent = Math.round(lhr);
+},500);
+</script>
+</body>
+</html>
