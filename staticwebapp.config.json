@@ -49,6 +49,33 @@
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/.well-known/*", "/admin/*", "/icope/*", "/bodygo3_0/*", "/bodygo3_0/*/*", "/bodygo3_0/*/*/*", "/bodygo3_0/*/*/*/*"]
+    "exclude": [
+      "/.well-known/*",
+      "/admin/*",
+      "/icope/*",
+      "/bodygo3_0/*",
+      "/bodygo3_0/DM/*",
+      "/bodygo3_0/images/*",
+      "/bodygo3_0/images/adult/*",
+      "/bodygo3_0/images/elder/*",
+      "/bodygo3_0/images/fall/*",
+      "/bodygo3_0/images/sppb/*",
+      "/bodygo3_0/DM/frames/3m-shuttle-walk/*",
+      "/bodygo3_0/DM/frames/chair-sit-and-reach/*",
+      "/bodygo3_0/DM/frames/chair-stand-30s/*",
+      "/bodygo3_0/DM/frames/eyes-open-balance/*",
+      "/bodygo3_0/DM/frames/functional-reach/*",
+      "/bodygo3_0/DM/frames/march-in-place-2min/*",
+      "/bodygo3_0/DM/frames/ppb-gait-4m/*",
+      "/bodygo3_0/DM/frames/single-leg-stance-eyes-closed/*",
+      "/bodygo3_0/DM/frames/sit-and-reach/*",
+      "/bodygo3_0/DM/frames/sit-to-stand-5x/*",
+      "/bodygo3_0/DM/frames/sit-up/*",
+      "/bodygo3_0/DM/frames/sppb-chair-stand-5x/*",
+      "/bodygo3_0/DM/frames/walk-2p44m/*",
+      "/bodygo3_0/DM/frames/坐站/*",
+      "/bodygo3_0/DM/frames/成人-心肺適能/*",
+      "/bodygo3_0/DM/frames/銀髮上肢肌耐力/*"
+    ]
   }
 }
