@@ -194,19 +194,19 @@ body{
 
 /* left column: thumb + ble device */
 .card-left{
-  width:240px;flex-shrink:0;
+  width:180px;flex-shrink:0;
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;
 }
 .thumb-box{
   flex:1;background:#040c18;
   display:flex;align-items:center;justify-content:center;
-  min-height:140px;max-height:170px;overflow:hidden;
+  min-height:80px;max-height:110px;overflow:hidden;
   border-bottom:1px solid var(--border);
 }
 .thumb-box img{
   width:100%;height:100%;object-fit:contain;
-  padding:10px;
+  padding:8px;
 }
 .ble-device-box{
   padding:12px;display:flex;flex-direction:column;align-items:center;
@@ -232,8 +232,8 @@ body{
   flex-shrink:0;
 }
 .card-right > img{
-  width:100%;flex:1;object-fit:cover;display:block;
-  min-height:200px;
+  width:100%;flex:1;object-fit:contain;display:block;
+  min-height:160px;max-height:260px;
 }
 .no-demo{
   flex:1;min-height:180px;
@@ -242,8 +242,9 @@ body{
 }
 .frames-strip{
   display:flex;flex-wrap:nowrap;
-  align-items:center;
+  align-items:center;justify-content:center;
   gap:6px;padding:10px;
+  overflow:hidden;
 }
 .frame-item{
   flex:1 1 0;min-width:0;position:relative;
