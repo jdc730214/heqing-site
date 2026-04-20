@@ -18,7 +18,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html{background:#030810;scroll-behavior:smooth;}
 body{
-  width:var(--w);margin:0 auto;
+  width:min(var(--w),100%);margin:0 auto;
   background:var(--bg);color:var(--text);
   font-family:'Roboto','Microsoft JhengHei',system-ui,sans-serif;
   line-height:1.5;overflow-x:hidden;
@@ -350,6 +350,24 @@ body{
 .page-footer strong{color:var(--sub);display:block;margin-bottom:6px;font-size:15px;}
 
 /* ══ PRINT ══ */
+/* ── Portrait / narrow screens ── */
+@media(max-width:720px){
+  .cat-banner{padding:28px 20px 22px;}
+  .cat-banner-inner{flex-wrap:wrap;gap:16px;}
+  .card-body{flex-direction:column;}
+  .card-left{width:100%;flex-direction:row;border-right:none;border-bottom:1px solid var(--border);}
+  .thumb-box{min-height:60px;max-height:80px;flex:0 0 120px;border-bottom:none;border-right:1px solid var(--border);}
+  .frames-strip{padding:8px 6px;gap:4px;}
+  .frame-item img{max-height:200px;}
+  .card-body.tall .frame-item img{max-height:250px;}
+  .params-strip{flex-wrap:wrap;}
+  .params-strip .param{min-width:calc(50% - 6px);}
+}
+@media(max-width:480px){
+  .frame-item img{max-height:140px;}
+  .card-body.tall .frame-item img{max-height:180px;}
+  .thumb-box{flex:0 0 80px;}
+}
 @media print{
   html,body{width:1080px;background:#fff;color:#111;}
   .test-card{page-break-inside:avoid;border:1px solid #ccc;box-shadow:none;}
