@@ -1,0 +1,3286 @@
+{
+  "version": "2.10",
+  "children": [
+    {
+      "type": "frame",
+      "id": "GuGnd",
+      "x": 0,
+      "y": 0,
+      "name": "BodyGo 3.0 Landing",
+      "clip": true,
+      "width": 1080,
+      "height": 1920,
+      "fill": "#0A0A0AFF",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "IldyJ",
+          "name": "Hero",
+          "width": "fill_container",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 160,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#0F1628FF",
+                "position": 0
+              },
+              {
+                "color": "#1A1A3AFF",
+                "position": 0.5
+              },
+              {
+                "color": "#0A0A0AFF",
+                "position": 1
+              }
+            ]
+          },
+          "gap": 24,
+          "padding": [
+            20,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "loxVG",
+              "name": "logoCol",
+              "layout": "vertical",
+              "gap": 4,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EQNio",
+                  "width": 140,
+                  "height": 40,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "./logo3.png",
+                    "mode": "fit"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "wK2Mk",
+                  "width": 120,
+                  "height": 28,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "../images/logo5.png",
+                    "mode": "fit"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "AWdGH",
+              "name": "divLine",
+              "width": 1,
+              "height": 80,
+              "fill": "#FFFFFF20"
+            },
+            {
+              "type": "frame",
+              "id": "apjh3",
+              "name": "textCol",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "DFGtx",
+                  "fill": "#FFFFFFFF",
+                  "content": "科技體適能評估",
+                  "fontFamily": "Inter",
+                  "fontSize": 34,
+                  "fontWeight": "900"
+                },
+                {
+                  "type": "text",
+                  "id": "7x6Bg",
+                  "fill": "#71717AFF",
+                  "content": "AI-Powered Fitness Assessment System",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mF2p9",
+          "name": "divider1",
+          "width": "fill_container",
+          "height": 1,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#00000000",
+                "position": 0
+              },
+              {
+                "color": "#A855F740",
+                "position": 0.5
+              },
+              {
+                "color": "#00000000",
+                "position": 1
+              }
+            ]
+          }
+        },
+        {
+          "type": "frame",
+          "id": "hdwLP",
+          "name": "Core Features",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            10,
+            48
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "Yevus",
+              "name": "featTitle",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "lX7nJ",
+                  "name": "featIcon",
+                  "fill": "#FFFFFFFF",
+                  "content": "⭐",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "PH0yb",
+                  "name": "featZh",
+                  "fill": "#FFFFFFFF",
+                  "content": "核心功能",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "HOlXV",
+                  "name": "featEn",
+                  "fill": "#71717AFF",
+                  "content": "Core Features",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 12
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WPad2",
+              "name": "Features Grid",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QS3Gg",
+                  "name": "featRow1",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "9thdo",
+                      "name": "c1",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF08",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FFFFFF10"
+                      },
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "KzfvE",
+                          "name": "c1i",
+                          "fill": "#FFFFFFFF",
+                          "content": "🤖",
+                          "fontFamily": "Inter",
+                          "fontSize": 22,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "T2p1P",
+                          "name": "c1t",
+                          "fill": "#FFFFFFFF",
+                          "content": "AI 姿態辨識",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "pQYuq",
+                          "name": "c1d",
+                          "fill": "#71717AFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "即時骨架追蹤\n自動計次與姿態評估",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "M0rw1",
+                      "name": "c2",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF08",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FFFFFF10"
+                      },
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ruX8H",
+                          "name": "c2i",
+                          "fill": "#FFFFFFFF",
+                          "content": "📡",
+                          "fontFamily": "Inter",
+                          "fontSize": 22,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "mQUix",
+                          "name": "c2t",
+                          "fill": "#FFFFFFFF",
+                          "content": "BLE 智慧設備",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "tO4xD",
+                          "name": "c2d",
+                          "fill": "#71717AFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "握力計、心率帶\n距離感測、量測尺",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EyMG7",
+                      "name": "c3",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF08",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FFFFFF10"
+                      },
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "sNdgo",
+                          "name": "c3i",
+                          "fill": "#FFFFFFFF",
+                          "content": "📐",
+                          "fontFamily": "Inter",
+                          "fontSize": 22,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "T0QiZ",
+                          "name": "c3t",
+                          "fill": "#FFFFFFFF",
+                          "content": "3D 深度感測",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "nacqR",
+                          "name": "c3d",
+                          "fill": "#71717AFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "深度相機\n精準空間量測",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "KPZmH",
+                  "name": "featRow2",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Mnsrd",
+                      "name": "c4",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF08",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FFFFFF10"
+                      },
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "xqAEA",
+                          "name": "c4i",
+                          "fill": "#FFFFFFFF",
+                          "content": "📊",
+                          "fontFamily": "Inter",
+                          "fontSize": 22,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Ofbh5",
+                          "name": "c4t",
+                          "fill": "#FFFFFFFF",
+                          "content": "專業報告",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "CfgCM",
+                          "name": "c4d",
+                          "fill": "#71717AFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "A4 PDF 雷達圖\n排名 + 運動建議",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lEKMZ",
+                      "name": "c5",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF08",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FFFFFF10"
+                      },
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "y2te7",
+                          "name": "c5i",
+                          "fill": "#FFFFFFFF",
+                          "content": "🔊",
+                          "fontFamily": "Inter",
+                          "fontSize": 22,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "8aZCS",
+                          "name": "c5t",
+                          "fill": "#FFFFFFFF",
+                          "content": "語音引導",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "w1pCU",
+                          "name": "c5d",
+                          "fill": "#71717AFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "TTS 語音指令\n長者友善操作",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EibsI",
+                      "name": "c6",
+                      "width": "fill_container",
+                      "fill": "#FFFFFF08",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "thickness": 1,
+                        "fill": "#FFFFFF10"
+                      },
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "i1zLt",
+                          "name": "c6i",
+                          "fill": "#FFFFFFFF",
+                          "content": "☁️",
+                          "fontFamily": "Inter",
+                          "fontSize": 22,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "QLGK9",
+                          "name": "c6t",
+                          "fill": "#FFFFFFFF",
+                          "content": "雲端整合",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "YOYln",
+                          "name": "c6d",
+                          "fill": "#71717AFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "CIAM 身份驗證\n跨裝置安全存取",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XkFSo",
+          "name": "divider2",
+          "width": "fill_container",
+          "height": 1,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#00000000",
+                "position": 0
+              },
+              {
+                "color": "#A855F740",
+                "position": 0.5
+              },
+              {
+                "color": "#00000000",
+                "position": 1
+              }
+            ]
+          }
+        },
+        {
+          "type": "frame",
+          "id": "UINMi",
+          "name": "Assessment",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            10,
+            48
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "w0joi",
+              "name": "assessTitle",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gaORS",
+                  "fill": "#FFFFFFFF",
+                  "content": "📋",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "oNaOR",
+                  "fill": "#FFFFFFFF",
+                  "content": "評估類別",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "D0Zn9",
+                  "fill": "#71717AFF",
+                  "content": "Assessment",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 12
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "UymbR",
+              "name": "assessGrid",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "x4gla",
+                  "name": "a1",
+                  "width": "fill_container",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 145,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#A855F715",
+                        "position": 0
+                      },
+                      {
+                        "color": "#EC489910",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#A855F725"
+                  },
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "SzWQn",
+                      "fill": "#FFFFFFFF",
+                      "content": "成人體適能",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "zqWdQ",
+                      "fill": "#71717AFF",
+                      "content": "Adult",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jS0JY",
+                      "name": "a1b",
+                      "fill": "#A855F720",
+                      "cornerRadius": 20,
+                      "padding": [
+                        4,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "KH2Xh",
+                          "fill": "#A855F7FF",
+                          "content": "6 項",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "h2nCq",
+                  "name": "a2",
+                  "width": "fill_container",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 145,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#A855F715",
+                        "position": 0
+                      },
+                      {
+                        "color": "#EC489910",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#A855F725"
+                  },
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "iMd5r",
+                      "fill": "#FFFFFFFF",
+                      "content": "銀髮體適能",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "7lob2",
+                      "fill": "#71717AFF",
+                      "content": "Senior",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "J4v96",
+                      "name": "a2b",
+                      "fill": "#A855F720",
+                      "cornerRadius": 20,
+                      "padding": [
+                        4,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "1MRrS",
+                          "fill": "#A855F7FF",
+                          "content": "7 項",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PjJEe",
+                  "name": "a3",
+                  "width": "fill_container",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 145,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#A855F715",
+                        "position": 0
+                      },
+                      {
+                        "color": "#EC489910",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#A855F725"
+                  },
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "8joBn",
+                      "fill": "#FFFFFFFF",
+                      "content": "跌倒風險",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cgbnD",
+                      "fill": "#71717AFF",
+                      "content": "Fall Risk",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "54LWl",
+                      "name": "a3b",
+                      "fill": "#A855F720",
+                      "cornerRadius": 20,
+                      "padding": [
+                        4,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "4wXfA",
+                          "fill": "#A855F7FF",
+                          "content": "7 項",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "wc2lz",
+                  "name": "a4",
+                  "width": "fill_container",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 145,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#A855F715",
+                        "position": 0
+                      },
+                      {
+                        "color": "#EC489910",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#A855F725"
+                  },
+                  "layout": "vertical",
+                  "gap": 6,
+                  "padding": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "1ewCo",
+                      "fill": "#FFFFFFFF",
+                      "content": "SPPB",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "5992X",
+                      "fill": "#71717AFF",
+                      "content": "SPPB",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NJ1eC",
+                      "name": "a4b",
+                      "fill": "#A855F720",
+                      "cornerRadius": 20,
+                      "padding": [
+                        4,
+                        14
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hxNXJ",
+                          "fill": "#A855F7FF",
+                          "content": "3 項",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "UUyTa",
+          "name": "divider3",
+          "width": "fill_container",
+          "height": 1,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#00000000",
+                "position": 0
+              },
+              {
+                "color": "#A855F740",
+                "position": 0.5
+              },
+              {
+                "color": "#00000000",
+                "position": 1
+              }
+            ]
+          }
+        },
+        {
+          "type": "frame",
+          "id": "STSgf",
+          "name": "Hardware",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "padding": [
+            8,
+            48
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "k2Xw5",
+              "name": "hwTitle",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "56ZzO",
+                  "fill": "#FFFFFFFF",
+                  "content": "📶",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "vsRgw",
+                  "fill": "#FFFFFFFF",
+                  "content": "系統設備與智慧週邊",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "qt2QS",
+                  "fill": "#71717AFF",
+                  "content": "Hardware",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ezsgG",
+              "name": "hwRow1",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "lO9XI",
+                  "name": "hw1",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF06",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#FFFFFF0A"
+                  },
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "cfCAr",
+                      "width": "fill_container",
+                      "height": 60,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./機器.png",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "L1T2K",
+                      "fill": "#FFFFFFFF",
+                      "content": "系統主機",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "UkeeJ",
+                      "fill": "#71717AFF",
+                      "content": "AI Machine",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HvGmz",
+                  "name": "hw2",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF06",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#FFFFFF0A"
+                  },
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Na4vP",
+                      "width": "fill_container",
+                      "height": 60,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./地墊.png",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "eL3JG",
+                      "fill": "#FFFFFFFF",
+                      "content": "測試地墊",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cJqoj",
+                      "fill": "#71717AFF",
+                      "content": "Test Mat",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "c837P",
+                  "name": "hw3",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF06",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#FFFFFF0A"
+                  },
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ejWZ4",
+                      "width": "fill_container",
+                      "height": 50,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./握力計.png",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "r13As",
+                      "fill": "#FFFFFFFF",
+                      "content": "握力計",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "5e9oo",
+                      "fill": "#71717AFF",
+                      "content": "Grip Meter",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wtkEy",
+              "name": "hwRow2",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "on0un",
+                  "name": "hw4",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF06",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#FFFFFF0A"
+                  },
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "alSZJ",
+                      "width": "fill_container",
+                      "height": 50,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./心率錶.png",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "3N7iW",
+                      "fill": "#FFFFFFFF",
+                      "content": "心率錶",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "6zJpF",
+                      "fill": "#71717AFF",
+                      "content": "HR Watch",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vvc3W",
+                  "name": "hw5",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF06",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#FFFFFF0A"
+                  },
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kAcnO",
+                      "width": "fill_container",
+                      "height": 50,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./測距.png",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "kegeq",
+                      "fill": "#FFFFFFFF",
+                      "content": "紅外線測距",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "B2fN0",
+                      "fill": "#71717AFF",
+                      "content": "IR Distance",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NC77W",
+                  "name": "hw6",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF06",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#FFFFFF0A"
+                  },
+                  "layout": "vertical",
+                  "gap": 3,
+                  "padding": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "CaXm2",
+                      "width": "fill_container",
+                      "height": 50,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./health-tape.png",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "4U49v",
+                      "fill": "#FFFFFFFF",
+                      "content": "量測尺",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "adnyK",
+                      "fill": "#71717AFF",
+                      "content": "Health Tape",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "7vLzX",
+              "name": "hwNote",
+              "width": "fill_container",
+              "fill": "#FFFFFF05",
+              "cornerRadius": 10,
+              "stroke": {
+                "thickness": {
+                  "left": 3
+                },
+                "fill": "#A855F760"
+              },
+              "padding": [
+                10,
+                14
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mlukK",
+                  "fill": "#A1A1AAFF",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "主機與 AI 相機整合模組，搭配 BLE 周邊與智能分析系統。📐 使用空間：寬 1500mm × 長 4750mm",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "1bszp",
+          "name": "divider4",
+          "width": "fill_container",
+          "height": 1,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#00000000",
+                "position": 0
+              },
+              {
+                "color": "#A855F740",
+                "position": 0.5
+              },
+              {
+                "color": "#00000000",
+                "position": 1
+              }
+            ]
+          }
+        },
+        {
+          "type": "frame",
+          "id": "WUybQ",
+          "name": "Test Items",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "padding": [
+            10,
+            48
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "IFFxE",
+              "name": "testTitle",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "x4Nc6",
+                  "fill": "#FFFFFFFF",
+                  "content": "📝",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "73yup",
+                  "fill": "#FFFFFFFF",
+                  "content": "評估項目明細",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "JC9mx",
+                  "fill": "#71717AFF",
+                  "content": "Test Items",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "gGTXP",
+              "name": "testCols",
+              "width": "fill_container",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "0CEqR",
+                  "name": "colLeft",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "8PUEy",
+                      "name": "adultGrp",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "P0Heg",
+                          "name": "adultHdr",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "qb0dp",
+                              "fill": "#FFFFFFFF",
+                              "content": "成人體適能",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Vghwm",
+                              "fill": "#A855F720",
+                              "cornerRadius": 8,
+                              "padding": [
+                                2,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "3ZNoX",
+                                  "fill": "#A855F7FF",
+                                  "content": "Adult · 6",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eJAkc",
+                          "name": "aRows",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "ymgHE",
+                              "name": "ar1",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "jefQU",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "心肺適能",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "pbDlh",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "3分鐘登階，心率恢復",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "14ruc",
+                              "name": "ar2",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "PvuZ9",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "反應力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "dFHde",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "視覺刺激反應計時",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "MxSoi",
+                              "name": "ar3",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "QvKxh",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "手握力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "XRvyU",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "BLE 握力計，左右各2次",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "DpIoQ",
+                              "name": "ar4",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "6EIc1",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "肌耐力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "SJAWf",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "1分鐘仰臥起坐，AI計次",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "I8Uav",
+                              "name": "ar5",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "lScsL",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "柔軟度",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "112HM",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "坐姿體前彎，感測器量測",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "c21LZ",
+                              "name": "ar6",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "tD6uZ",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "閉眼單腳平衡",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "RIy3Q",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "AI姿態偵測計時",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "g8m9f",
+                      "name": "fallGrp",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "PKLtF",
+                          "name": "fallHdr",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "zu2yh",
+                              "fill": "#FFFFFFFF",
+                              "content": "跌倒風險",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "p1cBp",
+                              "fill": "#EC489920",
+                              "cornerRadius": 8,
+                              "padding": [
+                                2,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "hDyWG",
+                                  "fill": "#EC4899FF",
+                                  "content": "Fall · 7",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "a9cby",
+                          "name": "fRows",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "F0lN7",
+                              "name": "fr1",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "pmdd0",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "3m 折返走",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "gu1cZ",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "AI計時步態，轉身穩定度",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "GJcWZ",
+                              "name": "fr2",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "0dwVz",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "手握力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Nfm4N",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "BLE握力計，肌少風險",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "iuEjH",
+                              "name": "fr3",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "fzRZA",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "開眼平衡",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "5nzZq",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "AI姿態偵測，穩定度計時",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Yh0x4",
+                              "name": "fr4",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "ddTeb",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "功能前伸",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "i541s",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "距離感測器量測前伸",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "nbEGh",
+                              "name": "fr5",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Ap9Yp",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "5次坐站",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "I3OnY",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "AI計次計時，下肢爆發力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "hC14h",
+                              "name": "fr6",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "TbRXZ",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "小腿圍",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "alsvK",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "BLE量測尺，肌肉量篩檢",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "yia26",
+                              "name": "fr7",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "0bFxx",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "衰弱前期",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "ahDO4",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "5題問卷，綜合衰弱風險",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "iysGC",
+                  "name": "colRight",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "62yh8",
+                      "name": "seniorGrp",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "mPsdO",
+                          "name": "seniorHdr",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "ExH65",
+                              "fill": "#FFFFFFFF",
+                              "content": "銀髮體適能",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "ydHhA",
+                              "fill": "#A855F720",
+                              "cornerRadius": 8,
+                              "padding": [
+                                2,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "h2o82",
+                                  "fill": "#A855F7FF",
+                                  "content": "Senior · 7",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "HjGLG",
+                          "name": "sRows",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "duUc7",
+                              "name": "sr1",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "eZAOu",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "下肢肌耐力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "cLU02",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "30秒坐站，AI自動計次",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "UNJdy",
+                              "name": "sr2",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "mB6dx",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "上肢肌耐力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "pSFSj",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "30秒手臂彎舉，AI計次",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "YuAeR",
+                              "name": "sr3",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "miCVF",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "心肺適能",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "KXdkE",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "2分鐘原地踏步，AI偵測",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "jKn0K",
+                              "name": "sr4",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "AzbEt",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "下肢柔軟度",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "q26wL",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "椅上前彎，感測器量測",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "OUtA2",
+                              "name": "sr5",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "yDqgH",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "上肢柔軟度",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "NKdt0",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "抓背測試，量測尺量測",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "aIAHw",
+                              "name": "sr6",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "mEQWU",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "2.44m折返走",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "oLuWj",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "AI計時，動態平衡步態",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "RDHiD",
+                              "name": "sr7",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "fMxBX",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "手握力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "KZgK3",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "BLE握力計，上肢力量",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "T4M7N",
+                      "name": "sppbGrp",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "MkfRf",
+                          "name": "sppbHdr",
+                          "width": "fill_container",
+                          "gap": 6,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "KGt4l",
+                              "fill": "#FFFFFFFF",
+                              "content": "SPPB 評估",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "FWcJq",
+                              "fill": "#EC489920",
+                              "cornerRadius": 8,
+                              "padding": [
+                                2,
+                                8
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "M4Wwt",
+                                  "fill": "#EC4899FF",
+                                  "content": "SPPB · 3",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "93zFj",
+                          "name": "spRows",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "SKuMT",
+                              "name": "sp1",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "B96Wq",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "平衡測試",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "AdbNw",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "閉足/半腳/全腳跟三階段",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "wCT0n",
+                              "name": "sp2",
+                              "width": "fill_container",
+                              "stroke": {
+                                "thickness": {
+                                  "bottom": 1
+                                },
+                                "fill": "#FFFFFF08"
+                              },
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "s2tob",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "4m 行走",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "ejyvm",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "AI步速分析，行走速度",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "4XqwL",
+                              "name": "sp3",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "padding": [
+                                4,
+                                0
+                              ],
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "1B9kK",
+                                  "fill": "#FFFFFFCC",
+                                  "textGrowth": "fixed-width",
+                                  "width": 90,
+                                  "content": "5次坐站",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "86Jke",
+                                  "fill": "#71717AFF",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "AI計次計時，起立能力",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TcU6F",
+          "name": "divider5",
+          "width": "fill_container",
+          "height": 1,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#00000000",
+                "position": 0
+              },
+              {
+                "color": "#A855F740",
+                "position": 0.5
+              },
+              {
+                "color": "#00000000",
+                "position": 1
+              }
+            ]
+          }
+        },
+        {
+          "type": "frame",
+          "id": "VlciS",
+          "name": "Report",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "padding": [
+            10,
+            48
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ta8up",
+              "name": "rptTitle",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "KPEH3",
+                  "fill": "#FFFFFFFF",
+                  "content": "📑",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "xP3L8",
+                  "fill": "#FFFFFFFF",
+                  "content": "評估報告",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "tOPUN",
+                  "fill": "#71717AFF",
+                  "content": "Report",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "b3E6F",
+              "name": "rptPages",
+              "width": "fill_container",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QdE8K",
+                  "name": "rp1",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF00",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#A855F730"
+                  },
+                  "layout": "vertical",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "64J1X",
+                      "name": "rp1img",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 301,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./rp1.jpg",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 12
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hKp75",
+                  "name": "rp2",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF00",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#A855F730"
+                  },
+                  "layout": "vertical",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "zLrNm",
+                      "name": "rp2img",
+                      "clip": true,
+                      "width": "fill_container",
+                      "height": 301,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./rp2.jpg",
+                        "mode": "fit"
+                      },
+                      "cornerRadius": 12
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "p1UaY",
+              "name": "rptNote",
+              "width": "fill_container",
+              "fill": "#FFFFFF05",
+              "cornerRadius": 10,
+              "stroke": {
+                "thickness": {
+                  "left": 3
+                },
+                "fill": "#A855F760"
+              },
+              "padding": [
+                10,
+                14
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "tKxA3",
+                  "fill": "#A1A1AAFF",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "導入國民健康署體適能常模資料庫，採用回歸演算法依年齡、性別推算個人百分位排名 (PR) 與體適能等級",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sOeKO",
+          "name": "divider6",
+          "width": "fill_container",
+          "height": 1,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#00000000",
+                "position": 0
+              },
+              {
+                "color": "#A855F740",
+                "position": 0.5
+              },
+              {
+                "color": "#00000000",
+                "position": 1
+              }
+            ]
+          }
+        },
+        {
+          "type": "frame",
+          "id": "SV55Q",
+          "name": "Workflow",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "padding": [
+            4,
+            48
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "EgRWW",
+              "name": "wfTitle",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "juvQl",
+                  "fill": "#FFFFFFFF",
+                  "content": "🔄",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "PH6uA",
+                  "fill": "#FFFFFFFF",
+                  "content": "評估流程",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Ly2Uu",
+                  "fill": "#71717AFF",
+                  "content": "Workflow",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sb4Yw",
+              "name": "wfRow",
+              "width": "fill_container",
+              "justifyContent": "space_around",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "AKrsa",
+                  "name": "wf1",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "fnSgg",
+                      "name": "wf1n",
+                      "width": 48,
+                      "height": 48,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 135,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#A855F7FF",
+                            "position": 0
+                          },
+                          {
+                            "color": "#EC4899FF",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 9999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OnZVu",
+                          "fill": "#FFFFFFFF",
+                          "content": "1",
+                          "fontFamily": "Inter",
+                          "fontSize": 20,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "uri3S",
+                      "fill": "#FFFFFFFF",
+                      "content": "建立個案",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "rId6s",
+                      "fill": "#71717AFF",
+                      "content": "Profile",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HqC2P",
+                  "name": "arr1",
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "SfWMY",
+                      "fill": "#A855F750",
+                      "content": "▶",
+                      "fontFamily": "Inter",
+                      "fontSize": 22,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ieM5x",
+                  "name": "wf2",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xo3ks",
+                      "name": "wf2n",
+                      "width": 48,
+                      "height": 48,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 135,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#A855F7FF",
+                            "position": 0
+                          },
+                          {
+                            "color": "#EC4899FF",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 9999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "3Y2DU",
+                          "fill": "#FFFFFFFF",
+                          "content": "2",
+                          "fontFamily": "Inter",
+                          "fontSize": 20,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "8pgZX",
+                      "fill": "#FFFFFFFF",
+                      "content": "選擇評估",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "0VGnH",
+                      "fill": "#71717AFF",
+                      "content": "Select",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "KcaRS",
+                  "name": "arr2",
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "4Mxsb",
+                      "fill": "#A855F750",
+                      "content": "▶",
+                      "fontFamily": "Inter",
+                      "fontSize": 22,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tbBL7",
+                  "name": "wf3",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "5yWrY",
+                      "name": "wf3n",
+                      "width": 48,
+                      "height": 48,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 135,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#A855F7FF",
+                            "position": 0
+                          },
+                          {
+                            "color": "#EC4899FF",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 9999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "62vPq",
+                          "fill": "#FFFFFFFF",
+                          "content": "3",
+                          "fontFamily": "Inter",
+                          "fontSize": 20,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "BlafN",
+                      "fill": "#FFFFFFFF",
+                      "content": "AI 測試",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "HSOnh",
+                      "fill": "#71717AFF",
+                      "content": "Assess",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "gIZYj",
+                  "name": "arr3",
+                  "padding": [
+                    0,
+                    8
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "EOiPz",
+                      "fill": "#A855F750",
+                      "content": "▶",
+                      "fontFamily": "Inter",
+                      "fontSize": 22,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vNWfp",
+                  "name": "wf4",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "OPjIZ",
+                      "name": "wf4n",
+                      "width": 48,
+                      "height": 48,
+                      "fill": {
+                        "type": "gradient",
+                        "gradientType": "linear",
+                        "enabled": true,
+                        "rotation": 135,
+                        "size": {
+                          "height": 1
+                        },
+                        "colors": [
+                          {
+                            "color": "#A855F7FF",
+                            "position": 0
+                          },
+                          {
+                            "color": "#EC4899FF",
+                            "position": 1
+                          }
+                        ]
+                      },
+                      "cornerRadius": 9999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "I9Icd",
+                          "fill": "#FFFFFFFF",
+                          "content": "4",
+                          "fontFamily": "Inter",
+                          "fontSize": 20,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "H09FZ",
+                      "fill": "#FFFFFFFF",
+                      "content": "產出報告",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Inmb0",
+                      "fill": "#71717AFF",
+                      "content": "Report",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jyuZ7",
+          "name": "footerDiv",
+          "width": "fill_container",
+          "height": 1,
+          "fill": "#FFFFFF0A"
+        },
+        {
+          "type": "frame",
+          "id": "OjMC2",
+          "name": "Footer",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 2,
+          "padding": [
+            1,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "bbTie",
+              "fill": "#71717A99",
+              "content": "HEQING MEDICAL © 2026  |  Powered by AI Vision Technology",
+              "fontFamily": "Geist Mono",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "OUNxT",
+              "fill": "#A855F780",
+              "content": "https://heqinghealth.com",
+              "fontFamily": "Geist Mono",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "imports": {
+    "P": "pencil:shadcn.lib.pen",
+    "l": "pencil:lunaris.lib.pen",
+    "O": "pencil:halo.lib.pen",
+    "J": "pencil:nitro.lib.pen"
+  }
+}

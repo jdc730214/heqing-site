@@ -41,10 +41,14 @@
     {
       "route": "/icope/*",
       "rewrite": "/icope/index.html"
+    },
+    {
+      "route": "/bodygo3_0",
+      "rewrite": "/bodygo3_0/operator-manual.html"
     }
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/.well-known/*", "/admin/*", "/icope/*"]
+    "exclude": ["/.well-known/*", "/admin/*", "/icope/*", "/bodygo3_0/*"]
   }
 }

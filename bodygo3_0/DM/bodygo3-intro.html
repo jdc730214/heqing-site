@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>BodyGo 3.0 科技體適能評估 | AI Fitness Assessment</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    min-height: 1920px;
+    font-family: 'Inter', 'Noto Sans TC', sans-serif;
+    background: #0a0e1a;
+    color: #e8eaf0;
+    overflow-x: hidden;
+  }
+
+  /* ── Hero Section ── */
+  .hero {
+    position: relative;
+    width: 100%;
+    padding: 60px 60px 40px;
+    background: linear-gradient(160deg, #0f1628 0%, #162040 40%, #1a3060 70%, #0f1628 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,180,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(120,80,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-top { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; position: relative; z-index: 1; }
+  .hero-logo { width: 64px; height: 64px; border-radius: 14px; object-fit: contain; background: rgba(255,255,255,0.1); padding: 6px; }
+  .hero-brand { font-size: 22px; font-weight: 600; color: rgba(255,255,255,0.6); letter-spacing: 2px; }
+  .hero h1 { font-size: 56px; font-weight: 900; line-height: 1.15; margin-bottom: 8px; position: relative; z-index: 1; }
+  .hero h1 .accent { background: linear-gradient(135deg, #00b4ff, #7c5cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero .subtitle { font-size: 24px; font-weight: 400; color: rgba(255,255,255,0.55); letter-spacing: 1px; position: relative; z-index: 1; }
+
+  /* ── Section titles ── */
+  .section { padding: 36px 60px; }
+  .section-title {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 26px; font-weight: 700; margin-bottom: 24px;
+    color: #fff;
+  }
+  .section-title .icon { font-size: 28px; }
+  .section-title .en { font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.4); margin-left: 8px; }
+  .section-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,180,255,0.3), rgba(124,92,255,0.3), transparent); margin-bottom: 0; }
+
+  /* ── Core Features Grid ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .feature-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px 20px;
+    transition: transform 0.2s;
+  }
+  .feature-card .f-icon { font-size: 32px; margin-bottom: 10px; }
+  .feature-card h3 { font-size: 19px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+  .feature-card .f-items { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+
+  /* ── Assessment Categories ── */
+  .assess-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .assess-card {
+    background: linear-gradient(145deg, rgba(0,180,255,0.08), rgba(124,92,255,0.05));
+    border: 1px solid rgba(0,180,255,0.15);
+    border-radius: 16px;
+    padding: 24px 18px;
+    text-align: center;
+  }
+  .assess-card .a-zh { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .assess-card .a-en { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+  .assess-card .a-count {
+    display: inline-block;
+    background: rgba(0,180,255,0.15);
+    color: #00b4ff;
+    font-size: 15px; font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+
+  /* ── Hardware Section ── */
+  .hw-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .hw-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .hw-card .hw-icon { font-size: 30px; margin-bottom: 8px; }
+  .hw-card .hw-zh { font-size: 16px; font-weight: 600; color: #fff; }
+  .hw-card .hw-en { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .hw-note {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.7;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border-left: 3px solid rgba(0,180,255,0.4);
+  }
+
+  /* ── Test Items Table ── */
+  .test-group { margin-bottom: 20px; }
+  .test-group-title {
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .test-group-title .badge {
+    font-size: 13px; font-weight: 600;
+    background: rgba(0,180,255,0.15); color: #00b4ff;
+    padding: 2px 10px; border-radius: 10px;
+  }
+  .test-table { width: 100%; border-collapse: collapse; }
+  .test-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .test-table td {
+    padding: 8px 12px;
+    font-size: 14px;
+    vertical-align: top;
+  }
+  .test-table td:first-child {
+    width: 160px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.8);
+  }
+  .test-table td:last-child {
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* ── Report Section ── */
+  .report-features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .report-feat {
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 20px 12px;
+  }
+  .report-feat .rf-icon { font-size: 30px; margin-bottom: 8px; }
+  .report-feat .rf-zh { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .report-feat .rf-en { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .report-pages {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .report-page {
+    background: linear-gradient(145deg, rgba(124,92,255,0.08), rgba(0,180,255,0.05));
+    border: 1px solid rgba(124,92,255,0.15);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .report-page .rp-label { font-size: 14px; font-weight: 700; color: rgba(124,92,255,0.8); }
+  .report-page .rp-zh { font-size: 17px; font-weight: 600; color: #fff; }
+  .report-page .rp-en { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .report-note {
+    font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.7;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px; padding: 14px 20px;
+    border-left: 3px solid rgba(124,92,255,0.4);
+  }
+
+  /* ── Workflow ── */
+  .workflow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 10px 0;
+  }
+  .wf-step {
+    text-align: center;
+    flex: 0 0 auto;
+  }
+  .wf-num {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00b4ff, #7c5cff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800; color: #fff;
+    margin: 0 auto 10px;
+  }
+  .wf-zh { font-size: 17px; font-weight: 600; color: #fff; }
+  .wf-en { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .wf-arrow {
+    font-size: 28px;
+    color: rgba(0,180,255,0.4);
+    margin: 0 24px;
+    padding-bottom: 20px;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 24px 60px 36px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer p { font-size: 14px; color: rgba(255,255,255,0.3); line-height: 1.8; }
+  .footer a { color: rgba(0,180,255,0.6); text-decoration: none; }
+
+  /* ── Compact adjustments ── */
+  .section.compact { padding-top: 24px; padding-bottom: 24px; }
+  .section.compact .section-title { margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ════════════ HERO ════════════ -->
+<div class="hero">
+  <div class="hero-top">
+    <img src="../images/logo5.png" alt="logo" class="hero-logo">
+    <span class="hero-brand">HEQING MEDICAL</span>
+  </div>
+  <h1><span class="accent">BodyGo 3.0</span><br>科技體適能評估</h1>
+  <div class="subtitle">AI-Powered Fitness Assessment System</div>
+</div>
+
+<!-- ════════════ CORE FEATURES ════════════ -->
+<div class="section-divider"></div>
+<div class="section compact">
+  <div class="section-title">
+    <span class="icon">⭐</span> 核心功能 <span class="en">Core Features</span>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="f-icon">🤖</div>
+      <h3>AI 姿態辨識</h3>
+      <div class="f-items">即時骨架追蹤<br>自動計次與姿態評估</div>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">📡</div>
+      <h3>BLE 智慧設備</h3>
+      <div class="f-items">握力計、心率帶<br>距離感測、量測尺</div>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">📐</div>
+      <h3>3D 深度感測</h3>
+      <div class="f-items">深度相機<br>精準空間量測</div>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">📊</div>
+      <h3>專業報告</h3>
+      <div class="f-items">A4 PDF 雷達圖<br>排名 + 運動建議</div>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">🔊</div>
+      <h3>語音引導</h3>
+      <div class="f-items">TTS 語音指令<br>長者友善操作</div>
+    </div>
+    <div class="feature-card">
+      <div class="f-icon">☁️</div>
+      <h3>雲端整合</h3>
+      <div class="f-items">CIAM 身份驗證<br>跨裝置安全存取</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ASSESSMENT CATEGORIES ════════════ -->
+<div class="section-divider"></div>
+<div class="section compact">
+  <div class="section-title">
+    <span class="icon">📋</span> 評估類別 <span class="en">Assessment</span>
+  </div>
+  <div class="assess-grid">
+    <div class="assess-card">
+      <div class="a-zh">成人體適能</div>
+      <div class="a-en">Adult</div>
+      <div class="a-count">6 項</div>
+    </div>
+    <div class="assess-card">
+      <div class="a-zh">銀髮體適能</div>
+      <div class="a-en">Senior</div>
+      <div class="a-count">7 項</div>
+    </div>
+    <div class="assess-card">
+      <div class="a-zh">跌倒風險</div>
+      <div class="a-en">Fall Risk</div>
+      <div class="a-count">7 項</div>
+    </div>
+    <div class="assess-card">
+      <div class="a-zh">SPPB</div>
+      <div class="a-en">SPPB</div>
+      <div class="a-count">3 項</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ HARDWARE ════════════ -->
+<div class="section-divider"></div>
+<div class="section compact">
+  <div class="section-title">
+    <span class="icon">📶</span> 系統設備與智慧週邊 <span class="en">Hardware &amp; BLE Peripherals</span>
+  </div>
+  <div class="hw-grid">
+    <div class="hw-card">
+      <div class="hw-icon">🖥️</div>
+      <div class="hw-zh">系統主機</div>
+      <div class="hw-en">AI Machine</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-icon">🟩</div>
+      <div class="hw-zh">測試地墊</div>
+      <div class="hw-en">Test Mat</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-icon">✊</div>
+      <div class="hw-zh">握力計</div>
+      <div class="hw-en">Grip Meter</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-icon">💓</div>
+      <div class="hw-zh">心率帶</div>
+      <div class="hw-en">HR Monitor</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-icon">📏</div>
+      <div class="hw-zh">距離感測器</div>
+      <div class="hw-en">Distance Sensor</div>
+    </div>
+    <div class="hw-card">
+      <div class="hw-icon">📐</div>
+      <div class="hw-zh">量測尺</div>
+      <div class="hw-en">Health Tape</div>
+    </div>
+  </div>
+  <div class="hw-note">
+    主機與 AI 相機整合模組，專用防滑地墊便於使用者引導定位站立與檢測，搭配 BLE 周邊與智能分析系統，提供穩定的測試流程。<br>
+    📐 使用空間：寬 1500mm × 長 4750mm
+  </div>
+</div>
+
+<!-- ════════════ TEST ITEMS ════════════ -->
+<div class="section-divider"></div>
+<div class="section compact">
+  <div class="section-title">
+    <span class="icon">📝</span> 評估項目明細 <span class="en">Test Items</span>
+  </div>
+
+  <!-- Adult -->
+  <div class="test-group">
+    <div class="test-group-title">成人體適能 <span class="badge">Adult · 6</span></div>
+    <table class="test-table">
+      <tr><td>心肺適能</td><td>3 分鐘登階測試，記錄運動後心率恢復</td></tr>
+      <tr><td>反應力</td><td>視覺刺激反應計時，評估神經肌肉速度</td></tr>
+      <tr><td>手握力</td><td>BLE 握力計量測，左右手各 2 次取最佳</td></tr>
+      <tr><td>肌耐力</td><td>1 分鐘仰臥起坐，AI 自動計次</td></tr>
+      <tr><td>柔軟度</td><td>坐姿體前彎，距離感測器精準量測</td></tr>
+      <tr><td>閉眼單腳平衡</td><td>AI 姿態偵測計時，自動判定結束</td></tr>
+    </table>
+  </div>
+
+  <!-- Senior -->
+  <div class="test-group">
+    <div class="test-group-title">銀髮體適能 <span class="badge">Senior · 7</span></div>
+    <table class="test-table">
+      <tr><td>下肢肌耐力</td><td>30 秒坐站，AI 自動計次</td></tr>
+      <tr><td>上肢肌耐力</td><td>30 秒手臂彎舉，AI 自動計次</td></tr>
+      <tr><td>心肺適能</td><td>2 分鐘原地踏步，AI 偵測抬腿</td></tr>
+      <tr><td>下肢柔軟度</td><td>椅上坐姿前彎，感測器量測距離</td></tr>
+      <tr><td>上肢柔軟度</td><td>抓背測試，智慧量測尺量測距離</td></tr>
+      <tr><td>2.44m 折返走</td><td>AI 計時行走，評估動態平衡步態</td></tr>
+      <tr><td>手握力</td><td>BLE 握力計量測，評估上肢力量</td></tr>
+    </table>
+  </div>
+
+  <!-- Fall Risk -->
+  <div class="test-group">
+    <div class="test-group-title">跌倒風險 <span class="badge">Fall Risk · 7</span></div>
+    <table class="test-table">
+      <tr><td>3m 折返走</td><td>AI 計時步態分析，含轉身穩定度</td></tr>
+      <tr><td>手握力</td><td>BLE 握力計量測，評估肌少風險</td></tr>
+      <tr><td>開眼平衡</td><td>AI 姿態偵測，站立穩定度計時</td></tr>
+      <tr><td>功能前伸</td><td>距離感測器量測前伸幅度</td></tr>
+      <tr><td>5 次坐站</td><td>AI 計次計時，評估下肢爆發力</td></tr>
+      <tr><td>小腿圍</td><td>BLE 量測尺，肌肉量篩檢指標</td></tr>
+      <tr><td>衰弱前期評估</td><td>5 題結構化問卷，綜合衰弱風險</td></tr>
+    </table>
+  </div>
+
+  <!-- SPPB -->
+  <div class="test-group">
+    <div class="test-group-title">SPPB 評估 <span class="badge">SPPB · 3</span></div>
+    <table class="test-table">
+      <tr><td>平衡測試</td><td>AI 偵測閉足 / 半腳 / 全腳跟三階段</td></tr>
+      <tr><td>4m 行走</td><td>AI 步速分析，自動計算行走速度</td></tr>
+      <tr><td>5 次坐站</td><td>AI 計次計時，評估起立能力</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════ REPORT ════════════ -->
+<div class="section-divider"></div>
+<div class="section compact">
+  <div class="section-title">
+    <span class="icon">📑</span> 評估報告 <span class="en">Report</span>
+  </div>
+  <div class="report-pages">
+    <div class="report-page">
+      <div><div class="rp-label">P.1</div></div>
+      <div><div class="rp-zh">總覽 Overview</div><div class="rp-en">Summary &amp; Radar Chart</div></div>
+    </div>
+    <div class="report-page">
+      <div><div class="rp-label">P.2</div></div>
+      <div><div class="rp-zh">詳細 Details</div><div class="rp-en">Items &amp; Percentile</div></div>
+    </div>
+  </div>
+  <div class="report-features">
+    <div class="report-feat">
+      <div class="rf-icon">📈</div>
+      <div class="rf-zh">多維雷達圖</div>
+      <div class="rf-en">Radar Chart</div>
+    </div>
+    <div class="report-feat">
+      <div class="rf-icon">📊</div>
+      <div class="rf-zh">百分位排名</div>
+      <div class="rf-en">Percentile PR</div>
+    </div>
+    <div class="report-feat">
+      <div class="rf-icon">🏋️</div>
+      <div class="rf-zh">運動建議</div>
+      <div class="rf-en">Exercise Advice</div>
+    </div>
+    <div class="report-feat">
+      <div class="rf-icon">🖨️</div>
+      <div class="rf-zh">A4 PDF 匯出</div>
+      <div class="rf-en">PDF Export</div>
+    </div>
+  </div>
+  <div class="report-note">
+    🏛 導入國民健康署體適能常模資料庫，採用回歸演算法依年齡、性別推算個人百分位排名 (PR) 與體適能等級<br>
+    Based on National Health Administration norms with regression algorithms for personalized PR scoring
+  </div>
+</div>
+
+<!-- ════════════ WORKFLOW ════════════ -->
+<div class="section-divider"></div>
+<div class="section compact">
+  <div class="section-title">
+    <span class="icon">🔄</span> 評估流程 <span class="en">Workflow</span>
+  </div>
+  <div class="workflow">
+    <div class="wf-step">
+      <div class="wf-num">1</div>
+      <div class="wf-zh">建立個案</div>
+      <div class="wf-en">Profile</div>
+    </div>
+    <div class="wf-arrow">▶</div>
+    <div class="wf-step">
+      <div class="wf-num">2</div>
+      <div class="wf-zh">選擇評估</div>
+      <div class="wf-en">Select</div>
+    </div>
+    <div class="wf-arrow">▶</div>
+    <div class="wf-step">
+      <div class="wf-num">3</div>
+      <div class="wf-zh">AI 測試</div>
+      <div class="wf-en">Assess</div>
+    </div>
+    <div class="wf-arrow">▶</div>
+    <div class="wf-step">
+      <div class="wf-num">4</div>
+      <div class="wf-zh">產出報告</div>
+      <div class="wf-en">Report</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FOOTER ════════════ -->
+<div class="footer">
+  <p>HEQING MEDICAL &copy; 2026 &nbsp;|&nbsp; Powered by AI Vision Technology</p>
+  <p><a href="https://heqinghealth.com">https://heqinghealth.com</a></p>
+</div>
+
+</body>
+</html>
