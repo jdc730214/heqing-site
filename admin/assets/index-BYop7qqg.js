@@ -479,7 +479,7 @@ ${a}`);return}throw dr(e.error,e.error_description,e.suberror)?new ye(e.error,e.
         <hr class="my-3" />
         <p class="text-muted small mb-2">
           <i class="bi bi-clock text-primary me-1"></i>
-          每週有效運動時間目標（留空則用 App 預設：固定區間 200 分鐘 / Karvonen 120 分鐘）
+          每週有效運動時間目標（留空則用 App 預設 150 分鐘）
         </p>
         <div class="row">
           <div class="col-6 mb-3">
