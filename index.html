@@ -6,7 +6,40 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>禾青醫電 HEQING MEDICAL | 高階醫療電子開發</title>
+    <title>禾青醫電 HEQING MEDICAL | BodyGo 3.0 科技體適能・禾青心訓・高階醫療電子開發</title>
+    <meta
+      name="description"
+      content="禾青醫電 HEQING MEDICAL 專注高階醫療電子開發。核心產品：BodyGo 3.0 科技體適能（透過機器視覺與週邊無線檢測設備精準量測，使用最新常模提供檢測報告）、禾青心訓（適合銀髮居家心肺訓練，依個人能力自適應調整訓練區間，可健走/快走/跑步，醫師與教練可從後台檢視數據、設計運動處方）。"
+    />
+    <meta
+      name="keywords"
+      content="BodyGo 3.0, 科技體適能, 禾青醫電, HEQING MEDICAL, 禾青心訓, 機器視覺檢測, 心電量測, 心肺訓練, 銀髮居家, 自適應訓練區間, 運動處方, 健走, 快走, 跑步, 居家健康, 長照科技, 健康檢測, 高階醫療電子, 體適能評估, 常模, 檢測報告"
+    />
+    <meta name="author" content="禾青醫電 HEQING MEDICAL" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://heqinghealth.com/" />
+
+    <!-- Open Graph / Facebook / LINE -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="禾青醫電 HEQING MEDICAL" />
+    <meta property="og:url" content="https://heqinghealth.com/" />
+    <meta property="og:title" content="禾青醫電 HEQING MEDICAL | BodyGo 3.0 科技體適能・禾青心訓" />
+    <meta
+      property="og:description"
+      content="BodyGo 3.0 科技體適能：機器視覺＋無線檢測設備精準量測，最新常模檢測報告。禾青心訓：銀髮居家自適應心肺訓練，醫師教練後台檢視數據、設計運動處方。"
+    />
+    <meta property="og:image" content="https://heqinghealth.com/images/bodygo3.0.jpg" />
+    <meta property="og:image:alt" content="BodyGo 3.0 科技體適能評估" />
+    <meta property="og:locale" content="zh_TW" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="禾青醫電 HEQING MEDICAL | BodyGo 3.0・禾青心訓" />
+    <meta
+      name="twitter:description"
+      content="BodyGo 3.0 科技體適能、禾青心訓自適應心肺訓練，高階醫療電子開發。"
+    />
+    <meta name="twitter:image" content="https://heqinghealth.com/images/bodygo3.0.jpg" />
     <!-- MSAL Browser (Azure AD B2C / External ID) -->
     <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -211,6 +244,9 @@
         background: var(--card-bg);
         transition: 0.4s;
         overflow: hidden;
+        display: block;
+        color: inherit;
+        text-decoration: none;
       }
       .showcase-card:hover {
         border-color: var(--text-color);
@@ -1355,31 +1391,31 @@
       <div class="container">
         <h2 class="section-title">CORE_PRODUCTS</h2>
         <div class="showcase-grid">
-          <div class="showcase-card">
+          <a class="showcase-card" href="bodygo3_0/DM/bodygo3-intro.html">
             <div
               class="showcase-thumb"
               style="
-                background-image: url(&quot;https://picsum.photos/400/300?sig=1&quot;);
+                background-image: url(&quot;images/bodygo3.0.jpg&quot;);
               "
             ></div>
             <div class="showcase-info">
-              <h4>HQ-AFE 100</h4>
-              <p>高精準度心電量測前端模組</p>
+              <h4>BodyGo 3.0 科技體適能</h4>
+              <p>透過機器視覺與週邊無線檢測設備精準量測，使用最新常模提供檢測報告。</p>
             </div>
-          </div>
+          </a>
 
-          <div class="showcase-card">
+          <a class="showcase-card" href="heqinghealth_HR_TrainingDM/">
             <div
               class="showcase-thumb"
               style="
-                background-image: url(&quot;https://picsum.photos/400/300?sig=2&quot;);
+                background-image: url(&quot;images/禾青心訓_簡報.png&quot;);
               "
             ></div>
             <div class="showcase-info">
-              <h4>BIO_SENSE v2</h4>
-              <p>穿戴式生理數據擷取器</p>
+              <h4>禾青心訓</h4>
+              <p>適合銀髮居家，依個人心肺能力自適應調整訓練區間；健走、快走、跑步皆可，醫師、教練可從後台檢視數據、設計運動處方。</p>
             </div>
-          </div>
+          </a>
 
           <div class="showcase-card">
             <div
