@@ -45,6 +45,40 @@
     {
       "route": "/bodygo3_0",
       "rewrite": "/bodygo3_0/operator-manual.html"
+    },
+    {
+      "route": "/sppb",
+      "redirect": "/bodygo3_0/DM/bodygo3-intro.html",
+      "statusCode": 301
+    },
+    {
+      "route": "/bodygo",
+      "redirect": "/bodygo3_0/DM/bodygo3-intro.html",
+      "statusCode": 301
+    },
+    {
+      "route": "/icope-info",
+      "redirect": "/icope/",
+      "statusCode": 301
+    },
+    {
+      "route": "/heart-training",
+      "redirect": "/heqinghealth_HR_TrainingDM/",
+      "statusCode": 301
+    },
+    {
+      "route": "/sitemap.xml",
+      "headers": {
+        "Content-Type": "application/xml",
+        "Cache-Control": "public, max-age=3600"
+      }
+    },
+    {
+      "route": "/robots.txt",
+      "headers": {
+        "Content-Type": "text/plain",
+        "Cache-Control": "public, max-age=3600"
+      }
     }
   ],
   "navigationFallback": {
@@ -54,6 +88,8 @@
       "/admin/*",
       "/icope/*",
       "/bodygo3_0/*",
+      "/sitemap.xml",
+      "/robots.txt",
       "/bodygo3_0/DM/*",
       "/bodygo3_0/images/*",
       "/bodygo3_0/images/adult/*",

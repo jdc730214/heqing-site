@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://heqinghealth.com/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://heqinghealth.com/"/>
+  </url>
+  <url>
+    <loc>https://heqinghealth.com/bodygo3_0/DM/bodygo3-intro.html</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://heqinghealth.com/bodygo3_0/DM/bodygo3-intro.html"/>
+  </url>
+  <url>
+    <loc>https://heqinghealth.com/icope/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://heqinghealth.com/icope/"/>
+  </url>
+  <url>
+    <loc>https://heqinghealth.com/heqinghealth_HR_TrainingDM/</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://heqinghealth.com/heqinghealth_HR_TrainingDM/"/>
+  </url>
+</urlset>

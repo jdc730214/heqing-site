@@ -1,0 +1,11 @@
+# robots.txt for https://heqinghealth.com/
+# 禾青醫電 HEQING MEDICAL
+User-agent: *
+Allow: /
+
+# Block admin panel from indexing (internal staff use only)
+Disallow: /admin/
+Disallow: /admin-login.html
+
+# Sitemap
+Sitemap: https://heqinghealth.com/sitemap.xml
