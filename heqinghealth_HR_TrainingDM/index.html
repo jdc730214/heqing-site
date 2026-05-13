@@ -404,6 +404,8 @@ section{padding:80px 24px}
   border-top:1px solid rgba(255,255,255,.06);font-size:.65rem;color:var(--muted)}
 /* admin content */
 .admin-content{padding:20px;overflow-y:auto}
+/* privacy mosaic — 馬賽克隱私遮罩 for demo user info */
+.mosaic{filter:blur(4px);-webkit-filter:blur(4px);user-select:none;-webkit-user-select:none;pointer-events:none;display:inline-block}
 .admin-content-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
 .admin-breadcrumb{font-size:.7rem;color:var(--muted)}
 .admin-breadcrumb span{color:var(--text)}
@@ -1012,8 +1014,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
             </thead>
             <tbody>
               <tr>
-                <td class="tbl-id">20267171</td>
-                <td>黃醫師</td>
+                <td class="tbl-id"><span class="mosaic">20267171</span></td>
+                <td><span class="mosaic">黃醫師</span></td>
                 <td>
                   <span class="tbl-tag t-t4">健康控制組</span>
                   <span class="tbl-tag" style="background:rgba(56,189,248,.1);color:#7DD3FC">healthy control</span>
@@ -1025,8 +1027,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
                 <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
               </tr>
               <tr>
-                <td class="tbl-id">888888</td>
-                <td>JD_爸</td>
+                <td class="tbl-id"><span class="mosaic">888888</span></td>
+                <td><span class="mosaic">JD_爸</span></td>
                 <td><span class="tbl-tag t-t3">JD家</span></td>
                 <td>1952/11/6</td><td>-</td>
                 <td><span class="bpm-badge">107–125</span></td>
@@ -1035,8 +1037,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
                 <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
               </tr>
               <tr>
-                <td class="tbl-id">A12345677</td>
-                <td>JD</td>
+                <td class="tbl-id"><span class="mosaic">A12345677</span></td>
+                <td><span class="mosaic">JD</span></td>
                 <td><span class="tbl-tag t-t3">JD家</span><span class="tbl-tag t-t2">開發測試</span></td>
                 <td>1984/2/10</td><td>男</td>
                 <td><span class="bpm-badge b1">70–85</span></td>
@@ -1045,8 +1047,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
                 <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
               </tr>
               <tr>
-                <td class="tbl-id">99186134</td>
-                <td>Roger女友</td>
+                <td class="tbl-id"><span class="mosaic">99186134</span></td>
+                <td><span class="mosaic">Roger女友</span></td>
                 <td><span class="tbl-tag t-t1">長庚-復健科</span></td>
                 <td>2002/12/11</td><td>女</td>
                 <td><span class="bpm-badge">140–190</span></td>
@@ -1055,8 +1057,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
                 <td><div class="tbl-actions"><button class="ta-btn edit">✏</button><button class="ta-btn del">🗑</button></div></td>
               </tr>
               <tr>
-                <td class="tbl-id">Test_1</td>
-                <td>apple 評證</td>
+                <td class="tbl-id"><span class="mosaic">Test_1</span></td>
+                <td><span class="mosaic">apple 評證</span></td>
                 <td><span class="tbl-tag t-t2">開發測試</span></td>
                 <td>1995/5/4</td><td>-</td>
                 <td><span style="font-size:.62rem;color:var(--muted)">公式計算</span></td>
@@ -1074,7 +1076,7 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
     <div class="browser-frame fi" style="margin-top:24px">
       <div class="browser-chrome">
         <div class="browser-dots"><div class="bd r"></div><div class="bd y"></div><div class="bd g"></div></div>
-        <div class="browser-url">heqinghealth.com/admin/#/groups/1/users/20267171/history</div>
+        <div class="browser-url">heqinghealth.com/admin/#/groups/1/users/<span class="mosaic">20267171</span>/history</div>
       </div>
       <div class="hist-layout">
         <div class="hist-left" style="background:#0F0F1E">
