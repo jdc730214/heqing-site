@@ -884,7 +884,7 @@ ${a}`);return}throw Rr(e.error,e.error_description,e.suberror)?new be(e.error,e.
       <span class="mx-2">｜</span>
       <i class="bi bi-arrow-up me-1"></i>最高 ${Cs} bpm
       ${u!=null?`<span class="mx-2">｜</span><i class="bi bi-pause-circle me-1"></i>運動前心率 ${u} bpm`:""}
-      ${m!=null?`<span class="mx-2">｜</span><i class="bi bi-heart-pulse me-1"></i>近期30日 5min 休息心率 ${m} bpm`:""}
+      ${m!=null?`<span class="mx-2">｜</span><i class="bi bi-heart-pulse me-1"></i>近期 5min 休息心率 ${m} bpm`:""}
       ${Xo}
       ${Ss}
       ${$t}
