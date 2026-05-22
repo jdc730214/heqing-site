@@ -1835,7 +1835,8 @@
           navigateToLoginRequestUrl: false,
         },
         cache: {
-          cacheLocation: "sessionStorage",
+          // localStorage：與 DM 頁等子頁面共用登入狀態（同網域同 clientId）
+          cacheLocation: "localStorage",
           storeAuthStateInCookie: false,
         },
       });
