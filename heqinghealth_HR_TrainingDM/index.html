@@ -86,6 +86,30 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 .nav-links a{color:var(--muted);font-size:.85rem;text-decoration:none;transition:color .2s}
 .nav-links a:hover{color:var(--text)}
 @media(max-width:600px){.nav-links{display:none}}
+/* nav 右側：登入/註冊 + 訂閱 */
+.nav-right{display:flex;align-items:center;gap:22px}
+.nav-auth{display:flex;align-items:center;gap:10px}
+.nav-sub-btn{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;border:none;
+  border-radius:10px;padding:8px 18px;font-size:.82rem;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 16px rgba(124,58,237,.4);transition:transform .2s;white-space:nowrap}
+.nav-sub-btn:hover{transform:translateY(-1px)}
+.nav-auth-link{color:var(--muted);font-size:.82rem;text-decoration:none;cursor:pointer;
+  border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:7px 14px;
+  transition:color .2s,border-color .2s;white-space:nowrap}
+.nav-auth-link:hover{color:var(--text);border-color:rgba(255,255,255,.3)}
+.nav-user{display:flex;align-items:center;gap:8px}
+.nav-user .nu-email{font-size:.8rem;color:var(--emerald);max-width:130px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:600px){.nav-user .nu-email{max-width:90px}}
+/* 訂閱佔位 modal */
+.sub-modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);
+  backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px}
+.sub-modal{background:#15152a;border:1px solid rgba(255,255,255,.1);border-radius:18px;
+  max-width:380px;width:100%;padding:28px 24px;text-align:center}
+.sub-modal-title{font-size:1.2rem;font-weight:800;color:var(--text);margin-bottom:12px}
+.sub-modal-body{font-size:.9rem;color:var(--muted);line-height:1.8;margin-bottom:22px}
+.sub-modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.sub-modal-actions .btn-p,.sub-modal-actions .btn-o{padding:11px 22px;font-size:.85rem}
 
 /* ── HERO ── */
 .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
@@ -574,6 +598,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
 .fi{opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
 .fi.show{opacity:1;transform:translateY(0)}
 </style>
+<!-- MSAL Browser (Azure CIAM) — 與主站同一套會員 -->
+<script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
 </head>
 <body>
 
@@ -586,11 +612,21 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
       <div style="font-size:.6rem;color:var(--muted)">HEQING HR Training</div>
     </div>
   </div>
-  <div class="nav-links">
-    <a href="#screenshots">App 畫面</a>
-    <a href="#admin">後台管理</a>
-    <a href="#features">功能特色</a>
-    <a href="#cta">聯絡我們</a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#screenshots">App 畫面</a>
+      <a href="#admin">後台管理</a>
+      <a href="#features">功能特色</a>
+      <a href="#cta">聯絡我們</a>
+    </div>
+    <div class="nav-auth">
+      <a class="nav-auth-link" id="authLoginBtn">登入 / 註冊</a>
+      <span class="nav-user" id="authUser" style="display:none">
+        <span class="nu-email" id="authEmail"></span>
+        <a class="nav-auth-link" id="authLogoutBtn">登出</a>
+      </span>
+      <button class="nav-sub-btn" id="subscribeBtn">訂閱</button>
+    </div>
   </div>
 </nav>
 
@@ -1403,6 +1439,73 @@ setInterval(() => {
   const el = document.getElementById('liveHr');
   if(el) el.textContent = Math.round(lhr);
 },500);
+</script>
+
+<!-- 訂閱佔位 modal（Phase 1：綠界金流尚未串接）-->
+<div id="subModal" class="sub-modal-overlay" style="display:none">
+  <div class="sub-modal">
+    <div class="sub-modal-title">訂閱即將開放</div>
+    <p class="sub-modal-body">感謝您的興趣！線上訂閱（綠界金流）正在串接中。<br>開通後會通知您；若需提前開通，歡迎與我們聯絡。</p>
+    <div class="sub-modal-actions">
+      <a href="#cta" class="btn-o" id="subContactBtn">聯絡我們</a>
+      <button class="btn-p" id="subCloseBtn">我知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 會員登入狀態（與主站同一套 CIAM；登入導去首頁）-->
+<script>
+(function(){
+  const _HOME = "https://heqinghealth.com/";
+  if (typeof msal === "undefined") { console.warn("[auth] MSAL 未載入"); return; }
+  const msalInstance = new msal.PublicClientApplication({
+    auth: {
+      clientId: "93802a48-96d9-45ae-8fc3-2a93065c7f0f",
+      authority: "https://bodygocustomers.ciamlogin.com/",
+      knownAuthorities: ["bodygocustomers.ciamlogin.com"],
+      redirectUri: _HOME,
+      postLogoutRedirectUri: _HOME,
+      navigateToLoginRequestUrl: false,
+    },
+    cache: { cacheLocation: "sessionStorage", storeAuthStateInCookie: false },
+  });
+
+  let account = null;
+  const $ = id => document.getElementById(id);
+
+  function updateUI(){
+    const loginBtn = $("authLoginBtn"), userBox = $("authUser"), emailEl = $("authEmail");
+    if (account){
+      loginBtn.style.display = "none";
+      userBox.style.display = "flex";
+      emailEl.textContent = account.username || account.name || "已登入";
+    } else {
+      loginBtn.style.display = "";
+      userBox.style.display = "none";
+    }
+  }
+
+  // 登入/註冊 → 導去首頁登入（首頁登完同分頁回來即顯示已登入）
+  $("authLoginBtn").addEventListener("click", () => { window.location.href = _HOME; });
+  // 登出
+  $("authLogoutBtn").addEventListener("click", () => {
+    msalInstance.logoutRedirect({ account: account || undefined }).catch(e => console.error("[auth] logout", e));
+  });
+  // 訂閱（Phase 1：未串金流 → 未登入先去登入，已登入顯示佔位 modal）
+  $("subscribeBtn").addEventListener("click", () => {
+    if (!account){ window.location.href = _HOME; return; }
+    $("subModal").style.display = "flex";
+  });
+  $("subCloseBtn").addEventListener("click", () => { $("subModal").style.display = "none"; });
+  $("subContactBtn").addEventListener("click", () => { $("subModal").style.display = "none"; });
+  $("subModal").addEventListener("click", e => { if (e.target.id === "subModal") $("subModal").style.display = "none"; });
+
+  msalInstance.handleRedirectPromise().then(() => {
+    const accts = msalInstance.getAllAccounts();
+    if (accts.length){ msalInstance.setActiveAccount(accts[0]); account = accts[0]; }
+    updateUI();
+  }).catch(e => { console.error("[auth]", e); updateUI(); });
+})();
 </script>
 </body>
 </html>
