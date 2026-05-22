@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>禾青心訓 · 銀髮自適應心肺訓練 App · Karvonen 訓練區間 | 禾青醫電 HEQING MEDICAL</title>
-<meta name="description" content="禾青心訓是禾青醫電（HEQING MEDICAL）研發的銀髮居家自適應心肺訓練 App：依個人靜止心率與最大心率以 Karvonen 公式自適應計算訓練區間，支援健走、快走、跑步；醫師、教練可從後台檢視訓練數據、在區間內秒數，為個案設計運動處方。適用於長照中心、社區關懷據點、復健診所、健身房居家心肺訓練。" />
-<meta name="keywords" content="禾青心訓, 心率訓練, 心肺訓練, 心率區間, Karvonen, 自適應訓練, 靜止心率, 最大心率, 銀髮運動, 銀髮居家, 樂齡, 健走, 快走, 跑步, 運動處方, 醫師處方, 教練處方, 心電量測, BLE 心率帶, 藍牙心率錶, Flutter App, 高齡健康, 長照科技, 復健, 心肺復健, 禾青醫電, HEQING MEDICAL, HR Training, Heart Rate Training, 訓練平台" />
+<meta name="description" content="禾青心訓是禾青醫電（HEQING MEDICAL）研發的銀髮居家自適應心肺訓練 App：依個人靜止心率與最大心率以 Karvonen 公式自適應計算訓練區間，支援健走、快走、跑步；教練、管理者可從後台檢視訓練數據、在區間內秒數，為個案設計運動計畫。適用於長照中心、社區關懷據點、健身房與居家心肺訓練。" />
+<meta name="keywords" content="禾青心訓, 心率訓練, 心肺訓練, 心率區間, Karvonen, 自適應訓練, 靜止心率, 最大心率, 銀髮運動, 銀髮居家, 樂齡, 健走, 快走, 跑步, 運動計畫, 教練管理, 心電量測, BLE 心率帶, 藍牙心率錶, Flutter App, 高齡健康, 長照科技, 禾青醫電, HEQING MEDICAL, HR Training, Heart Rate Training, 訓練平台" />
 <meta name="author" content="禾青醫電 HEQING MEDICAL" />
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="https://heqinghealth.com/heqinghealth_HR_TrainingDM/" />
@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="禾青醫電 HEQING MEDICAL" />
 <meta property="og:url" content="https://heqinghealth.com/heqinghealth_HR_TrainingDM/" />
 <meta property="og:title" content="禾青心訓 · 銀髮自適應心肺訓練 · Karvonen 訓練區間 | 禾青醫電" />
-<meta property="og:description" content="依 Karvonen 公式自適應計算心率訓練區間，健走／快走／跑步皆可；醫師教練後台檢視數據、設計運動處方。" />
+<meta property="og:description" content="依 Karvonen 公式自適應計算心率訓練區間，健走／快走／跑步皆可；教練後台檢視數據、設計運動計畫。" />
 <meta property="og:image" content="https://heqinghealth.com/images/心訓產品照.png" />
 <meta property="og:image:alt" content="禾青心訓 銀髮自適應心肺訓練 App" />
 <meta property="og:locale" content="zh_TW" />
@@ -24,7 +24,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="禾青心訓 · 銀髮自適應心肺訓練 | 禾青醫電" />
-<meta name="twitter:description" content="Karvonen 自適應心率區間，醫師教練後台設計運動處方。" />
+<meta name="twitter:description" content="Karvonen 自適應心率區間，教練後台設計運動計畫。" />
 <meta name="twitter:image" content="https://heqinghealth.com/images/心訓產品照.png" />
 
 <!-- JSON-LD: SoftwareApplication + BreadcrumbList -->
@@ -38,7 +38,7 @@
       "alternateName": ["禾青心訓", "HEQING HR Training", "心率訓練 App"],
       "applicationCategory": "HealthApplication",
       "operatingSystem": "Android, iOS",
-      "description": "依個人靜止心率與最大心率以 Karvonen 公式自適應計算訓練區間的銀髮居家心肺訓練 App；支援健走、快走、跑步；醫師、教練可從後台檢視訓練數據、設計運動處方。",
+      "description": "依個人靜止心率與最大心率以 Karvonen 公式自適應計算訓練區間的銀髮居家心肺訓練 App；支援健走、快走、跑步；教練、管理者可從後台檢視訓練數據、設計運動計畫。",
       "url": "https://heqinghealth.com/heqinghealth_HR_TrainingDM/",
       "image": "https://heqinghealth.com/images/心訓產品照.png",
       "publisher": {"@type": "Organization", "name": "禾青醫電 HEQING MEDICAL", "url": "https://heqinghealth.com/"},
@@ -46,7 +46,7 @@
         "Karvonen 自適應訓練區間計算",
         "BLE 心率帶連線",
         "六階段訓練流程（連線→測量靜止→暖身→訓練→恢復→報告）",
-        "醫師／教練後台監督",
+        "教練／管理者後台監督",
         "群組管理與資料匯出"
       ]
     },
@@ -597,15 +597,15 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg"><img src="images/hero_dark.png" alt=""></div>
-  <div class="hero-badge"><span class="badge-dot"></span>專為醫療機構設計 · Healthcare Edition</div>
+  <div class="hero-badge"><span class="badge-dot"></span>專為團體訓練設計 · Group Training Edition</div>
   <h1>
     <span class="g">禾青心訓</span>
     <span class="en">HEQING HR TRAINING PLATFORM</span>
   </h1>
   <p class="hero-desc">
     結合 <strong>BLE 心率裝置</strong>、<strong>智能訓練區間</strong>與<strong>後台管理系統</strong>，
-    讓醫師即時掌握每位患者的心率訓練成效。<br>
-    <span style="font-size:.9em;color:var(--muted2)">BLE heart rate monitoring · Smart training zones · Clinical supervision dashboard</span>
+    讓教練即時掌握每位學員的心率訓練成效。<br>
+    <span style="font-size:.9em;color:var(--muted2)">BLE heart rate monitoring · Smart training zones · Group supervision dashboard</span>
   </p>
   <div class="hero-cta">
     <a href="#screenshots" class="btn-p">查看 App 畫面 · View App</a>
@@ -966,8 +966,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
 <section id="admin" class="admin-section">
   <div class="container">
     <p class="sec-label fi">後台管理系統 · Admin Dashboard</p>
-    <h2 class="sec-title fi">醫師與教練的全方位掌控中心<span class="sec-en">Complete supervision center for clinicians &amp; trainers</span></h2>
-    <p class="sec-desc fi">後台管理面板提供群組管理、使用者標籤分類、訓練歷程查閱，讓醫療機構高效管理大量患者訓練紀錄。</p>
+    <h2 class="sec-title fi">教練與管理者的全方位掌控中心<span class="sec-en">Complete supervision center for trainers &amp; managers</span></h2>
+    <p class="sec-desc fi">後台管理面板提供群組管理、使用者標籤分類、訓練歷程查閱，讓機構高效管理大量使用者訓練紀錄。</p>
 
     <!-- Group Users Tab -->
     <div class="browser-frame fi">
@@ -998,7 +998,6 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
           </div>
           <div class="tag-filter">
             <span class="tf-label">標籤篩選：</span>
-            <span class="tf-tag t1">長庚-復健科</span>
             <span class="tf-tag t2">開發測試</span>
             <span class="tf-tag t3">JD家</span>
             <span class="tf-tag t4">健康控制組</span>
@@ -1008,14 +1007,14 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
           <table class="admin-table">
             <thead>
               <tr>
-                <th>登入碼（病歷號）</th><th>備註</th><th>標籤</th><th>生日</th><th>性別</th>
+                <th>登入碼</th><th>備註</th><th>標籤</th><th>生日</th><th>性別</th>
                 <th>訓練區間 (BPM)</th><th>本週有效時間</th><th>狀態</th><th></th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="tbl-id"><span class="mosaic">20267171</span></td>
-                <td><span class="mosaic">黃醫師</span></td>
+                <td><span class="mosaic">黃先生</span></td>
                 <td>
                   <span class="tbl-tag t-t4">健康控制組</span>
                   <span class="tbl-tag" style="background:rgba(56,189,248,.1);color:#7DD3FC">healthy control</span>
@@ -1049,7 +1048,7 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
               <tr>
                 <td class="tbl-id"><span class="mosaic">99186134</span></td>
                 <td><span class="mosaic">Roger女友</span></td>
-                <td><span class="tbl-tag t-t1">長庚-復健科</span></td>
+                <td></td>
                 <td>2002/12/11</td><td>女</td>
                 <td><span class="bpm-badge">140–190</span></td>
                 <td style="color:var(--muted)">—</td>
@@ -1189,8 +1188,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
         <div class="fc-icon">🎯</div>
         <h3>個人化訓練區間</h3>
         <div class="fc-en">Personalized Training Zones</div>
-        <p>醫師可手動設定最低/最高心率，或採用 Karvonen 公式自動計算（儲備心率法 40%–59%）。進出區間有 10 秒遲滯防抖，避免誤判。</p>
-        <div class="fc-tags"><span class="fc-tag">Karvonen 公式</span><span class="fc-tag">醫師自訂</span><span class="fc-tag">遲滯防抖</span></div>
+        <p>管理者可手動設定最低/最高心率，或採用 Karvonen 公式自動計算（儲備心率法 40%–59%）。進出區間有 10 秒遲滯防抖，避免誤判。</p>
+        <div class="fc-tags"><span class="fc-tag">Karvonen 公式</span><span class="fc-tag">自訂區間</span><span class="fc-tag">遲滯防抖</span></div>
       </div>
       <div class="fc ca fi">
         <div class="fc-icon">📊</div>
@@ -1234,7 +1233,7 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
     <div class="flow-steps">
       <div class="fs fi"><div class="fs-num s1">🔵</div><h4>等待連線<br><small style="color:var(--muted);font-weight:400">Wait HR</small></h4><p>自動掃描 BLE 心率錶，預覽訓練區間</p></div>
       <div class="fs fi"><div class="fs-num s2">💛</div><h4>運動前量測<br><small style="color:var(--muted);font-weight:400">Pre-Exercise HR</small></h4><p>120 秒靜息，中位數作為基準心率</p></div>
-      <div class="fs fi"><div class="fs-num s3">🔷</div><h4>計算目標<br><small style="color:var(--muted);font-weight:400">Compute Targets</small></h4><p>Karvonen 或醫師設定，決定上下限</p></div>
+      <div class="fs fi"><div class="fs-num s3">🔷</div><h4>計算目標<br><small style="color:var(--muted);font-weight:400">Compute Targets</small></h4><p>Karvonen 或自訂設定，決定上下限</p></div>
       <div class="fs fi"><div class="fs-num s4">💚</div><h4>訓練進行中<br><small style="color:var(--muted);font-weight:400">Training</small></h4><p>三階段節拍漸進，即時血條顯示</p></div>
       <div class="fs fi"><div class="fs-num s5">🟠</div><h4>運動後恢復<br><small style="color:var(--muted);font-weight:400">Post Rest</small></h4><p>量測心率回落時間，記錄恢復秒數</p></div>
       <div class="fs fi"><div class="fs-num s6">🔮</div><h4>訓練報告<br><small style="color:var(--muted);font-weight:400">Report</small></h4><p>週健康點數、非線性血條、趨勢圖</p></div>
@@ -1287,11 +1286,11 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
 <section>
   <div class="container" style="text-align:center">
     <p class="sec-label fi" style="text-align:center">適用對象 · Target Users</p>
-    <h2 class="sec-title fi" style="margin:0 auto 16px">從醫療機構到個人健康管理<span class="sec-en">From clinical settings to personal wellness</span></h2>
+    <h2 class="sec-title fi" style="margin:0 auto 16px">從團體機構到個人健康管理<span class="sec-en">From organizations to personal wellness</span></h2>
     <div class="audience-grid">
-      <div class="ac fi"><div class="ac-icon">🏥</div><h4>復健科 / 心臟科醫師</h4><p>設定個人心率區間，追蹤患者每週訓練量，依據數據調整處方</p></div>
+      <div class="ac fi"><div class="ac-icon">🏢</div><h4>機構 / 團體管理者</h4><p>設定個人心率區間，追蹤使用者每週訓練量，依據數據調整計畫</p></div>
       <div class="ac fi"><div class="ac-icon">🧑‍💼</div><h4>健康管理教練</h4><p>透過後台標籤分組管理多位學員，即時查看本週有效訓練成效</p></div>
-      <div class="ac fi"><div class="ac-icon">🏃</div><h4>心血管疾病患者</h4><p>在安全心率範圍內進行有氧運動，語音即時提醒避免過度訓練</p></div>
+      <div class="ac fi"><div class="ac-icon">🏃</div><h4>需控管運動強度者</h4><p>在安全心率範圍內進行有氧運動，語音即時提醒避免過度訓練</p></div>
       <div class="ac fi"><div class="ac-icon">👴</div><h4>銀髮族健康促進</h4><p>大字體設計、TTS 語音引導、步頻節拍協助安全有效的銀髮運動</p></div>
     </div>
   </div>
@@ -1306,7 +1305,7 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
     <h2 class="sec-title fi" style="text-align:center;margin:0 auto 14px">讓數據驅動更精準的心率訓練<span class="sec-en">Let data drive more precise heart rate training</span></h2>
     <div class="cta-feats fi">
       <div class="cta-feat"><span class="ck">✓</span> BLE 心率裝置自動連線</div>
-      <div class="cta-feat"><span class="ck">✓</span> Karvonen 或醫師自訂區間</div>
+      <div class="cta-feat"><span class="ck">✓</span> Karvonen 或自訂心率區間</div>
       <div class="cta-feat"><span class="ck">✓</span> 後台多使用者群組管理</div>
       <div class="cta-feat"><span class="ck">✓</span> TTS 中文語音即時播報</div>
       <div class="cta-feat"><span class="ck">✓</span> Chart.js 心率趨勢視覺化</div>
