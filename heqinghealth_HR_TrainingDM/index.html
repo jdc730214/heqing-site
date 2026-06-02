@@ -1596,13 +1596,30 @@ setInterval(() => {
 
   // 查訂閱狀態並填入 dropdown
   async function fetchSubStatus(){
+    const badge = $("nuBadge");
     try {
-      const token = await msalInstance.acquireTokenSilent({ scopes: API_SCOPES, account }).then(r => r.accessToken).catch(() => null);
-      if (!token) return;
+      // silent 拿 token；失敗時改用互動式（不 redirect，只 popup）
+      let token = null;
+      try {
+        const r = await msalInstance.acquireTokenSilent({ scopes: API_SCOPES, account });
+        token = r.accessToken;
+      } catch(e) {
+        console.warn("[sub status] silent token fail:", e.message);
+      }
+      if (!token) {
+        badge.textContent = "請重新登入";
+        badge.className = "nu-badge inactive";
+        return;
+      }
       const res = await fetch(BACKEND + "/api/subscription/status", {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (!res.ok) return;
+      if (!res.ok) {
+        console.warn("[sub status] API error:", res.status);
+        badge.textContent = "查詢失敗";
+        badge.className = "nu-badge inactive";
+        return;
+      }
       const d = await res.json();
       const badge = $("nuBadge");
       if (d.active) {
@@ -1622,7 +1639,11 @@ setInterval(() => {
         $("nuExpiryRow").style.display = "none";
         $("nuRenewRow").style.display = "none";
       }
-    } catch(e) { console.warn("[sub status]", e); }
+    } catch(e) {
+      console.warn("[sub status] unexpected:", e);
+      badge.textContent = "查詢失敗";
+      badge.className = "nu-badge inactive";
+    }
   }
 
   // 在本頁直接登入/註冊（CIAM SUSI 合併流程；登完回到本頁）
