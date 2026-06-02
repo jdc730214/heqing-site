@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>付款結果 · 禾青心訓</title>
+  <style>
+    :root{ --bg:#0a0a12; --card:#13131f; --text:#F1F5F9; --muted:#94A3B8;
+           --emerald:#34D399; --cyan:#38BDF8; --err:#F87171; --purple:#7C3AED; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;background:var(--bg);color:var(--text);
+      font-family:system-ui,"Microsoft JhengHei",sans-serif;
+      display:flex;align-items:center;justify-content:center;padding:24px}
+    .box{background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:20px;
+      padding:44px 32px;max-width:440px;width:100%;text-align:center}
+    .icon{font-size:3.4rem;margin-bottom:14px}
+    h1{font-size:1.5rem;font-weight:800;margin-bottom:10px}
+    p{color:var(--muted);font-size:.95rem;line-height:1.85;margin-bottom:8px}
+    .note{font-size:.82rem;color:rgba(148,163,184,.7);margin-top:16px;line-height:1.8}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:28px}
+    a.btn{text-decoration:none;border-radius:12px;padding:13px 26px;font-size:.92rem;font-weight:700;display:inline-block}
+    .btn-p{background:linear-gradient(135deg,var(--emerald),var(--cyan));color:#04111d}
+    .btn-o{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.18)}
+    .ok h1{color:var(--emerald)} .fail h1{color:var(--err)}
+  </style>
+</head>
+<body>
+  <div class="box" id="box">
+    <div class="icon" id="icon">⏳</div>
+    <h1 id="title">確認付款結果中…</h1>
+    <p id="msg"></p>
+    <p class="note" id="note"></p>
+    <div class="actions">
+      <a class="btn btn-p" href="/heqinghealth_HR_TrainingDM/">返回禾青心訓</a>
+      <a class="btn btn-o" href="/">回首頁</a>
+    </div>
+  </div>
+  <script>
+    const status = new URLSearchParams(location.search).get("status");
+    const box = document.getElementById("box");
+    const icon = document.getElementById("icon");
+    const title = document.getElementById("title");
+    const msg = document.getElementById("msg");
+    const note = document.getElementById("note");
+    if (status === "ok") {
+      box.classList.add("ok");
+      icon.textContent = "✅";
+      title.textContent = "付款成功，感謝您的訂閱！";
+      msg.textContent = "您的禾青心訓訂閱已開通。";
+      note.innerHTML = "系統正在同步開通狀態，最長約 1 分鐘；開啟 App 或重新整理即可使用完整功能。<br>如有問題請來信 aerosmith.icl@gmail.com。";
+    } else {
+      box.classList.add("fail");
+      icon.textContent = "⚠️";
+      title.textContent = "付款未完成";
+      msg.textContent = "這筆付款未成功或已取消，未對您收取任何費用。";
+      note.innerHTML = "可返回方案頁重新嘗試；若反覆失敗請來信 aerosmith.icl@gmail.com 或致電 0911-102-789。";
+    }
+  </script>
+</body>
+</html>

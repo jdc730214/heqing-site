@@ -1353,7 +1353,7 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
           ✓ TTS 中文語音即時播報<br>
           ✓ 心率趨勢報告與點數累積
         </div>
-        <button class="btn-o plan-sub-btn" style="width:100%;margin-top:22px;text-align:center">立即訂閱</button>
+        <button class="btn-o plan-sub-btn" data-plan="monthly" style="width:100%;margin-top:22px;text-align:center">立即訂閱</button>
       </div>
 
       <!-- 年費（推薦）-->
@@ -1368,7 +1368,7 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
           ✓ 後台群組管理（教練／機構）<br>
           ✓ 跨平台 iOS + Android
         </div>
-        <button class="btn-p plan-sub-btn" style="width:100%;margin-top:22px;text-align:center">立即訂閱</button>
+        <button class="btn-p plan-sub-btn" data-plan="yearly" style="width:100%;margin-top:22px;text-align:center">立即訂閱</button>
       </div>
 
       <!-- 會員禮包 -->
@@ -1382,7 +1382,7 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
           ✓ 含所有訓練與報告功能<br>
           ✓ 到期不續扣，無綁約
         </div>
-        <button class="btn-o plan-sub-btn" style="width:100%;margin-top:22px;text-align:center">購買贈送</button>
+        <button class="btn-o plan-sub-btn" data-plan="gift3m" style="width:100%;margin-top:22px;text-align:center">購買贈送</button>
       </div>
 
     </div>
@@ -1508,18 +1508,6 @@ setInterval(() => {
 },500);
 </script>
 
-<!-- 訂閱佔位 modal（Phase 1：綠界金流尚未串接）-->
-<div id="subModal" class="sub-modal-overlay" style="display:none">
-  <div class="sub-modal">
-    <div class="sub-modal-title">訂閱即將開放</div>
-    <p class="sub-modal-body">感謝您的興趣！線上訂閱（綠界金流）正在串接中。<br>開通後會通知您；若需提前開通，歡迎與我們聯絡。</p>
-    <div class="sub-modal-actions">
-      <a href="#cta" class="btn-o" id="subContactBtn">聯絡我們</a>
-      <button class="btn-p" id="subCloseBtn">我知道了</button>
-    </div>
-  </div>
-</div>
-
 <!-- 會員登入狀態（與主站同一套 CIAM；登入導去首頁）-->
 <script>
 (function(){
@@ -1564,19 +1552,61 @@ setInterval(() => {
   $("authLogoutBtn").addEventListener("click", () => {
     msalInstance.logoutRedirect({ account: account || undefined }).catch(e => console.error("[auth] logout", e));
   });
-  // 訂閱（Phase 1：未串金流 → 未登入先登入，已登入顯示佔位 modal）
+  const BACKEND = "https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net";
+  const API_SCOPES = ["api://ff727949-37ca-44ae-a461-d06be688e8e1/access_as_user"];
+
+  // nav「訂閱」鈕：未登入先登入；已登入捲到方案區挑方案
   $("subscribeBtn").addEventListener("click", () => {
     if (!account){ doLogin(); return; }
-    $("subModal").style.display = "flex";
+    document.getElementById("pricing").scrollIntoView({ behavior: "smooth" });
   });
-  // 訂閱方案卡片按鈕：複用同一套（未登入先登入，已登入顯示佔位 modal）
-  document.querySelectorAll(".plan-sub-btn").forEach(b => b.addEventListener("click", () => {
+
+  // 取得後端可用的 access token；silent 失敗則改互動式（會離開本頁）
+  async function getApiToken(){
+    try {
+      const r = await msalInstance.acquireTokenSilent({ scopes: API_SCOPES, account });
+      return r.accessToken;
+    } catch(e) {
+      await msalInstance.acquireTokenRedirect({ scopes: API_SCOPES });
+      return null;
+    }
+  }
+
+  // 方案按鈕 → 建立綠界訂單，組隱藏表單 POST 導向綠界付款頁
+  async function startCheckout(planId, btn){
     if (!account){ doLogin(); return; }
-    $("subModal").style.display = "flex";
-  }));
-  $("subCloseBtn").addEventListener("click", () => { $("subModal").style.display = "none"; });
-  $("subContactBtn").addEventListener("click", () => { $("subModal").style.display = "none"; });
-  $("subModal").addEventListener("click", e => { if (e.target.id === "subModal") $("subModal").style.display = "none"; });
+    if (!planId) return;
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = "前往付款…";
+    try {
+      const token = await getApiToken();
+      if (!token) return; // 已觸發互動式 redirect
+      const res = await fetch(BACKEND + "/api/ecpay/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ planId }),
+      });
+      if (!res.ok) throw new Error("create-order " + res.status);
+      const data = await res.json();
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = data.actionUrl;
+      Object.entries(data.fields).forEach(([k, v]) => {
+        const i = document.createElement("input");
+        i.type = "hidden"; i.name = k; i.value = v;
+        form.appendChild(i);
+      });
+      document.body.appendChild(form);
+      form.submit();
+    } catch(err) {
+      console.error("[checkout]", err);
+      alert("建立訂單失敗，請稍後再試，或來信 aerosmith.icl@gmail.com。");
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
+  document.querySelectorAll(".plan-sub-btn").forEach(b =>
+    b.addEventListener("click", () => startCheckout(b.dataset.plan, b)));
 
   msalInstance.handleRedirectPromise().then(() => {
     const accts = msalInstance.getAllAccounts();
