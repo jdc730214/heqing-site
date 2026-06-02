@@ -1621,7 +1621,6 @@ setInterval(() => {
         return;
       }
       const d = await res.json();
-      const badge = $("nuBadge");
       if (d.active) {
         badge.textContent = "訂閱中";
         badge.className = "nu-badge active";
