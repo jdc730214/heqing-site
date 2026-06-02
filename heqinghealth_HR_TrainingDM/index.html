@@ -1615,7 +1615,8 @@ setInterval(() => {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!res.ok) {
-        console.warn("[sub status] API error:", res.status);
+        const errBody = await res.json().catch(() => null);
+        console.warn("[sub status] API error:", res.status, errBody);
         badge.textContent = "查詢失敗";
         badge.className = "nu-badge inactive";
         return;
