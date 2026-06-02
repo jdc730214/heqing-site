@@ -98,18 +98,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
   transition:color .2s,border-color .2s;white-space:nowrap}
 .nav-auth-link:hover{color:var(--text);border-color:rgba(255,255,255,.3)}
 .nav-user{display:flex;align-items:center;gap:8px}
-.nav-user .nu-email{font-size:.8rem;color:var(--emerald);max-width:130px;
+/* 帳號 dropdown */
+.nu-wrap{position:relative}
+.nu-toggle{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0}
+.nu-toggle .nu-email{font-size:.8rem;color:var(--emerald);max-width:130px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media(max-width:600px){.nav-user .nu-email{max-width:90px}}
-/* 訂閱佔位 modal */
-.sub-modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);
-  backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px}
-.sub-modal{background:#15152a;border:1px solid rgba(255,255,255,.1);border-radius:18px;
-  max-width:380px;width:100%;padding:28px 24px;text-align:center}
-.sub-modal-title{font-size:1.2rem;font-weight:800;color:var(--text);margin-bottom:12px}
-.sub-modal-body{font-size:.9rem;color:var(--muted);line-height:1.8;margin-bottom:22px}
-.sub-modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.sub-modal-actions .btn-p,.sub-modal-actions .btn-o{padding:11px 22px;font-size:.85rem}
+.nu-toggle .nu-chevron{font-size:.65rem;color:var(--muted);transition:transform .2s}
+.nu-wrap.open .nu-chevron{transform:rotate(180deg)}
+@media(max-width:600px){.nu-toggle .nu-email{max-width:90px}}
+.nu-dropdown{position:absolute;top:calc(100% + 10px);right:0;min-width:240px;
+  background:#15152a;border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  padding:16px;z-index:300;box-shadow:0 8px 32px rgba(0,0,0,.5);
+  display:none;flex-direction:column;gap:10px}
+.nu-wrap.open .nu-dropdown{display:flex}
+.nu-email-full{font-size:.78rem;color:var(--muted);word-break:break-all;margin-bottom:2px}
+.nu-divider{height:1px;background:rgba(255,255,255,.07);margin:2px 0}
+.nu-sub-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem}
+.nu-sub-label{color:var(--muted)}
+.nu-sub-val{color:var(--text);font-weight:600}
+.nu-badge{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:999px}
+.nu-badge.active{background:rgba(52,211,153,.15);color:var(--emerald);border:1px solid rgba(52,211,153,.3)}
+.nu-badge.inactive{background:rgba(148,163,184,.1);color:var(--muted);border:1px solid rgba(148,163,184,.2)}
+.nu-logout-btn{margin-top:4px;background:transparent;border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:7px 0;font-size:.8rem;color:var(--muted);cursor:pointer;
+  transition:border-color .2s,color .2s;text-align:center}
+.nu-logout-btn:hover{border-color:rgba(255,255,255,.3);color:var(--text)}
 
 /* ── HERO ── */
 .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
@@ -622,8 +635,34 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
     <div class="nav-auth">
       <a class="nav-auth-link" id="authLoginBtn">登入 / 註冊</a>
       <span class="nav-user" id="authUser" style="display:none">
-        <span class="nu-email" id="authEmail"></span>
-        <a class="nav-auth-link" id="authLogoutBtn">登出</a>
+        <span class="nu-wrap" id="nuWrap">
+          <button class="nu-toggle" id="nuToggle" type="button">
+            <span class="nu-email" id="authEmail"></span>
+            <span class="nu-chevron">▼</span>
+          </button>
+          <div class="nu-dropdown" id="nuDropdown">
+            <div class="nu-email-full" id="nuEmailFull"></div>
+            <div class="nu-divider"></div>
+            <div class="nu-sub-row">
+              <span class="nu-sub-label">訂閱狀態</span>
+              <span class="nu-badge inactive" id="nuBadge">查詢中…</span>
+            </div>
+            <div class="nu-sub-row" id="nuPlanRow" style="display:none">
+              <span class="nu-sub-label">方案</span>
+              <span class="nu-sub-val" id="nuPlan"></span>
+            </div>
+            <div class="nu-sub-row" id="nuExpiryRow" style="display:none">
+              <span class="nu-sub-label">到期日</span>
+              <span class="nu-sub-val" id="nuExpiry"></span>
+            </div>
+            <div class="nu-sub-row" id="nuRenewRow" style="display:none">
+              <span class="nu-sub-label">自動續訂</span>
+              <span class="nu-sub-val" id="nuRenew"></span>
+            </div>
+            <div class="nu-divider"></div>
+            <button class="nu-logout-btn" id="authLogoutBtn">登出</button>
+          </div>
+        </span>
       </span>
       <button class="nav-sub-btn" id="subscribeBtn">訂閱</button>
     </div>
@@ -1530,16 +1569,60 @@ setInterval(() => {
   let account = null;
   const $ = id => document.getElementById(id);
 
+  const PLAN_NAMES = { monthly:"月訂閱 NT$199/月", yearly:"年訂閱 NT$1,200/年", gift3m:"會員禮包（三個月）" };
+
   function updateUI(){
     const loginBtn = $("authLoginBtn"), userBox = $("authUser"), emailEl = $("authEmail");
     if (account){
       loginBtn.style.display = "none";
       userBox.style.display = "flex";
-      emailEl.textContent = account.username || account.name || "已登入";
+      const email = account.username || account.name || "已登入";
+      emailEl.textContent = email;
+      $("nuEmailFull").textContent = email;
+      fetchSubStatus();
     } else {
       loginBtn.style.display = "";
       userBox.style.display = "none";
     }
+  }
+
+  // dropdown 開關
+  $("nuToggle").addEventListener("click", e => {
+    e.stopPropagation();
+    $("nuWrap").classList.toggle("open");
+  });
+  document.addEventListener("click", () => $("nuWrap").classList.remove("open"));
+  $("nuDropdown").addEventListener("click", e => e.stopPropagation());
+
+  // 查訂閱狀態並填入 dropdown
+  async function fetchSubStatus(){
+    try {
+      const token = await msalInstance.acquireTokenSilent({ scopes: API_SCOPES, account }).then(r => r.accessToken).catch(() => null);
+      if (!token) return;
+      const res = await fetch(BACKEND + "/api/subscription/status", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) return;
+      const d = await res.json();
+      const badge = $("nuBadge");
+      if (d.active) {
+        badge.textContent = "訂閱中";
+        badge.className = "nu-badge active";
+        const expiry = d.expiryDate ? new Date(d.expiryDate).toLocaleDateString("zh-TW") : "—";
+        $("nuPlan").textContent = PLAN_NAMES[d.planId] || d.planId;
+        $("nuExpiry").textContent = expiry;
+        $("nuRenew").textContent = d.autoRenew ? "是（自動續訂）" : "否";
+        $("nuPlanRow").style.display = "";
+        $("nuExpiryRow").style.display = "";
+        $("nuRenewRow").style.display = "";
+      } else {
+        badge.textContent = "未訂閱";
+        badge.className = "nu-badge inactive";
+        $("nuPlanRow").style.display = "none";
+        $("nuExpiryRow").style.display = "none";
+        $("nuRenewRow").style.display = "none";
+      }
+    } catch(e) { console.warn("[sub status]", e); }
   }
 
   // 在本頁直接登入/註冊（CIAM SUSI 合併流程；登完回到本頁）
