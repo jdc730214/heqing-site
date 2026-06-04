@@ -565,17 +565,18 @@ section{padding:80px 24px}
 ══════════════════════════════════════════ */
 .score-demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;margin-top:40px}
 @media(max-width:768px){.score-demo-grid{grid-template-columns:1fr}}
-.score-card{background:var(--card2);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:24px}
+.score-card{background:var(--card2);border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:24px;display:flex;flex-direction:column;justify-content:center}
 .sc-score{font-size:3.5rem;font-weight:900;
   background:linear-gradient(135deg,#FBBF24,#34D399);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .sc-label{font-size:.85rem;color:var(--muted);margin:4px 0 18px}
 .sc-bar{position:relative;height:10px;border-radius:5px;margin-bottom:6px;
-  background:linear-gradient(90deg,#7F1D1D 0%,#DC2626 15%,#EF4444 25%,#FBBF24 38%,#34D399 50%,#FBBF24 65%,#F97316 82%,#DC2626 100%)}
+  background:linear-gradient(90deg,#3B82F6 0%,#60A5FA 20%,#34D399 50%,#F87171 80%,#DC2626 100%)}
 .sc-cursor{position:absolute;top:-4px;width:3px;height:18px;background:#fff;
   border-radius:2px;box-shadow:0 0 8px rgba(255,255,255,.8);left:12%}
 .sc-ticks{display:flex;justify-content:space-between;font-size:.68rem;color:var(--muted);margin-bottom:14px}
 .sc-warn{font-size:.78rem;color:var(--red);display:flex;align-items:center;gap:5px}
+.sc-zones{display:flex;justify-content:space-between;font-size:.85rem;font-weight:700;margin-top:12px}
 
 /* audience */
 .audience-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:36px}
@@ -1326,10 +1327,8 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
     <div class="score-demo-grid">
       <div class="fi">
         <p style="color:var(--muted);font-size:.98rem;line-height:1.85;margin-bottom:24px">
-          傳統「達成率」只計時間，<strong style="color:var(--amber)">禾青心訓健康點數</strong>改用心跳×分鐘加權，
-          高強度訓練獲得更多積分，更真實反映心臟負荷。<br><br>
-          血條採非線性刻度：0–100 分佔 60% 寬、100–200 分佔 20%、200–400 分佔 20%，
-          讓低分段差異一目了然，同時防止過度訓練被忽視。
+          結合「心跳率」與「運動時間」雙重加權，為您量身計算專屬的<strong style="color:var(--amber)">「週心訓健康點數」</strong>，找出最適運動平衡點。<br><br>
+          動得不夠？我們為您加油打氣；練得過頭？我們及時提醒您休息。訓練剛剛好，健康更加分！
         </p>
         <div style="display:flex;gap:16px;flex-wrap:wrap">
           <div style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:10px;padding:10px 16px">
@@ -1344,11 +1343,13 @@ footer{padding:40px 24px;text-align:center;color:var(--muted);
       </div>
       <div class="fi">
         <div class="score-card">
-          <div class="sc-score" id="demoScore">42.3</div>
           <div class="sc-label">週心訓健康點數 · Weekly HR Score</div>
           <div class="sc-bar"><div class="sc-cursor" id="demoCursor"></div></div>
-          <div class="sc-ticks"><span>0</span><span>30</span><span>100</span><span>200</span><span>400</span></div>
-          <div class="sc-warn">⚠ 留意運動量不足 · Insufficient exercise</div>
+          <div class="sc-zones">
+            <span style="color:#60A5FA">太少</span>
+            <span style="color:#34D399">適中</span>
+            <span style="color:#F87171">過量</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1512,9 +1513,7 @@ setInterval(() => {
   score += dir * 0.5;
   if(score > 88) dir = -1;
   if(score < 10) dir = 1;
-  document.getElementById('demoScore').textContent = score.toFixed(1);
-  let pct = score <= 100 ? score/100*60 : score <= 200 ? 60+(score-100)/100*20 : 80+(score-200)/200*20;
-  document.getElementById('demoCursor').style.left = Math.min(pct,96)+'%';
+  document.getElementById('demoCursor').style.left = Math.min(Math.max(score,2),96)+'%';
 },110);
 
 // Metronome dots animation
