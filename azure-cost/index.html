@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>禾青心訓 · Azure 成本估算</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0B0B14; --card:#15151F; --card2:#1C1C2A;
+    --line:rgba(255,255,255,.08);
+    --text:#E8E8F0; --muted:#9A9AB0;
+    --purple:#7C3AED; --cyan:#22D3EE; --green:#34D399;
+    --amber:#FBBF24; --red:#F87171; --orange:#F97316; --blue:#60A5FA;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);
+    font-family:"Segoe UI","Microsoft JhengHei",system-ui,sans-serif;
+    line-height:1.7;padding:32px 20px;max-width:1080px;margin:0 auto}
+  h1{font-size:1.9rem;font-weight:800;margin-bottom:6px;
+    background:linear-gradient(120deg,var(--purple),var(--cyan));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .sub{color:var(--muted);font-size:.95rem;margin-bottom:28px}
+  h2{font-size:1.25rem;font-weight:700;margin:36px 0 14px;
+    display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:4px;height:20px;border-radius:2px;
+    background:linear-gradient(var(--purple),var(--cyan))}
+  .card{background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:22px;margin-bottom:18px}
+  .note{font-size:.9rem;color:var(--muted);margin-top:10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:18px 0}
+  .stat{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .stat .k{font-size:.78rem;color:var(--muted)}
+  .stat .v{font-size:1.5rem;font-weight:800;margin-top:4px}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:6px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:.82rem}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.78rem;font-weight:700}
+  .chart-box{position:relative;height:360px}
+  ul{padding-left:20px;margin-top:8px}
+  li{margin-bottom:8px}
+  strong{color:var(--amber)}
+  code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:5px;font-size:.88em}
+  .hl-green{color:var(--green)} .hl-red{color:var(--red)} .hl-cyan{color:var(--cyan)}
+  .foot{color:var(--muted);font-size:.82rem;margin-top:40px;border-top:1px solid var(--line);padding-top:16px}
+</style>
+</head>
+<body>
+  <h1>禾青心訓 · Azure 資料庫成本估算</h1>
+  <div class="sub">依使用人次預估 Azure SQL Database 費用 · 參考實際報價（Basic 5 DTU = US$5.39 ≈ NT$170/月）</div>
+
+  <!-- 現況 -->
+  <h2>目前實況</h2>
+  <div class="grid">
+    <div class="stat"><div class="k">使用人數</div><div class="v">4 <span style="font-size:.9rem;color:var(--muted)">人</span></div></div>
+    <div class="stat"><div class="k">使用時間</div><div class="v">3 <span style="font-size:.9rem;color:var(--muted)">個月</span></div></div>
+    <div class="stat"><div class="k">資料用量</div><div class="v">40.75 <span style="font-size:.9rem;color:var(--muted)">MB</span></div></div>
+    <div class="stat"><div class="k">目前方案</div><div class="v" style="color:var(--green)">Basic</div></div>
+    <div class="stat"><div class="k">目前月費</div><div class="v" style="color:var(--cyan)">NT$170</div></div>
+  </div>
+  <div class="card note">
+    <strong>基準假設：</strong>40.75MB ÷ 4 人 ÷ 3 月 ≈ <strong>3.4 MB／人／月</strong>。
+    ⚠️ 此值偏<span class="hl-red">高估</span>（40.75MB 含系統開銷＋其他產品資料，不全是心訓），所以下方「撐爆時間」是偏早的保守估計，實際會更晚、更省。
+  </div>
+
+  <!-- 圖1 資料累積 -->
+  <h2>圖一 · 資料量累積（不同人次）</h2>
+  <div class="card">
+    <div class="chart-box"><canvas id="chartData"></canvas></div>
+    <div class="note">Y 軸為對數刻度（GB）。紅色虛線 = <span class="hl-red">Basic 2GB 上限</span>；任一條線超過它，代表該人次撐爆 Basic、必須升級或清資料。</div>
+  </div>
+
+  <!-- 圖2 費用階梯 -->
+  <h2>圖二 · 預估月費（人次 → 階梯式）</h2>
+  <div class="card">
+    <div class="chart-box"><canvas id="chartCost"></canvas></div>
+    <div class="note">費用不是線性增加，而是<strong>一階一階跳</strong>。逼你升級的主因是「運算（DTU）」與「儲存上限」，不是單純人數。</div>
+  </div>
+
+  <!-- Azure 方案表 -->
+  <h2>Azure 實際方案價格（DTU model · 參考 Australia East）</h2>
+  <div class="card">
+    <table>
+      <thead><tr>
+        <th>方案</th><th class="num">DTU</th><th class="num">儲存上限</th>
+        <th class="num">月費 (USD)</th><th class="num">約 NT$/月</th>
+      </tr></thead>
+      <tbody id="planTable"></tbody>
+    </table>
+    <div class="note">換算用 US$1 ≈ NT$31.5（對齊實際帳單 NT$170）。一旦升到 Standard（S0 起），<span class="hl-green">儲存上限直接跳到 250GB</span>，2GB 撐爆問題消失。</div>
+  </div>
+
+  <!-- 綜合表 -->
+  <h2>人次 → 綜合預估</h2>
+  <div class="card">
+    <table>
+      <thead><tr>
+        <th>人次</th><th class="num">每月新增</th><th class="num">3 個月累積</th>
+        <th class="num">撐爆 2GB</th><th>預估月費</th>
+      </tr></thead>
+      <tbody id="summaryTable"></tbody>
+    </table>
+  </div>
+
+  <!-- 提醒 -->
+  <h2>兩個關鍵省錢點</h2>
+  <div class="card">
+    <ul>
+      <li><strong>① 先補「缺少索引」。</strong>你現在才 4 人、DTU 尖峰就 100%，Azure 那個「建議缺少索引」提示很可能就是元凶。補上後尖峰可能從 100% 掉到 20%，<span class="hl-green">人次撐到上百都不用升級</span>。CP 值最高。</li>
+      <li><strong>② 定期清理舊心率紀錄。</strong><code>hrtrain_HeartRateRecords</code> 每 2 秒一筆、目前全保留。只留近 N 個月，就能讓儲存<span class="hl-green">永遠待在 Basic 2GB</span>——只要運算夠用，即使人次上百，月費都還能維持 NT$170。</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    估算僅供規劃參考，實際費用以 Azure Portal 該區域報價與實際用量為準。<br>
+    真正逼你升級的是「同時在線併發（DTU）」，非總人數；升級時機請看 30 天<em>平均</em> DTU，而非尖峰。
+  </div>
+
+<script>
+// ── 參數 ──────────────────────────────────────────────
+const MB_PER_USER_MONTH = 3.4;     // 每人每月資料量（線性外推、偏高估）
+const BASIC_LIMIT_GB = 2;
+const USD_TO_NTD = 31.5;
+const USERS = [4, 50, 100, 200, 500, 1000];
+const COLORS = ['#34D399','#60A5FA','#22D3EE','#FBBF24','#F97316','#F87171'];
+
+// Azure DTU 方案（USD/月）
+const PLANS = [
+  {name:'Basic',    dtu:5,   store:'2 GB',   usd:5.39},
+  {name:'Std S0',   dtu:10,  store:'250 GB', usd:15},
+  {name:'Std S1',   dtu:20,  store:'250 GB', usd:30},
+  {name:'Std S2',   dtu:50,  store:'250 GB', usd:75},
+  {name:'Std S3',   dtu:100, store:'1 TB',   usd:150},
+];
+// 人次對應的「代表性月費」（綜合儲存+運算的務實估計，USD）
+const COST_BY_USERS = {4:5.39, 50:5.39, 100:15, 200:30, 500:75, 1000:150};
+
+const ntd = usd => Math.round(usd*USD_TO_NTD);
+const fmtMB = mb => mb>=1024 ? (mb/1024).toFixed(mb/1024>=10?0:1)+' GB' : Math.round(mb)+' MB';
+
+// ── 圖一：資料累積（log scale） ───────────────────────
+const months = Array.from({length:13},(_,i)=>i);
+new Chart(document.getElementById('chartData'), {
+  type:'line',
+  data:{
+    labels: months.map(m=>m+' 月'),
+    datasets: [
+      ...USERS.map((n,i)=>({
+        label:n+' 人',
+        data: months.map(m=> n*MB_PER_USER_MONTH*m/1024),  // GB
+        borderColor: COLORS[i], backgroundColor: COLORS[i],
+        borderWidth:2, tension:.3, pointRadius:0, pointHoverRadius:4,
+      })),
+      {
+        label:'Basic 2GB 上限',
+        data: months.map(()=>BASIC_LIMIT_GB),
+        borderColor:'#F87171', borderDash:[6,5], borderWidth:1.5,
+        pointRadius:0, fill:false,
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    scales:{
+      y:{ type:'logarithmic', title:{display:true,text:'累積資料量 (GB)',color:'#9A9AB0'},
+          ticks:{color:'#9A9AB0', callback:v=>[0.1,0.5,1,2,5,10,20,40].includes(v)?v+' GB':''},
+          grid:{color:'rgba(255,255,255,.06)'} },
+      x:{ ticks:{color:'#9A9AB0'}, grid:{color:'rgba(255,255,255,.06)'} }
+    },
+    plugins:{ legend:{labels:{color:'#E8E8F0',usePointStyle:true,boxWidth:8}},
+      tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(2)+' GB'}} }
+  }
+});
+
+// ── 圖二：費用階梯（bar） ─────────────────────────────
+new Chart(document.getElementById('chartCost'), {
+  type:'bar',
+  data:{
+    labels: USERS.map(n=>n+' 人'),
+    datasets:[{
+      label:'預估月費 (NT$)',
+      data: USERS.map(n=>ntd(COST_BY_USERS[n])),
+      backgroundColor: USERS.map((n,i)=>COLORS[i]+'CC'),
+      borderColor: USERS.map((n,i)=>COLORS[i]), borderWidth:1.5,
+      borderRadius:6,
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    scales:{
+      y:{ title:{display:true,text:'月費 (NT$)',color:'#9A9AB0'},
+          ticks:{color:'#9A9AB0',callback:v=>'NT$'+v}, grid:{color:'rgba(255,255,255,.06)'} },
+      x:{ ticks:{color:'#9A9AB0'}, grid:{display:false} }
+    },
+    plugins:{ legend:{display:false},
+      tooltip:{callbacks:{label:c=>'NT$'+c.parsed.y+' / 月'}} }
+  }
+});
+
+// ── 方案表 ────────────────────────────────────────────
+document.getElementById('planTable').innerHTML = PLANS.map(p=>`
+  <tr>
+    <td><span class="pill" style="background:${p.name==='Basic'?'rgba(52,211,153,.15)':'rgba(124,58,237,.15)'};
+        color:${p.name==='Basic'?'#34D399':'#A78BFA'}">${p.name}</span></td>
+    <td class="num">${p.dtu}</td>
+    <td class="num">${p.store}</td>
+    <td class="num">$${p.usd}</td>
+    <td class="num">NT$${ntd(p.usd)}</td>
+  </tr>`).join('');
+
+// ── 綜合表 ────────────────────────────────────────────
+function monthsToFull(n){
+  const perMonthMB = n*MB_PER_USER_MONTH;
+  const m = BASIC_LIMIT_GB*1024 / perMonthMB;
+  if(m>=120) return '永遠不會';
+  if(m>=11)  return '約 '+Math.round(m)+' 個月';
+  if(m>=1)   return '約 '+m.toFixed(1)+' 個月';
+  return '約 '+Math.round(m*30)+' 天';
+}
+document.getElementById('summaryTable').innerHTML = USERS.map(n=>{
+  const perMonth = n*MB_PER_USER_MONTH;
+  const usd = COST_BY_USERS[n];
+  const planName = PLANS.find(p=>p.usd===usd)?.name || '';
+  return `<tr>
+    <td><strong style="color:#E8E8F0">${n} 人</strong></td>
+    <td class="num">${fmtMB(perMonth)}</td>
+    <td class="num">${fmtMB(perMonth*3)}</td>
+    <td class="num">${monthsToFull(n)}</td>
+    <td>NT$${ntd(usd)} <span style="color:#9A9AB0;font-size:.8rem">(${planName})</span></td>
+  </tr>`;
+}).join('');
+</script>
+</body>
+</html>

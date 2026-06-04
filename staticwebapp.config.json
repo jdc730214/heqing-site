@@ -79,6 +79,10 @@
         "Content-Type": "text/plain",
         "Cache-Control": "public, max-age=3600"
       }
+    },
+    {
+      "route": "/azure-cost",
+      "rewrite": "/azure-cost/index.html"
     }
   ],
   "navigationFallback": {
@@ -111,7 +115,8 @@
       "/bodygo3_0/DM/frames/walk-2p44m/*",
       "/bodygo3_0/DM/frames/坐站/*",
       "/bodygo3_0/DM/frames/成人-心肺適能/*",
-      "/bodygo3_0/DM/frames/銀髮上肢肌耐力/*"
+      "/bodygo3_0/DM/frames/銀髮上肢肌耐力/*",
+      "/azure-cost/*"
     ]
   }
 }
