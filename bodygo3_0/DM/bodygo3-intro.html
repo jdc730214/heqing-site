@@ -279,6 +279,17 @@ a { color: var(--cy); }
   border:1px solid rgba(55,240,180,.4); color:var(--gn); background:rgba(55,240,180,.07);
 }
 .chip.c { border-color: rgba(82,240,255,.4); color: var(--cy); background: rgba(82,240,255,.07); }
+.det-extra { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:26px; }
+@media (max-width:820px){ .det-extra{ grid-template-columns:1fr; } }
+.dx {
+  background: var(--card); border:1px solid var(--card-bd); border-radius:14px; padding:20px 22px;
+  transition: border-color .2s;
+}
+.dx:hover { border-color: var(--cy-dim); }
+.dx .dx-ic { font-size:24px; margin-bottom:10px; }
+.dx h4 { font-size:16px; font-weight:900; margin-bottom:2px; }
+.dx .en { font-family:var(--en); font-size:11.5px; letter-spacing:2px; color:var(--tx-faint); margin-bottom:8px; }
+.dx p { font-size:13.5px; line-height:1.85; color:var(--tx-dim); }
 
 /* ── hardware ── */
 .hw-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
@@ -459,11 +470,12 @@ a { color: var(--cy); }
       <p class="sec-desc">
         以下皆為系統實際畫面。霓虹視覺搭配大圖示、大字體與語音引導，受測者與操作人員都能直覺上手；
         從個人資料建立、評估模式選擇到單項檢測，動線一致、步驟明確。
+        <b style="color:var(--tx);">多人排隊等候時，可用手機掃碼「預先登錄」個人資料</b>，輪到受測時於機台一鍵快速導入，現場動線不塞車。
       </p>
     </div>
     <div class="ui-strip rv">
       <div class="ui-card"><div class="ui-frame"><img src="screens/index.jpg" alt="BodyGo 3.0 系統首頁：個人資料、資料上傳、評估項目、系統設置" loading="lazy"></div><div class="ui-cap"><div class="zh">系統首頁</div><div class="en">HOME</div></div></div>
-      <div class="ui-card"><div class="ui-frame"><img src="screens/profile.jpg" alt="個人資料頁：快速導入受測者、手機掃碼填寫表單" loading="lazy"></div><div class="ui-cap"><div class="zh">個人資料建立</div><div class="en">PROFILE</div></div></div>
+      <div class="ui-card"><div class="ui-frame"><img src="screens/profile.jpg" alt="個人資料頁：快速導入受測者、掃 QR code 用手機預先登錄表單" loading="lazy"></div><div class="ui-cap"><div class="zh">個人資料 · 手機預登錄</div><div class="en">PROFILE / QR PRE-REG</div></div></div>
       <div class="ui-card"><div class="ui-frame"><img src="screens/assess.jpg" alt="評估項目選單：成人體適能、跌倒風險評估、銀髮體適能、SPPB 評估" loading="lazy"></div><div class="ui-cap"><div class="zh">評估模式選擇</div><div class="en">ASSESSMENT</div></div></div>
       <div class="ui-card"><div class="ui-frame"><img src="screens/elder.jpg" alt="銀髮體適能檢測選單：2.44 公尺折返走、上肢肌力、柔軟度、下肢肌力、心肺適能、手握力" loading="lazy"></div><div class="ui-cap"><div class="zh">銀髮體適能</div><div class="en">SENIOR FITNESS</div></div></div>
       <div class="ui-card"><div class="ui-frame"><img src="screens/fall.jpg" alt="跌倒風險評估選單" loading="lazy"></div><div class="ui-cap"><div class="zh">跌倒風險評估</div><div class="en">FALL RISK</div></div></div>
@@ -504,6 +516,23 @@ a { color: var(--cy); }
         </div>
       </div>
     </div>
+    <div class="det-extra rv">
+      <div class="dx">
+        <div class="dx-ic">🧭</div>
+        <h4>標準動作指引</h4><div class="en">MOTION GUIDANCE</div>
+        <p>每項檢測開始前，螢幕以動作示範搭配語音逐步指引，施測者不必反覆解說、受測者一看就懂，確保每次都以正確姿勢受測。</p>
+      </div>
+      <div class="dx">
+        <div class="dx-ic">💡</div>
+        <h4>抗光源干擾</h4><div class="en">LIGHTING ROBUST</div>
+        <p>採用 3D 深度影像＋AI 骨架分析，不依賴環境亮度與背景顏色，在室內燈光變化、逆光等條件下仍能穩定追蹤動作。</p>
+      </div>
+      <div class="dx">
+        <div class="dx-ic">⚙️</div>
+        <h4>全自動判定</h4><div class="en">FULLY AUTOMATED</div>
+        <p>起訖判定、計次、計時與姿勢正確性全部由系統自動完成，免碼錶、免目測、免手抄，成績即時入檔，杜絕人為誤差。</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -514,8 +543,8 @@ a { color: var(--cy); }
       <div class="sec-kicker">HARDWARE &amp; BLE PERIPHERALS</div>
       <h2 class="sec-title">系統設備與智慧週邊<span class="en">DEVICE LINEUP</span></h2>
       <p class="sec-desc">
-        主機整合 AI 深度相機與觸控螢幕，量測型週邊透過 BLE 無線連接、成績自動回傳系統 —
-        免手抄、免鍵入，杜絕人工誤差；再搭配定位地墊引導受測者站位。
+        主機整合 AI 深度相機與觸控螢幕，量測型週邊透過 BLE 無線連接、數位讀值即測即傳 —
+        免手抄、免鍵入、免目測讀刻度，量測又快又準；再搭配定位地墊引導受測者站位，一人即可順暢施測。
       </p>
     </div>
     <div class="hw-grid rv">
@@ -523,8 +552,8 @@ a { color: var(--cy); }
         <div class="hw-num">01</div>
         <div class="hw-img"><img src="機器.png" alt="BodyGo 3.0 系統主機" loading="lazy"></div>
         <h3>系統主機</h3><div class="en">AI STATION</div>
-        <p>直立式大尺寸觸控螢幕＋AI 深度相機（3D 空間感測）＋移動式腳架，即推即用；內建語音引導（TTS），長者不需低頭操作。</p>
-        <div class="hw-uses"><span>全部檢測</span><span>AI 姿態辨識</span><span>語音引導</span></div>
+        <p>直立式觸控螢幕＋AI 深度相機（3D 空間感測）＋附輪腳架，即推即用、機動換場；螢幕尺寸可依場域需求選配。內建語音引導（TTS），長者不需低頭操作。</p>
+        <div class="hw-uses"><span>全部檢測</span><span>AI 姿態辨識</span><span>語音引導</span><span>尺寸可選配</span></div>
       </div>
       <div class="hw">
         <div class="hw-num">02</div>
@@ -564,7 +593,7 @@ a { color: var(--cy); }
     </div>
     <div class="hw-space rv">
       <b>SPACE&nbsp;·&nbsp;1500 × 4750 mm</b>
-      建議使用空間：寬 1.5 公尺 × 長 4.75 公尺，即可完成含 4 公尺步行在內的全部檢測；主機附輪可推移，機動佈署於健身房、據點、診所。
+      建議使用空間：寬 1.5 公尺 × 長 4.75 公尺，即可完成含 4 公尺步行在內的全部檢測；主機附輪好移動、螢幕尺寸可依場域選配，健身房、社區據點、診所、活動快閃皆可機動佈署。
     </div>
   </div>
 </section>
@@ -660,9 +689,10 @@ a { color: var(--cy); }
       <div class="rep-feats rv">
         <div class="rf"><div class="rf-ic">🏅</div><div><h4>綜合等級徽章<span class="en">OVERALL GRADE</span></h4><p>整體表現以等級徽章呈現於報告右上角，受測者一眼掌握自身水準。</p></div></div>
         <div class="rf"><div class="rf-ic">📡</div><div><h4>多向度雷達圖<span class="en">RADAR CHART</span></h4><p>將全部檢測項目的 PR 值繪成雷達圖，肌力、平衡、柔軟度、心肺的強弱項一目瞭然。</p></div></div>
-        <div class="rf"><div class="rf-ic">📊</div><div><h4>PR 百分位與燈號<span class="en">PERCENTILE RANK</span></h4><p>導入國健署體適能常模，依年齡、性別以回歸演算法推算 PR 值，並以「不足／稍弱／普通／尚好／很好」五級燈號標示。</p></div></div>
+        <div class="rf"><div class="rf-ic">📊</div><div><h4>常模大數據 · PR 百分位<span class="en">NORM BIG DATA</span></h4><p>導入國健署體適能常模大數據，依年齡、性別以回歸演算法推算 PR 值，快速識別個體差異與待改善狀況，以「不足／稍弱／普通／尚好／很好」五級燈號標示。</p></div></div>
         <div class="rf"><div class="rf-ic">🔁</div><div><h4>多次試作紀錄<span class="en">TRIALS</span></h4><p>每項目保留各次試作成績並自動標記最佳值（★），同時附上同齡正常範圍區間供對照。</p></div></div>
         <div class="rf"><div class="rf-ic">🚶</div><div><h4>動作分段圖解<span class="en">PHASE BREAKDOWN</span></h4><p>折返走等動態測驗以圖解拆分「坐→站、行走速度、轉身、站→坐」各分段耗時，指出弱點環節。</p></div></div>
+        <div class="rf"><div class="rf-ic">📈</div><div><h4>歷史成績回顧<span class="en">HISTORY REVIEW</span></h4><p>每次檢測成績自動存檔，可依受測者調閱歷次紀錄並繪成逐項趨勢圖，訓練前後表現差異、長期介入成效一目瞭然。</p></div></div>
         <div class="rf"><div class="rf-ic">🖨️</div><div><h4>雙語 A4 即印<span class="en">BILINGUAL PDF</span></h4><p>中英雙語版面、A4 兩頁排版，現場列印帶走，亦可 PDF 存檔與雲端上傳長期追蹤。</p></div></div>
       </div>
     </div>
@@ -727,7 +757,7 @@ a { color: var(--cy); }
       <h2 class="sec-title">評估流程<span class="en">4 STEPS</span></h2>
     </div>
     <div class="flow rv">
-      <div class="fl"><div class="fl-num">1</div><h4>建立個案</h4><div class="en">PROFILE</div><p>觸控輸入或手機掃碼填表，2 小時內受測者可快速導入</p></div>
+      <div class="fl"><div class="fl-num">1</div><h4>建立個案</h4><div class="en">PROFILE</div><p>觸控輸入或手機掃碼預登錄，多人等候也不塞車，2 小時內受測者可快速導入</p></div>
       <div class="fl"><div class="fl-num">2</div><h4>選擇評估</h4><div class="en">SELECT</div><p>依對象選擇 SPPB／跌倒風險／銀髮／成人四種模式</p></div>
       <div class="fl"><div class="fl-num">3</div><h4>AI 檢測</h4><div class="en">ASSESS</div><p>語音引導動作，AI 自動計次計時，BLE 成績即時回傳</p></div>
       <div class="fl"><div class="fl-num">4</div><h4>產出報告</h4><div class="en">REPORT</div><p>一鍵產出常模 PR 報告，現場列印或雲端保存追蹤</p></div>
