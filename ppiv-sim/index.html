@@ -463,7 +463,22 @@ function dayMarks(){
     if(c.measured) put(c.measured,'msd');
   }
   if(!S.needFirst && S.useDate && S.cycles.length) put(S.useDate,'msd'); // 首量或後台填值日
-  if(S.nextStart) put(S.nextStart,'nx');
+  // 未來輪次投影：節奏固定 +28，把剩餘輪次的日程預先畫到月曆上（含下下輪）
+  if(S.nextStart){
+    let fs = new Date(S.nextStart);
+    const remaining = MAX_ROUNDS - S.cycles.length;
+    for(let r=0; r<remaining; r++){
+      for(let i=0;i<CYCLE_LEN;i++){
+        const d = addD(fs, i), n = i+1;
+        if(n < CD_START) put(d,'ask');
+        else if(n < ASK_END) put(d,'cnt');
+        else if(n === ASK_END) put(d,'frc');
+        else put(d,'qut');
+      }
+      put(fs,'nx');
+      fs = addD(fs, 28);
+    }
+  }
   if(S.simDate) put(S.simDate,'now');
   return m;
 }
