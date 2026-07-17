@@ -490,10 +490,10 @@ function dayMarks(){
 function renderCals(){
   const anchor = S.anchor || md($('#useDate').value ? new Date($('#useDate').value+'T00:00:00') : new Date());
   const marks = dayMarks();
-  // 滾動視窗：模擬月份超出當月+1 後，三張月曆跟著往後推（模擬月保持在中間）
+  // 翻頁式視窗：三張月曆為一頁，跑格從第 1 張跑到第 3 張，跑完才整頁翻到下三個月
   let simIdx = 0;
   if(S.simDate) simIdx = (S.simDate.getFullYear()*12 + S.simDate.getMonth()) - (anchor.getFullYear()*12 + anchor.getMonth());
-  const m0 = Math.max(0, simIdx - 1);
+  const m0 = Math.floor(simIdx / 3) * 3;
   let html = '';
   for(let k=0;k<3;k++){
     const y = anchor.getFullYear(), mo = anchor.getMonth() + m0 + k;
