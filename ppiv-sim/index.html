@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>PPIV 輪詢週期模擬器</title>
+<style>
+  :root{
+    --void:#060912; --panel:rgba(13,20,33,.74); --panel-solid:#0D1421;
+    --edge:rgba(34,211,238,.17); --edge-hi:rgba(34,211,238,.42);
+    --cy:#22D3EE; --vi:#A78BFA; --ok:#34D399; --wn:#FBBF24; --bad:#FB7185;
+    --tx:#E7EEF9; --dim:#7D8CA5; --dimmer:#4E5C74;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono","Segoe UI Mono",Menlo,monospace;
+    --sans:ui-sans-serif,system-ui,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--void);color:var(--tx);font-family:var(--sans);line-height:1.5;
+    -webkit-font-smoothing:antialiased;min-height:100vh;
+    background-image:
+      radial-gradient(900px 500px at 12% -8%, rgba(34,211,238,.13), transparent 60%),
+      radial-gradient(760px 460px at 96% 4%, rgba(167,139,250,.11), transparent 60%),
+      linear-gradient(rgba(34,211,238,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,.028) 1px, transparent 1px);
+    background-size:auto,auto,44px 44px,44px 44px;
+  }
+  .app{max-width:1180px;margin:0 auto;padding:clamp(14px,3vw,34px)}
+  /* header */
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:clamp(14px,2.5vw,22px)}
+  .brand .eb{font-family:var(--mono);font-size:.68rem;letter-spacing:.28em;color:var(--cy);text-transform:uppercase;margin:0 0 7px}
+  h1{margin:0;font-size:clamp(1.15rem,3.2vw,1.7rem);font-weight:800;letter-spacing:-.01em}
+  .brand .sb{margin:5px 0 0;color:var(--dim);font-size:.86rem}
+  .stat{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;
+    border:1px solid var(--edge);background:var(--panel);border-radius:999px;padding:7px 14px;letter-spacing:.06em}
+  .led{width:7px;height:7px;border-radius:50%;background:var(--dimmer)}
+  .led.on{background:var(--ok);box-shadow:0 0 10px var(--ok);animation:pulse 1.6s infinite}
+  .led.hold{background:var(--wn);box-shadow:0 0 10px var(--wn)}
+  @keyframes pulse{50%{opacity:.35}}
+  @media (prefers-reduced-motion:reduce){.led.on{animation:none}}
+
+  .grid{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:clamp(12px,1.8vw,18px);align-items:start}
+  @media(max-width:940px){.grid{grid-template-columns:1fr}}
+
+  .panel{background:var(--panel);border:1px solid var(--edge);border-radius:16px;
+    backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(255,255,255,.02),0 24px 60px rgba(0,0,0,.5)}
+  .console{position:relative;padding:clamp(14px,2vw,20px)}
+  .lab{font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;color:var(--cy);text-transform:uppercase;margin:0 0 9px}
+  .fld{margin-bottom:18px}
+
+  /* toggle */
+  .tgl{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;
+    border:1px solid var(--edge);border-radius:11px;padding:12px 13px;background:rgba(255,255,255,.018);transition:.18s}
+  .tgl:hover{border-color:var(--edge-hi)}
+  .tgl input{position:absolute;opacity:0;pointer-events:none}
+  .box{width:19px;height:19px;border-radius:5px;border:1.5px solid var(--dimmer);flex:0 0 auto;
+    display:grid;place-items:center;transition:.18s}
+  .box::after{content:"";width:9px;height:9px;border-radius:2px;background:var(--cy);transform:scale(0);transition:.18s}
+  .tgl input:checked ~ .box{border-color:var(--cy);box-shadow:0 0 14px rgba(34,211,238,.4)}
+  .tgl input:checked ~ .box::after{transform:scale(1)}
+  .tgl input:focus-visible ~ .box{outline:2px solid var(--cy);outline-offset:3px}
+  .tgl .t{font-size:.9rem;font-weight:600}
+  .tgl .t s{display:block;font-size:.74rem;color:var(--dim);font-weight:500;text-decoration:none;margin-top:1px}
+
+  input[type=date]{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--edge);color:var(--tx);
+    border-radius:11px;padding:12px 13px;font-family:var(--mono);font-size:.94rem;color-scheme:dark;transition:.18s}
+  input[type=date]:hover{border-color:var(--edge-hi)}
+  input[type=date]:focus{outline:none;border-color:var(--cy);box-shadow:0 0 0 3px rgba(34,211,238,.14)}
+
+  .btn{border:1px solid var(--edge-hi);background:rgba(34,211,238,.09);color:var(--cy);font-family:var(--sans);
+    font-weight:700;font-size:.9rem;border-radius:11px;padding:12px 16px;cursor:pointer;transition:.18s;width:100%}
+  .btn:hover{background:rgba(34,211,238,.17);box-shadow:0 0 22px rgba(34,211,238,.24)}
+  .btn:disabled{opacity:.32;cursor:not-allowed;box-shadow:none}
+  .btn.ghost{border-color:rgba(255,255,255,.14);background:transparent;color:var(--dim)}
+  .btn.ghost:hover{background:rgba(255,255,255,.05);box-shadow:none;color:var(--tx)}
+  .btn.go{border-color:var(--ok);background:rgba(52,211,153,.12);color:var(--ok)}
+  .btn.go:hover{background:rgba(52,211,153,.2);box-shadow:0 0 22px rgba(52,211,153,.26)}
+  .btn.row{width:auto;flex:1}
+
+  .ctrls{display:flex;gap:8px;margin-top:10px}
+  .spd{display:flex;gap:5px;margin-top:10px}
+  .spd button{flex:1;font-family:var(--mono);font-size:.74rem;padding:7px 0;border-radius:8px;
+    border:1px solid var(--edge);background:transparent;color:var(--dim);cursor:pointer;transition:.15s}
+  .spd button:hover{border-color:var(--edge-hi);color:var(--tx)}
+  .spd button[aria-pressed=true]{background:rgba(34,211,238,.16);border-color:var(--cy);color:var(--cy)}
+
+  hr.sep{border:none;border-top:1px solid rgba(255,255,255,.07);margin:18px 0}
+
+  /* readout */
+  .ro{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cell{border:1px solid var(--edge);border-radius:12px;padding:12px;background:rgba(255,255,255,.02)}
+  .cell .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;color:var(--dimmer);text-transform:uppercase}
+  .cell .v{font-family:var(--mono);font-size:clamp(.95rem,1.4vw,1.18rem);font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums}
+  .cell.wide{grid-column:1/-1}
+  .cell .v.cy{color:var(--cy)} .cell .v.vi{color:var(--vi)} .cell .v.ok{color:var(--ok)}
+
+  .state{margin-top:12px;border-radius:12px;padding:13px 14px;border:1px solid;font-size:.88rem;font-weight:600}
+  .state .st{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:4px;opacity:.85}
+  .s-idle{border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--dim)}
+  .s-wait{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.1);color:var(--vi)}
+  .s-ask{border-color:rgba(34,211,238,.4);background:rgba(34,211,238,.09);color:var(--cy)}
+  .s-cnt{border-color:rgba(251,191,36,.45);background:rgba(251,191,36,.1);color:var(--wn)}
+  .s-force{border-color:rgba(251,113,133,.5);background:rgba(251,113,133,.12);color:var(--bad)}
+  .s-done{border-color:rgba(52,211,153,.42);background:rgba(52,211,153,.1);color:var(--ok)}
+
+  /* cycle progress */
+  .prog{margin-top:12px}
+  .bar{height:7px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;position:relative}
+  .bar .fill{height:100%;background:linear-gradient(90deg,var(--cy),var(--vi));width:0;transition:width .4s}
+  .bar .m14{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--bad);left:50%;opacity:.8}
+  .plabel{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;color:var(--dimmer);margin-top:6px}
+
+  /* popup */
+  .pop{margin:14px 0 2px;animation:in .18s ease-out}
+  .pop[hidden]{display:none}
+  @keyframes in{from{opacity:0;transform:scale(.97)}}
+  @media (prefers-reduced-motion:reduce){.pop{animation:none}}
+  .dlg{width:100%;border:1px solid var(--edge-hi);border-radius:14px;background:var(--panel-solid);
+    padding:18px;box-shadow:0 0 60px rgba(34,211,238,.22),0 20px 50px rgba(0,0,0,.6)}
+  .dlg.force{border-color:var(--bad);box-shadow:0 0 60px rgba(251,113,133,.26),0 20px 50px rgba(0,0,0,.6)}
+  .dlg .tag{display:inline-block;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+    padding:4px 9px;border-radius:6px;background:rgba(34,211,238,.16);color:var(--cy);margin-bottom:10px}
+  .dlg.force .tag{background:rgba(251,113,133,.18);color:var(--bad)}
+  .dlg h3{margin:0 0 6px;font-size:1.06rem;font-weight:800}
+  .dlg p{margin:0 0 14px;font-size:.87rem;color:var(--dim)}
+  .dlg .cd{font-family:var(--mono);font-size:.8rem;color:var(--wn);margin:0 0 14px;font-weight:700}
+  .dlg .acts{display:flex;gap:8px}
+
+  /* calendars */
+  .cals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(208px,100%),1fr));gap:clamp(10px,1.5vw,14px)}
+  .cal{padding:14px}
+  .cal h4{margin:0 0 11px;font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--tx);font-weight:700}
+  .wk,.dys{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .wk div{font-family:var(--mono);font-size:.58rem;color:var(--dimmer);text-align:center;padding-bottom:5px}
+  .dys div{aspect-ratio:1;display:grid;place-items:center;font-family:var(--mono);font-size:.68rem;
+    border-radius:6px;color:var(--dimmer);position:relative;font-variant-numeric:tabular-nums}
+  .dys .in{color:var(--dim)}
+  .dys .ask{background:rgba(34,211,238,.13);color:#9EEAF7}
+  .dys .cnt{background:rgba(251,191,36,.18);color:#FCD97A}
+  .dys .frc{background:rgba(251,113,133,.24);color:#FFB3C0;font-weight:700}
+  .dys .qut{background:rgba(255,255,255,.045);color:var(--dimmer)}
+  .dys .msd{background:rgba(52,211,153,.26);color:#9CF0CE;font-weight:700}
+  .dys .msd::after{content:"✓";position:absolute;bottom:-1px;right:2px;font-size:.5rem;color:var(--ok)}
+  .dys .st{box-shadow:inset 0 0 0 1.5px var(--vi)}
+  .dys .nx{box-shadow:inset 0 0 0 1.5px var(--vi);color:var(--vi);font-weight:700}
+  .dys .now{box-shadow:0 0 0 2px var(--cy),0 0 16px rgba(34,211,238,.6);color:#fff;font-weight:800;z-index:2}
+
+  .lgd{margin-top:14px;padding:13px 14px;display:flex;flex-wrap:wrap;gap:7px 12px}
+  .lgd span{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;color:var(--dim);font-family:var(--mono)}
+  .sw{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
+  .sw.ask{background:rgba(34,211,238,.35)} .sw.cnt{background:rgba(251,191,36,.45)}
+  .sw.frc{background:rgba(251,113,133,.5)} .sw.msd{background:rgba(52,211,153,.5)}
+  .sw.qut{background:rgba(255,255,255,.1)} .sw.st{box-shadow:inset 0 0 0 1.5px var(--vi)}
+  .sw.now{box-shadow:0 0 0 2px var(--cy)}
+
+  .log{padding:13px 14px;margin-top:14px;max-height:172px;overflow:auto}
+  .log .lab{margin-bottom:8px}
+  .log ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+  .log li{font-family:var(--mono);font-size:.68rem;color:var(--dim);display:flex;gap:8px}
+  .log li b{color:var(--cy);font-weight:600;flex:0 0 auto}
+  .log li.g b{color:var(--ok)} .log li.r b{color:var(--bad)} .log li.v b{color:var(--vi)}
+
+  /* small screens */
+  @media(max-width:520px){
+    .stat{display:none}
+    .dlg .acts{flex-direction:column}
+    .log{max-height:130px}
+  }
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <p class="eb">禾青心訓 · 模擬器</p>
+      <h1>PPIV 輪詢週期模擬</h1>
+      <p class="sb">28 天為一輪 · 每 3 秒推進 1 天</p>
+    </div>
+    <div class="stat"><span class="led" id="led"></span><span id="statTx">待機</span></div>
+  </header>
+
+  <div class="grid">
+    <section class="panel console" id="console">
+      <div class="fld">
+        <p class="lab">01 · 後台狀態</p>
+        <label class="tgl">
+          <input type="checkbox" id="hasBk">
+          <span class="box"></span>
+          <span class="t">後台已輸入休息心率<s>勾選＝有填 · 不勾＝沒填</s></span>
+        </label>
+      </div>
+
+      <div class="fld">
+        <p class="lab">02 · 何時使用 App</p>
+        <input type="date" id="useDate">
+      </div>
+
+      <button class="btn go" id="startBtn">▶ 開始模擬</button>
+      <div class="ctrls">
+        <button class="btn ghost row" id="pauseBtn" disabled>⏸ 暫停</button>
+        <button class="btn ghost row" id="resetBtn">↺ 重設</button>
+      </div>
+      <div class="spd" role="group" aria-label="速度">
+        <button data-s="1" aria-pressed="true">×1</button>
+        <button data-s="3" aria-pressed="false">×3</button>
+        <button data-s="10" aria-pressed="false">×10</button>
+      </div>
+
+      <div class="pop" id="pop" hidden>
+        <div class="dlg" id="dlg">
+          <span class="tag" id="dlgTag">PPIV 量測</span>
+          <h3>要進行 5 分鐘 PPIV 量測嗎？</h3>
+          <p id="dlgSub">本輪詢問中，可先略過。</p>
+          <p class="cd" id="dlgCd" hidden></p>
+          <div class="acts">
+            <button class="btn go row" id="mBtn">開始量測</button>
+            <button class="btn ghost row" id="sBtn">略過</button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="sep">
+
+      <p class="lab">系統讀數</p>
+      <div class="ro">
+        <div class="cell"><div class="k">模擬日期</div><div class="v cy" id="roDate">—</div></div>
+        <div class="cell"><div class="k">輪詢第 N 天</div><div class="v" id="roDay">—</div></div>
+        <div class="cell wide"><div class="k">本輪起始日</div><div class="v vi" id="roStart">—</div></div>
+        <div class="cell wide"><div class="k">下一輪起始日</div><div class="v ok" id="roNext">—</div></div>
+      </div>
+
+      <div class="state s-idle" id="stBox"><span class="st">狀態</span><span id="stTx">請設定 01 與 02 後開始模擬</span></div>
+
+      <div class="prog">
+        <div class="bar"><div class="fill" id="pFill"></div><div class="m14" id="pM14"></div></div>
+        <div class="plabel"><span>DAY 1</span><span>DAY 14 強制</span><span>DAY 28</span></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="cals" id="cals"></div>
+      <div class="panel lgd">
+        <span><i class="sw ask"></i>Day 1–9 詢問</span>
+        <span><i class="sw cnt"></i>Day 10–13 倒數</span>
+        <span><i class="sw frc"></i>Day 14 強制</span>
+        <span><i class="sw qut"></i>Day 15–28 安靜</span>
+        <span><i class="sw msd"></i>已量測</span>
+        <span><i class="sw st"></i>起始／下一輪</span>
+        <span><i class="sw now"></i>今天</span>
+      </div>
+      <div class="panel log"><p class="lab">事件記錄</p><ol id="logList"></ol></div>
+    </section>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const DAY = 86400000;
+const md = d => { const x = new Date(d); x.setHours(0,0,0,0); return x; };
+const addD = (d,n) => md(new Date(md(d).getTime() + n*DAY));
+const diffD = (a,b) => Math.round((md(a)-md(b))/DAY);
+const key = d => md(d).toISOString().slice(0,10);
+const fmt = d => d ? `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}` : '—';
+const WD = ['日','一','二','三','四','五','六'];
+const fmtW = d => d ? `${fmt(d)} (${WD[d.getDay()]})` : '—';
+
+// 未來最近的週一（今天是週一就用今天）
+function nextMonOnAfter(from){ const d = md(from); d.setDate(d.getDate() + ((1 - d.getDay() + 7) % 7)); return d; }
+// 某月第一個週一
+function firstMonOf(y,m){ const d = new Date(y,m,1); d.setDate(1 + ((1 - d.getDay() + 7) % 7)); return md(d); }
+// 下個月第一個週一
+function firstMonNextMonth(from){ const f = md(from); let y=f.getFullYear(), m=f.getMonth()+1; if(m>11){m=0;y++;} return firstMonOf(y,m); }
+
+const CYCLE_LEN = 28, ASK_END = 14, CD_START = 10;
+
+let S = null;
+function fresh(){ return { hasBk:false, useDate:null, simDate:null, running:false, speed:1,
+  needFirst:false, cycles:[], nextStart:null, timer:null, log:[], anchor:null, done:false }; }
+S = fresh();
+
+function log(msg, cls){ S.log.unshift({d:S.simDate?fmt(S.simDate):'', m:msg, c:cls||''}); if(S.log.length>60) S.log.pop(); }
+const curCycle = () => S.cycles.length ? S.cycles[S.cycles.length-1] : null;
+
+function startSim(){
+  const v = $('#useDate').value; if(!v){ $('#useDate').focus(); return; }
+  const base = fresh();
+  base.hasBk = $('#hasBk').checked;
+  base.useDate = md(new Date(v + 'T00:00:00'));
+  base.simDate = new Date(base.useDate);
+  base.anchor = new Date(base.useDate);
+  base.running = true; base.speed = S.speed;
+  S = base;
+  log(`使用 App（後台${S.hasBk?'有':'沒'}填休息心率）`, 'v');
+  if(!S.hasBk){
+    S.needFirst = true;
+    log('後台沒填 → 彈出 PPIV 量測視窗（首次必量）', 'r');
+  }else{
+    const st = nextMonOnAfter(S.useDate);
+    S.cycles.push({start:st, measured:null});
+    log(`後台有填 → 輪詢起始日＝未來最近週一 ${fmt(st)}`, 'g');
+  }
+  $('#startBtn').disabled = true; $('#pauseBtn').disabled = false;
+  $('#hasBk').disabled = true; $('#useDate').disabled = true;
+  tickTimer(); render();
+}
+
+function tickTimer(){
+  clearInterval(S.timer);
+  if(!S.running) return;
+  S.timer = setInterval(() => { if(S.running) step(); }, 3000 / S.speed);
+}
+
+function step(){
+  if(S.needFirst) return;                 // 首次必量：停住等操作
+  const st = evalState();
+  if(st.k === 'FORCE') return;            // 強制量測：停住等操作
+  S.simDate = addD(S.simDate, 1);
+  if(st.k === 'ASK' || st.k === 'CNT') log('未操作 → 自動略過', '');
+  render();
+}
+
+// 推進到期的下一輪
+function activate(){
+  if(S.nextStart && diffD(S.simDate, S.nextStart) >= 0){
+    S.cycles.push({start:new Date(S.nextStart), measured:null});
+    log(`新一輪開始（起始日 ${fmt(S.nextStart)}）`, 'v');
+    S.nextStart = null;
+  }
+}
+
+function evalState(){
+  activate();
+  if(S.needFirst) return {k:'FIRST'};
+  const c = curCycle();
+  if(!c) return {k:'WAITNEXT'};
+  if(diffD(S.simDate, c.start) < 0) return {k:'WAITSTART', c};
+  const d = diffD(S.simDate, c.start) + 1;
+  if(c.measured) return {k:'DONE', c, d};
+  if(d >= 1 && d < CD_START) return {k:'ASK', c, d};
+  if(d >= CD_START && d < ASK_END) return {k:'CNT', c, d, cd:15 - d};
+  if(d >= ASK_END) return {k:'FORCE', c, d, cd:1};
+  return {k:'IDLE'};
+}
+
+function doMeasure(){
+  if(S.needFirst){
+    S.needFirst = false;
+    S.nextStart = firstMonNextMonth(S.simDate);
+    log('完成首次 PPIV 量測', 'g');
+    log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
+  }else{
+    const c = curCycle(); if(!c) return;
+    c.measured = new Date(S.simDate);
+    S.nextStart = firstMonNextMonth(S.simDate);
+    const d = diffD(S.simDate, c.start) + 1;
+    log(`Day ${d} 完成 PPIV 量測 → 本輪結束`, 'g');
+    log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
+  }
+  render();
+}
+
+function doSkip(){
+  const st = evalState();
+  if(st.k === 'FORCE') return;
+  log(`Day ${st.d} 略過`, '');
+  S.simDate = addD(S.simDate, 1);
+  render();
+}
+
+function render(){
+  const st = evalState();
+  $('#roDate').textContent = fmtW(S.simDate);
+  const c = curCycle();
+  $('#roStart').textContent = c ? fmtW(c.start) : '—';
+  $('#roNext').textContent = S.nextStart ? fmtW(S.nextStart) : '—';
+  const inCyc = c && diffD(S.simDate, c.start) >= 0 && diffD(S.simDate, c.start) < CYCLE_LEN;
+  const dn = inCyc ? diffD(S.simDate, c.start) + 1 : null;
+  $('#roDay').textContent = dn ? `${dn} / 28` : '—';
+  $('#pFill').style.width = dn ? (dn/CYCLE_LEN*100)+'%' : '0%';
+  $('#pM14').style.left = (ASK_END/CYCLE_LEN*100)+'%';
+
+  const box = $('#stBox'), tx = $('#stTx');
+  const set = (cls, msg) => { box.className = 'state ' + cls; tx.textContent = msg; };
+  const led = $('#led'), lt = $('#statTx');
+
+  if(st.k === 'FIRST'){ set('s-force','後台沒填 → 首次必須量測，流程暫停'); led.className='led hold'; lt.textContent='等待量測'; }
+  else if(st.k === 'WAITSTART'){ const n = diffD(st.c.start, S.simDate); set('s-wait',`尚未進入輪詢，還有 ${n} 天開始（${fmt(st.c.start)}）`); led.className='led on'; lt.textContent='等待輪詢'; }
+  else if(st.k === 'WAITNEXT'){ set('s-wait','等待下一輪起始日'); led.className='led on'; lt.textContent='等待輪詢'; }
+  else if(st.k === 'ASK'){ set('s-ask',`Day ${st.d} · 詢問是否量測（可略過）`); led.className='led on'; lt.textContent='輪詢中'; }
+  else if(st.k === 'CNT'){ set('s-cnt',`Day ${st.d} · 提示剩 ${st.cd} 天（可略過）`); led.className='led on'; lt.textContent='倒數中'; }
+  else if(st.k === 'FORCE'){ set('s-force',`Day ${st.d} · 剩 1 天 → 強制量測，不可略過`); led.className='led hold'; lt.textContent='強制量測'; }
+  else if(st.k === 'DONE'){ set('s-done',`本輪已完成量測，等待下一輪（${fmt(S.nextStart)}）`); led.className='led on'; lt.textContent='本輪完成'; }
+  else { set('s-idle','待機'); led.className='led'; lt.textContent='待機'; }
+
+  // popup
+  const showPop = (st.k === 'FIRST' || st.k === 'ASK' || st.k === 'CNT' || st.k === 'FORCE');
+  $('#pop').hidden = !showPop;
+  if(showPop){
+    const forced = (st.k === 'FIRST' || st.k === 'FORCE');
+    $('#dlg').className = 'dlg' + (forced ? ' force' : '');
+    $('#dlgTag').textContent = st.k==='FIRST' ? '首次必量 · 後台未填' : (forced ? '強制量測 · 不可略過' : 'PPIV 量測');
+    $('#dlgSub').textContent = st.k==='FIRST'
+      ? '後台沒有休息心率，必須先完成量測才能繼續。'
+      : (forced ? '本輪最後期限，必須完成量測。' : `輪詢 Day ${st.d}，本輪期限前完成即可。`);
+    const cd = $('#dlgCd');
+    if(st.cd){ cd.hidden = false; cd.textContent = `⚠ 剩 ${st.cd} 天`; } else cd.hidden = true;
+    $('#sBtn').style.display = forced ? 'none' : '';
+  }
+  renderCals();
+  renderLog();
+}
+
+function dayMarks(){
+  const m = new Map();
+  const put = (d, cls) => { const k = key(d); m.set(k, (m.get(k)||'') + ' ' + cls); };
+  for(const c of S.cycles){
+    for(let i=0;i<CYCLE_LEN;i++){
+      const d = addD(c.start, i), n = i+1;
+      if(c.measured && diffD(d, c.measured) > 0) put(d,'qut');
+      else if(n < CD_START) put(d,'ask');
+      else if(n < ASK_END) put(d,'cnt');
+      else if(n === ASK_END) put(d,'frc');
+      else put(d,'qut');
+    }
+    put(c.start,'st');
+    if(c.measured) put(c.measured,'msd');
+  }
+  if(!S.hasBk && !S.needFirst && S.useDate) put(S.useDate,'msd');
+  if(S.nextStart) put(S.nextStart,'nx');
+  if(S.simDate) put(S.simDate,'now');
+  return m;
+}
+
+function renderCals(){
+  const anchor = S.anchor || md($('#useDate').value ? new Date($('#useDate').value+'T00:00:00') : new Date());
+  const marks = dayMarks();
+  let html = '';
+  for(let k=0;k<3;k++){
+    const y = anchor.getFullYear(), mo = anchor.getMonth() + k;
+    const first = new Date(y, mo, 1), Y = first.getFullYear(), M = first.getMonth();
+    const lead = (first.getDay() + 6) % 7;             // 週一為首
+    const len = new Date(Y, M+1, 0).getDate();
+    let cells = '';
+    for(let i=0;i<lead;i++) cells += '<div></div>';
+    for(let d=1; d<=len; d++){
+      const cur = md(new Date(Y,M,d));
+      const cls = (marks.get(key(cur)) || '').trim();
+      cells += `<div class="in ${cls}">${d}</div>`;
+    }
+    html += `<div class="panel cal"><h4>${Y} / ${String(M+1).padStart(2,'0')}</h4>
+      <div class="wk"><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div><div>日</div></div>
+      <div class="dys">${cells}</div></div>`;
+  }
+  $('#cals').innerHTML = html;
+}
+
+function renderLog(){
+  $('#logList').innerHTML = S.log.map(e => `<li class="${e.c}"><b>${e.d||'--'}</b><span>${e.m}</span></li>`).join('');
+}
+
+// events
+$('#startBtn').addEventListener('click', startSim);
+$('#pauseBtn').addEventListener('click', () => {
+  S.running = !S.running;
+  $('#pauseBtn').textContent = S.running ? '⏸ 暫停' : '▶ 繼續';
+  tickTimer();
+});
+$('#resetBtn').addEventListener('click', () => {
+  clearInterval(S.timer); const sp = S.speed; S = fresh(); S.speed = sp;
+  $('#startBtn').disabled = false; $('#pauseBtn').disabled = true; $('#pauseBtn').textContent = '⏸ 暫停';
+  $('#hasBk').disabled = false; $('#useDate').disabled = false;
+  $('#pop').hidden = true;
+  $('#roDate').textContent = $('#roDay').textContent = $('#roStart').textContent = $('#roNext').textContent = '—';
+  $('#stBox').className = 'state s-idle'; $('#stTx').textContent = '請設定 01 與 02 後開始模擬';
+  $('#pFill').style.width = '0%'; $('#led').className = 'led'; $('#statTx').textContent = '待機';
+  renderCals(); renderLog();
+});
+$('#mBtn').addEventListener('click', doMeasure);
+$('#sBtn').addEventListener('click', doSkip);
+document.querySelectorAll('.spd button').forEach(b => b.addEventListener('click', () => {
+  S.speed = +b.dataset.s;
+  document.querySelectorAll('.spd button').forEach(x => x.setAttribute('aria-pressed', x===b));
+  tickTimer();
+}));
+$('#useDate').addEventListener('change', () => { if(!S.running && !S.cycles.length){ S.anchor = md(new Date($('#useDate').value+'T00:00:00')); renderCals(); } });
+
+// init
+(function(){ const t = new Date(); $('#useDate').value = key(t); S.anchor = md(t); renderCals(); renderLog(); })();
+</script>
+
+</body>
+</html>
