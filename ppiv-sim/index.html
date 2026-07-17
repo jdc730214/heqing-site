@@ -283,10 +283,8 @@ const fmtW = d => d ? `${fmt(d)} (${WD[d.getDay()]})` : '—';
 
 // 未來最近的週一（今天是週一就用今天）
 function nextMonOnAfter(from){ const d = md(from); d.setDate(d.getDate() + ((1 - d.getDay() + 7) % 7)); return d; }
-// 某月第一個週一
-function firstMonOf(y,m){ const d = new Date(y,m,1); d.setDate(1 + ((1 - d.getDay() + 7) % 7)); return md(d); }
-// 下個月第一個週一
-function firstMonNextMonth(from){ const f = md(from); let y=f.getFullYear(), m=f.getMonth()+1; if(m>11){m=0;y++;} return firstMonOf(y,m); }
+// 輪詢節奏固定：第一輪 = 使用日之後未來最近的週一；之後每輪 = 上一輪起始 + 28 天
+// （例：7/16 開始使用 → 第一輪 7/20、下輪 8/17、再下輪 9/14 …）
 
 const CYCLE_LEN = 28, ASK_END = 14, CD_START = 10, MAX_ROUNDS = 5;
 
@@ -364,13 +362,13 @@ function evalState(){
 function doMeasure(){
   if(S.needFirst){
     S.needFirst = false;
-    S.nextStart = firstMonNextMonth(S.simDate);
+    S.nextStart = nextMonOnAfter(S.simDate);
     log('完成首次 PPIV 量測', 'g');
-    log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
+    log(`第一輪起始日＝未來最近週一 ${fmt(S.nextStart)}`, 'v');
   }else{
     const c = curCycle(); if(!c) return;
     c.measured = new Date(S.simDate);
-    S.nextStart = firstMonNextMonth(S.simDate);
+    S.nextStart = addD(c.start, 28);
     const d = diffD(S.simDate, c.start) + 1;
     log(`Day ${d} 完成 PPIV 量測 → 本輪結束`, 'g');
     const done = S.cycles.filter(x => x.measured).length;
@@ -380,7 +378,7 @@ function doMeasure(){
       $('#pauseBtn').disabled = true;
       log(`已完成 ${MAX_ROUNDS} 輪，模擬結束`, 'g');
     }else{
-      log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
+      log(`下一輪起始日＝本輪起始+28天 ${fmt(S.nextStart)}`, 'v');
     }
   }
   render();
