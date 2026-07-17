@@ -39,8 +39,8 @@
   @keyframes pulse{50%{opacity:.35}}
   @media (prefers-reduced-motion:reduce){.led.on{animation:none}}
 
-  .grid{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:clamp(12px,1.8vw,18px);align-items:start}
-  @media(max-width:940px){.grid{grid-template-columns:1fr}}
+  .grid{display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr);gap:clamp(12px,1.8vw,18px);align-items:start}
+  @media(max-width:940px){.grid{grid-template-columns:minmax(0,1fr)}}
 
   .panel{background:var(--panel);border:1px solid var(--edge);border-radius:16px;
     backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(255,255,255,.02),0 24px 60px rgba(0,0,0,.5)}
@@ -78,11 +78,6 @@
   .btn.row{width:auto;flex:1}
 
   .ctrls{display:flex;gap:8px;margin-top:10px}
-  .spd{display:flex;gap:5px;margin-top:10px}
-  .spd button{flex:1;font-family:var(--mono);font-size:.74rem;padding:7px 0;border-radius:8px;
-    border:1px solid var(--edge);background:transparent;color:var(--dim);cursor:pointer;transition:.15s}
-  .spd button:hover{border-color:var(--edge-hi);color:var(--tx)}
-  .spd button[aria-pressed=true]{background:rgba(34,211,238,.16);border-color:var(--cy);color:var(--cy)}
 
   hr.sep{border:none;border-top:1px solid rgba(255,255,255,.07);margin:18px 0}
 
@@ -160,51 +155,72 @@
   .log li b{color:var(--cy);font-weight:600;flex:0 0 auto}
   .log li.g b{color:var(--ok)} .log li.r b{color:var(--bad)} .log li.v b{color:var(--vi)}
 
+  /* mobile top status bar */
+  #mbar{display:none;position:fixed;top:0;left:0;right:0;z-index:80;
+    background:rgba(6,9,18,.94);border-bottom:1px solid var(--edge-hi);
+    padding:9px 14px;font-family:var(--mono);font-size:.72rem;color:var(--tx);
+    align-items:center;justify-content:space-between;gap:10px;backdrop-filter:blur(8px)}
+  #mbar b{color:var(--cy);font-weight:700;white-space:nowrap}
+  #mbar .ms{color:var(--wn);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* mobile relayout：月曆優先、彈框改底部浮出、設定收起 */
+  @media(max-width:940px){
+    .panel{backdrop-filter:none;background:var(--panel-solid)}
+    body.started #setup{display:none}
+    body.started #mbar{display:flex}
+    body.started .app{padding-top:52px}
+    body.started .console{order:2}
+    .pop{position:fixed;left:10px;right:10px;bottom:10px;margin:0;z-index:70}
+    .pop .dlg{box-shadow:0 -8px 40px rgba(0,0,0,.65),0 0 60px rgba(34,211,238,.18)}
+    .cals{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+      scrollbar-width:none}
+    .cals::-webkit-scrollbar{display:none}
+    .cals .cal{flex:0 0 94%;min-width:0;scroll-snap-align:center}
+    .dys div{aspect-ratio:auto;height:40px}
+  }
+
   /* small screens */
   @media(max-width:520px){
     .stat{display:none}
-    .dlg .acts{flex-direction:column}
     .log{max-height:130px}
   }
 </style>
 
 </head>
 <body>
+<div id="mbar"><b id="mbDate">—</b><span id="mbDay">—</span><span class="ms" id="mbSt">—</span></div>
 <div class="app">
   <header>
     <div class="brand">
       <p class="eb">禾青心訓 · 模擬器</p>
       <h1>PPIV 輪詢週期模擬</h1>
-      <p class="sb">28 天為一輪 · 每 3 秒推進 1 天</p>
+      <p class="sb">28 天為一輪 · 每 3 秒推進 1 天 · 共模擬 5 輪</p>
     </div>
     <div class="stat"><span class="led" id="led"></span><span id="statTx">待機</span></div>
   </header>
 
   <div class="grid">
     <section class="panel console" id="console">
-      <div class="fld">
-        <p class="lab">01 · 後台狀態</p>
-        <label class="tgl">
-          <input type="checkbox" id="hasBk">
-          <span class="box"></span>
-          <span class="t">後台已輸入休息心率<s>勾選＝有填 · 不勾＝沒填</s></span>
-        </label>
-      </div>
+      <div id="setup">
+        <div class="fld">
+          <p class="lab">01 · 後台狀態</p>
+          <label class="tgl">
+            <input type="checkbox" id="hasBk">
+            <span class="box"></span>
+            <span class="t">後台已輸入休息心率<s>勾選＝有填 · 不勾＝沒填</s></span>
+          </label>
+        </div>
 
-      <div class="fld">
-        <p class="lab">02 · 何時使用 App</p>
-        <input type="date" id="useDate">
-      </div>
+        <div class="fld">
+          <p class="lab">02 · 何時使用 App</p>
+          <input type="date" id="useDate">
+        </div>
 
-      <button class="btn go" id="startBtn">▶ 開始模擬</button>
+        <button class="btn go" id="startBtn">▶ 開始模擬</button>
+      </div>
       <div class="ctrls">
         <button class="btn ghost row" id="pauseBtn" disabled>⏸ 暫停</button>
         <button class="btn ghost row" id="resetBtn">↺ 重設</button>
-      </div>
-      <div class="spd" role="group" aria-label="速度">
-        <button data-s="1" aria-pressed="true">×1</button>
-        <button data-s="3" aria-pressed="false">×3</button>
-        <button data-s="10" aria-pressed="false">×10</button>
       </div>
 
       <div class="pop" id="pop" hidden>
@@ -272,11 +288,11 @@ function firstMonOf(y,m){ const d = new Date(y,m,1); d.setDate(1 + ((1 - d.getDa
 // 下個月第一個週一
 function firstMonNextMonth(from){ const f = md(from); let y=f.getFullYear(), m=f.getMonth()+1; if(m>11){m=0;y++;} return firstMonOf(y,m); }
 
-const CYCLE_LEN = 28, ASK_END = 14, CD_START = 10;
+const CYCLE_LEN = 28, ASK_END = 14, CD_START = 10, MAX_ROUNDS = 5;
 
 let S = null;
-function fresh(){ return { hasBk:false, useDate:null, simDate:null, running:false, speed:1,
-  needFirst:false, cycles:[], nextStart:null, timer:null, log:[], anchor:null, done:false }; }
+function fresh(){ return { hasBk:false, useDate:null, simDate:null, running:false,
+  needFirst:false, cycles:[], nextStart:null, timer:null, log:[], anchor:null, finished:false }; }
 S = fresh();
 
 function log(msg, cls){ S.log.unshift({d:S.simDate?fmt(S.simDate):'', m:msg, c:cls||''}); if(S.log.length>60) S.log.pop(); }
@@ -289,8 +305,9 @@ function startSim(){
   base.useDate = md(new Date(v + 'T00:00:00'));
   base.simDate = new Date(base.useDate);
   base.anchor = new Date(base.useDate);
-  base.running = true; base.speed = S.speed;
+  base.running = true;
   S = base;
+  document.body.classList.add('started');
   log(`使用 App（後台${S.hasBk?'有':'沒'}填休息心率）`, 'v');
   if(!S.hasBk){
     S.needFirst = true;
@@ -308,11 +325,11 @@ function startSim(){
 function tickTimer(){
   clearInterval(S.timer);
   if(!S.running) return;
-  S.timer = setInterval(() => { if(S.running) step(); }, 3000 / S.speed);
+  S.timer = setInterval(() => { if(S.running) step(); }, 3000);
 }
 
 function step(){
-  if(S.needFirst) return;                 // 首次必量：停住等操作
+  if(S.needFirst || S.finished) return;   // 首次必量／模擬結束：停住
   const st = evalState();
   if(st.k === 'FORCE') return;            // 強制量測：停住等操作
   S.simDate = addD(S.simDate, 1);
@@ -331,6 +348,7 @@ function activate(){
 
 function evalState(){
   activate();
+  if(S.finished) return {k:'ALLDONE'};
   if(S.needFirst) return {k:'FIRST'};
   const c = curCycle();
   if(!c) return {k:'WAITNEXT'};
@@ -355,7 +373,15 @@ function doMeasure(){
     S.nextStart = firstMonNextMonth(S.simDate);
     const d = diffD(S.simDate, c.start) + 1;
     log(`Day ${d} 完成 PPIV 量測 → 本輪結束`, 'g');
-    log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
+    const done = S.cycles.filter(x => x.measured).length;
+    if(done >= MAX_ROUNDS){
+      S.finished = true; S.running = false; clearInterval(S.timer);
+      S.nextStart = null;
+      $('#pauseBtn').disabled = true;
+      log(`已完成 ${MAX_ROUNDS} 輪，模擬結束`, 'g');
+    }else{
+      log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
+    }
   }
   render();
 }
@@ -391,7 +417,13 @@ function render(){
   else if(st.k === 'CNT'){ set('s-cnt',`Day ${st.d} · 提示剩 ${st.cd} 天（可略過）`); led.className='led on'; lt.textContent='倒數中'; }
   else if(st.k === 'FORCE'){ set('s-force',`Day ${st.d} · 剩 1 天 → 強制量測，不可略過`); led.className='led hold'; lt.textContent='強制量測'; }
   else if(st.k === 'DONE'){ set('s-done',`本輪已完成量測，等待下一輪（${fmt(S.nextStart)}）`); led.className='led on'; lt.textContent='本輪完成'; }
+  else if(st.k === 'ALLDONE'){ set('s-done',`已完成 ${MAX_ROUNDS} 輪輪詢，模擬結束`); led.className='led'; lt.textContent='模擬結束'; }
   else { set('s-idle','待機'); led.className='led'; lt.textContent='待機'; }
+
+  // 手機頂部固定狀態列
+  $('#mbDate').textContent = S.simDate ? fmtW(S.simDate) : '—';
+  $('#mbDay').textContent = dn ? `Day ${dn}/28` : '—';
+  $('#mbSt').textContent = tx.textContent;
 
   // popup
   const showPop = (st.k === 'FIRST' || st.k === 'ASK' || st.k === 'CNT' || st.k === 'FORCE');
@@ -435,9 +467,13 @@ function dayMarks(){
 function renderCals(){
   const anchor = S.anchor || md($('#useDate').value ? new Date($('#useDate').value+'T00:00:00') : new Date());
   const marks = dayMarks();
+  // 滾動視窗：模擬月份超出當月+1 後，三張月曆跟著往後推（模擬月保持在中間）
+  let simIdx = 0;
+  if(S.simDate) simIdx = (S.simDate.getFullYear()*12 + S.simDate.getMonth()) - (anchor.getFullYear()*12 + anchor.getMonth());
+  const m0 = Math.max(0, simIdx - 1);
   let html = '';
   for(let k=0;k<3;k++){
-    const y = anchor.getFullYear(), mo = anchor.getMonth() + k;
+    const y = anchor.getFullYear(), mo = anchor.getMonth() + m0 + k;
     const first = new Date(y, mo, 1), Y = first.getFullYear(), M = first.getMonth();
     const lead = (first.getDay() + 6) % 7;             // 週一為首
     const len = new Date(Y, M+1, 0).getDate();
@@ -453,6 +489,12 @@ function renderCals(){
       <div class="dys">${cells}</div></div>`;
   }
   $('#cals').innerHTML = html;
+  // 手機：橫向滑動月曆，自動捲到模擬所在月份
+  if(window.innerWidth <= 940 && S.simDate){
+    const active = Math.min(2, Math.max(0, simIdx - m0));
+    const el = $('#cals').children[active];
+    if(el) $('#cals').scrollLeft = el.offsetLeft - $('#cals').offsetLeft;
+  }
 }
 
 function renderLog(){
@@ -467,22 +509,19 @@ $('#pauseBtn').addEventListener('click', () => {
   tickTimer();
 });
 $('#resetBtn').addEventListener('click', () => {
-  clearInterval(S.timer); const sp = S.speed; S = fresh(); S.speed = sp;
+  clearInterval(S.timer); S = fresh();
+  document.body.classList.remove('started');
   $('#startBtn').disabled = false; $('#pauseBtn').disabled = true; $('#pauseBtn').textContent = '⏸ 暫停';
   $('#hasBk').disabled = false; $('#useDate').disabled = false;
   $('#pop').hidden = true;
   $('#roDate').textContent = $('#roDay').textContent = $('#roStart').textContent = $('#roNext').textContent = '—';
   $('#stBox').className = 'state s-idle'; $('#stTx').textContent = '請設定 01 與 02 後開始模擬';
   $('#pFill').style.width = '0%'; $('#led').className = 'led'; $('#statTx').textContent = '待機';
+  const dv = $('#useDate').value; if(dv) S.anchor = md(new Date(dv+'T00:00:00'));
   renderCals(); renderLog();
 });
 $('#mBtn').addEventListener('click', doMeasure);
 $('#sBtn').addEventListener('click', doSkip);
-document.querySelectorAll('.spd button').forEach(b => b.addEventListener('click', () => {
-  S.speed = +b.dataset.s;
-  document.querySelectorAll('.spd button').forEach(x => x.setAttribute('aria-pressed', x===b));
-  tickTimer();
-}));
 $('#useDate').addEventListener('change', () => { if(!S.running && !S.cycles.length){ S.anchor = md(new Date($('#useDate').value+'T00:00:00')); renderCals(); } });
 
 // init
