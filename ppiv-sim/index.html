@@ -194,7 +194,7 @@
     <div class="brand">
       <p class="eb">禾青心訓 · 模擬器</p>
       <h1>PPIV 輪詢週期模擬</h1>
-      <p class="sb">28 天為一輪 · 每 1 秒推進 1 天 · 共模擬 5 輪</p>
+      <p class="sb">每月第一個週一開輪 · Day 1–14 詢問 · 每 1 秒推進 1 天 · 共模擬 5 輪</p>
     </div>
     <div class="stat"><span class="led" id="led"></span><span id="statTx">待機</span></div>
   </header>
@@ -250,7 +250,7 @@
 
       <div class="prog">
         <div class="bar"><div class="fill" id="pFill"></div><div class="m14" id="pM14"></div></div>
-        <div class="plabel"><span>DAY 1</span><span>DAY 14 強制</span><span>DAY 28</span></div>
+        <div class="plabel"><span>DAY 1</span><span>DAY 14 強制</span><span id="pEnd">DAY 28</span></div>
       </div>
     </section>
 
@@ -260,7 +260,7 @@
         <span><i class="sw ask"></i>Day 1–9 詢問</span>
         <span><i class="sw cnt"></i>Day 10–13 倒數</span>
         <span><i class="sw frc"></i>Day 14 強制</span>
-        <span><i class="sw qut"></i>Day 15–28 安靜</span>
+        <span><i class="sw qut"></i>Day 15 起安靜</span>
         <span><i class="sw msd"></i>已量測</span>
         <span><i class="sw st"></i>起始／下一輪</span>
         <span><i class="sw now"></i>今天</span>
@@ -283,10 +283,13 @@ const fmtW = d => d ? `${fmt(d)} (${WD[d.getDay()]})` : '—';
 
 // 未來最近的週一（今天是週一就用今天）
 function nextMonOnAfter(from){ const d = md(from); d.setDate(d.getDate() + ((1 - d.getDay() + 7) % 7)); return d; }
-// 輪詢節奏固定：第一輪 = 使用日之後未來最近的週一；之後每輪 = 上一輪起始 + 28 天
-// （例：7/16 開始使用 → 第一輪 7/20、下輪 8/17、再下輪 9/14 …）
+// 輪詢節奏＝月曆錨定：每月第一個週一開輪、Day 1–14 詢問（窗永遠落在該月內 → 每日曆月恰量一次）
+// 使用日當月被首量/後台填值抵掉 → 下一輪 = 下個月第一個週一（例：7/15 使用 → 8/3 → 9/7 → 10/5 …）
+function firstMonOf(y,m){ const d = new Date(y,m,1); d.setDate(1 + ((1 - d.getDay() + 7) % 7)); return md(d); }
+function firstMonNextMonth(from){ const f = md(from); let y=f.getFullYear(), m=f.getMonth()+1; if(m>11){m=0;y++;} return firstMonOf(y,m); }
+function roundLen(start){ return diffD(firstMonNextMonth(start), start); }  // 本輪長度 = 到下月第一個週一（28~35 天）
 
-const CYCLE_LEN = 28, ASK_END = 14, CD_START = 10, MAX_ROUNDS = 5;
+const ASK_END = 14, CD_START = 10, MAX_ROUNDS = 5;
 
 let S = null;
 function fresh(){ return { hasBk:false, useDate:null, simDate:null, running:false,
@@ -311,12 +314,12 @@ function startSim(){
     S.needFirst = true;
     log('後台沒填 → 彈出 PPIV 量測視窗（首次必量）', 'r');
   }else{
-    // 後台填的值抵掉第一輪：第一輪（最近週一起）視為已完成，下一輪 = 第一輪起始 + 28
-    const anchor = nextMonOnAfter(S.useDate);
+    // 後台填的值抵掉使用日當月的輪，下一輪 = 下個月第一個週一
+    const anchor = firstMonOf(S.useDate.getFullYear(), S.useDate.getMonth());
     S.cycles.push({start:anchor, measured:new Date(S.useDate)});
-    S.nextStart = addD(anchor, 28);
-    log(`後台有填 → 抵掉第一輪（${fmt(anchor)} 起）`, 'g');
-    log(`下一輪起始日＝${fmt(S.nextStart)}`, 'v');
+    S.nextStart = firstMonNextMonth(S.useDate);
+    log(`後台有填 → 抵掉本月的輪（${fmt(anchor)} 起）`, 'g');
+    log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
   }
   $('#startBtn').disabled = true; $('#pauseBtn').disabled = false;
   $('#hasBk').disabled = true; $('#useDate').disabled = true;
@@ -365,16 +368,16 @@ function evalState(){
 function doMeasure(){
   if(S.needFirst){
     S.needFirst = false;
-    // 首量抵掉第一輪：第一輪（最近週一起）視為已完成，下一輪 = 第一輪起始 + 28
-    const anchor = nextMonOnAfter(S.simDate);
+    // 首量抵掉使用日當月的輪，下一輪 = 下個月第一個週一
+    const anchor = firstMonOf(S.simDate.getFullYear(), S.simDate.getMonth());
     S.cycles.push({start:anchor, measured:new Date(S.simDate)});
-    S.nextStart = addD(anchor, 28);
-    log(`完成首次 PPIV 量測（抵掉 ${fmt(anchor)} 起的第一輪）`, 'g');
-    log(`下一輪起始日＝${fmt(S.nextStart)}`, 'v');
+    S.nextStart = firstMonNextMonth(S.simDate);
+    log(`完成首次 PPIV 量測（抵掉本月的輪 ${fmt(anchor)} 起）`, 'g');
+    log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
   }else{
     const c = curCycle(); if(!c) return;
     c.measured = new Date(S.simDate);
-    S.nextStart = addD(c.start, 28);
+    S.nextStart = firstMonNextMonth(c.start);
     const d = diffD(S.simDate, c.start) + 1;
     log(`Day ${d} 完成 PPIV 量測 → 本輪結束`, 'g');
     const done = S.cycles.filter(x => x.measured).length;
@@ -384,7 +387,7 @@ function doMeasure(){
       $('#pauseBtn').disabled = true;
       log(`已完成 ${MAX_ROUNDS} 輪，模擬結束`, 'g');
     }else{
-      log(`下一輪起始日＝本輪起始+28天 ${fmt(S.nextStart)}`, 'v');
+      log(`下一輪起始日＝下個月第一個週一 ${fmt(S.nextStart)}`, 'v');
     }
   }
   render();
@@ -404,11 +407,13 @@ function render(){
   const c = curCycle();
   $('#roStart').textContent = c ? fmtW(c.start) : '—';
   $('#roNext').textContent = S.nextStart ? fmtW(S.nextStart) : '—';
-  const inCyc = c && diffD(S.simDate, c.start) >= 0 && diffD(S.simDate, c.start) < CYCLE_LEN;
+  const len = c ? roundLen(c.start) : 28;
+  const inCyc = c && diffD(S.simDate, c.start) >= 0 && diffD(S.simDate, c.start) < len;
   const dn = inCyc ? diffD(S.simDate, c.start) + 1 : null;
-  $('#roDay').textContent = dn ? `${dn} / 28` : '—';
-  $('#pFill').style.width = dn ? (dn/CYCLE_LEN*100)+'%' : '0%';
-  $('#pM14').style.left = (ASK_END/CYCLE_LEN*100)+'%';
+  $('#roDay').textContent = dn ? `${dn} / ${len}` : '—';
+  $('#pFill').style.width = dn ? (dn/len*100)+'%' : '0%';
+  $('#pM14').style.left = (ASK_END/len*100)+'%';
+  $('#pEnd').textContent = 'DAY ' + len;
 
   const box = $('#stBox'), tx = $('#stTx');
   const set = (cls, msg) => { box.className = 'state ' + cls; tx.textContent = msg; };
@@ -426,7 +431,7 @@ function render(){
 
   // 手機頂部固定狀態列
   $('#mbDate').textContent = S.simDate ? fmtW(S.simDate) : '—';
-  $('#mbDay').textContent = dn ? `Day ${dn}/28` : '—';
+  $('#mbDay').textContent = dn ? `Day ${dn}/${len}` : '—';
   $('#mbSt').textContent = tx.textContent;
 
   // popup
@@ -451,7 +456,8 @@ function dayMarks(){
   const m = new Map();
   const put = (d, cls) => { const k = key(d); m.set(k, (m.get(k)||'') + ' ' + cls); };
   for(const c of S.cycles){
-    for(let i=0;i<CYCLE_LEN;i++){
+    const len = roundLen(c.start);
+    for(let i=0;i<len;i++){
       const d = addD(c.start, i), n = i+1;
       if(c.measured && diffD(d, c.measured) > 0) put(d,'qut');
       else if(n < CD_START) put(d,'ask');
@@ -463,12 +469,13 @@ function dayMarks(){
     if(c.measured) put(c.measured,'msd');
   }
   if(!S.needFirst && S.useDate && S.cycles.length) put(S.useDate,'msd'); // 首量或後台填值日
-  // 未來輪次投影：節奏固定 +28，把剩餘輪次的日程預先畫到月曆上（含下下輪）
+  // 未來輪次投影：每月第一個週一開輪，把剩餘輪次的日程預先畫到月曆上（含下下輪）
   if(S.nextStart){
     let fs = new Date(S.nextStart);
     const remaining = MAX_ROUNDS - S.cycles.length;
     for(let r=0; r<remaining; r++){
-      for(let i=0;i<CYCLE_LEN;i++){
+      const len = roundLen(fs);
+      for(let i=0;i<len;i++){
         const d = addD(fs, i), n = i+1;
         if(n < CD_START) put(d,'ask');
         else if(n < ASK_END) put(d,'cnt');
@@ -476,7 +483,7 @@ function dayMarks(){
         else put(d,'qut');
       }
       put(fs,'nx');
-      fs = addD(fs, 28);
+      fs = firstMonNextMonth(fs);
     }
   }
   if(S.simDate) put(S.simDate,'now');
