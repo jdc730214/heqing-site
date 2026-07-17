@@ -194,7 +194,7 @@
     <div class="brand">
       <p class="eb">禾青心訓 · 模擬器</p>
       <h1>PPIV 輪詢週期模擬</h1>
-      <p class="sb">28 天為一輪 · 每 3 秒推進 1 天 · 共模擬 5 輪</p>
+      <p class="sb">28 天為一輪 · 每 1 秒推進 1 天 · 共模擬 5 輪</p>
     </div>
     <div class="stat"><span class="led" id="led"></span><span id="statTx">待機</span></div>
   </header>
@@ -325,7 +325,7 @@ function startSim(){
 function tickTimer(){
   clearInterval(S.timer);
   if(!S.running) return;
-  S.timer = setInterval(() => { if(S.running) step(); }, 3000);
+  S.timer = setInterval(() => { if(S.running) step(); }, 1000);
 }
 
 function step(){
