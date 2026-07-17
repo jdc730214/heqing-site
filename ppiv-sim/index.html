@@ -311,9 +311,12 @@ function startSim(){
     S.needFirst = true;
     log('後台沒填 → 彈出 PPIV 量測視窗（首次必量）', 'r');
   }else{
-    const st = nextMonOnAfter(S.useDate);
-    S.cycles.push({start:st, measured:null});
-    log(`後台有填 → 輪詢起始日＝未來最近週一 ${fmt(st)}`, 'g');
+    // 後台填的值抵掉第一輪：第一輪（最近週一起）視為已完成，下一輪 = 第一輪起始 + 28
+    const anchor = nextMonOnAfter(S.useDate);
+    S.cycles.push({start:anchor, measured:new Date(S.useDate)});
+    S.nextStart = addD(anchor, 28);
+    log(`後台有填 → 抵掉第一輪（${fmt(anchor)} 起）`, 'g');
+    log(`下一輪起始日＝${fmt(S.nextStart)}`, 'v');
   }
   $('#startBtn').disabled = true; $('#pauseBtn').disabled = false;
   $('#hasBk').disabled = true; $('#useDate').disabled = true;
@@ -350,9 +353,9 @@ function evalState(){
   if(S.needFirst) return {k:'FIRST'};
   const c = curCycle();
   if(!c) return {k:'WAITNEXT'};
+  if(c.measured) return {k:'DONE', c};
   if(diffD(S.simDate, c.start) < 0) return {k:'WAITSTART', c};
   const d = diffD(S.simDate, c.start) + 1;
-  if(c.measured) return {k:'DONE', c, d};
   if(d >= 1 && d < CD_START) return {k:'ASK', c, d};
   if(d >= CD_START && d < ASK_END) return {k:'CNT', c, d, cd:15 - d};
   if(d >= ASK_END) return {k:'FORCE', c, d, cd:1};
@@ -362,9 +365,12 @@ function evalState(){
 function doMeasure(){
   if(S.needFirst){
     S.needFirst = false;
-    S.nextStart = nextMonOnAfter(S.simDate);
-    log('完成首次 PPIV 量測', 'g');
-    log(`第一輪起始日＝未來最近週一 ${fmt(S.nextStart)}`, 'v');
+    // 首量抵掉第一輪：第一輪（最近週一起）視為已完成，下一輪 = 第一輪起始 + 28
+    const anchor = nextMonOnAfter(S.simDate);
+    S.cycles.push({start:anchor, measured:new Date(S.simDate)});
+    S.nextStart = addD(anchor, 28);
+    log(`完成首次 PPIV 量測（抵掉 ${fmt(anchor)} 起的第一輪）`, 'g');
+    log(`下一輪起始日＝${fmt(S.nextStart)}`, 'v');
   }else{
     const c = curCycle(); if(!c) return;
     c.measured = new Date(S.simDate);
@@ -456,7 +462,7 @@ function dayMarks(){
     put(c.start,'st');
     if(c.measured) put(c.measured,'msd');
   }
-  if(!S.hasBk && !S.needFirst && S.useDate) put(S.useDate,'msd');
+  if(!S.needFirst && S.useDate && S.cycles.length) put(S.useDate,'msd'); // 首量或後台填值日
   if(S.nextStart) put(S.nextStart,'nx');
   if(S.simDate) put(S.simDate,'now');
   return m;
