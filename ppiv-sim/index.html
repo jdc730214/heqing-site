@@ -283,8 +283,10 @@ const fmtW = d => d ? `${fmt(d)} (${WD[d.getDay()]})` : '—';
 
 // 未來最近的週一（今天是週一就用今天）
 function nextMonOnAfter(from){ const d = md(from); d.setDate(d.getDate() + ((1 - d.getDay() + 7) % 7)); return d; }
-// 輪詢節奏＝固定 +28 天（定案 2026-07-17）：第一輪 = 使用日之後未來最近的週一（被首量/後台填值抵掉），
-// 之後每輪 = 上一輪起始 + 28 天，Day 1 永遠是週一（例：7/15 使用 → 7/20 抵掉 → 8/17 → 9/14 → 10/12 …）
+// 輪詢節奏＝固定 +28 天（定案 2026-07-17）：第一輪 = 使用日之後未來最近的週一，
+// 之後每輪 = 上一輪起始 + 28 天，Day 1 永遠是週一。
+//   後台沒填：使用日當場強制首量 → 首量「抵掉」第一輪（例 7/15 首量 → 7/20 抵掉 → 8/17 起詢問）
+//   後台有填：免首量，但第一輪不抵掉 → 第一輪照樣 Day 1–14 詢問（例 7/20–8/2 詢問、8/2 強制）
 // 已知取捨：一年 13 輪 vs 12 個月 → 約每年一次會有同一個日曆月落入兩個量測窗。
 
 const CYCLE_LEN = 28, ASK_END = 14, CD_START = 10, MAX_ROUNDS = 5;
@@ -312,12 +314,10 @@ function startSim(){
     S.needFirst = true;
     log('後台沒填 → 彈出 PPIV 量測視窗（首次必量）', 'r');
   }else{
-    // 後台填的值抵掉第一輪（最近週一起），下一輪 = 第一輪起始 + 28
+    // 後台有填 → 免首量，但第一輪不被抵掉：最近週一開輪、Day 1–14 照樣詢問
     const anchor = nextMonOnAfter(S.useDate);
-    S.cycles.push({start:anchor, measured:new Date(S.useDate)});
-    S.nextStart = addD(anchor, 28);
-    log(`後台有填 → 抵掉第一輪（${fmt(anchor)} 起）`, 'g');
-    log(`下一輪起始日＝第一輪起始+28天 ${fmt(S.nextStart)}`, 'v');
+    S.cycles.push({start:anchor, measured:null});
+    log(`後台有填 → 免首量；第一輪起始日＝未來最近週一 ${fmt(anchor)}`, 'g');
   }
   $('#startBtn').disabled = true; $('#pauseBtn').disabled = false;
   $('#hasBk').disabled = true; $('#useDate').disabled = true;
@@ -466,7 +466,7 @@ function dayMarks(){
     put(c.start,'st');
     if(c.measured) put(c.measured,'msd');
   }
-  if(!S.needFirst && S.useDate && S.cycles.length) put(S.useDate,'msd'); // 首量或後台填值日
+  if(!S.hasBk && !S.needFirst && S.useDate) put(S.useDate,'msd'); // 首量日（後台有填不標，因第一輪仍要量）
   // 未來輪次投影：節奏固定 +28，把剩餘輪次的日程預先畫到月曆上（含下下輪）
   if(S.nextStart){
     let fs = new Date(S.nextStart);
