@@ -46,100 +46,154 @@
 
     <!-- JSON-LD Structured Data: Organization + WebSite (sitelinks search) + ItemList of products -->
     <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": "Organization",
+      "@id": "https://heqinghealth.com/#organization",
+      "name": "禾青醫電",
+      "alternateName": [
+        "HEQING MEDICAL",
+        "HEQING MEDICAL ELECTRONICS",
+        "禾青醫電股份有限公司"
+      ],
+      "url": "https://heqinghealth.com/",
+      "logo": "https://heqinghealth.com/images/bodygo3Product.png",
+      "telephone": "+886-911-102-789",
+      "email": "aerosmith.icl@gmail.com",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "sales",
+        "telephone": "+886-911-102-789",
+        "email": "aerosmith.icl@gmail.com",
+        "areaServed": "TW",
+        "availableLanguage": [
+          "zh-Hant",
+          "en"
+        ]
+      },
+      "sameAs": [],
+      "description": "禾青醫電（HEQING MEDICAL）研發 BodyGo 科技體適能 SPPB 評估、iCope 長者整合式照護評估、禾青心訓 銀髮自適應心肺訓練等高齡健康促進與長照科技產品。",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "朝陽村中正路8號",
+        "addressLocality": "古坑鄉",
+        "addressRegion": "雲林縣",
+        "addressCountry": "TW"
+      },
+      "taxID": "64990372"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://heqinghealth.com/#website",
+      "url": "https://heqinghealth.com/",
+      "name": "禾青醫電 HEQING MEDICAL",
+      "inLanguage": "zh-TW",
+      "publisher": {
+        "@id": "https://heqinghealth.com/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://heqinghealth.com/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "name": "禾青醫電核心產品 Core Products",
+      "itemListElement": [
         {
-          "@type": "Organization",
-          "@id": "https://heqinghealth.com/#organization",
-          "name": "禾青醫電",
-          "alternateName": ["HEQING MEDICAL", "HEQING MEDICAL ELECTRONICS", "禾青醫電股份有限公司"],
-          "url": "https://heqinghealth.com/",
-          "logo": "https://heqinghealth.com/images/bodygo3Product.png",
-          "sameAs": [],
-          "description": "禾青醫電（HEQING MEDICAL）研發 BodyGo 科技體適能 SPPB 評估、iCope 長者整合式照護評估、禾青心訓 銀髮自適應心肺訓練等高齡健康促進與長照科技產品。"
+          "@type": "ListItem",
+          "position": 1,
+          "name": "BodyGo 科技體適能（含 SPPB 評估）",
+          "url": "https://heqinghealth.com/bodygo3_0/DM/bodygo3-intro.html"
         },
         {
-          "@type": "WebSite",
-          "@id": "https://heqinghealth.com/#website",
-          "url": "https://heqinghealth.com/",
-          "name": "禾青醫電 HEQING MEDICAL",
-          "inLanguage": "zh-TW",
-          "publisher": {"@id": "https://heqinghealth.com/#organization"},
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://heqinghealth.com/?q={search_term_string}",
-            "query-input": "required name=search_term_string"
+          "@type": "ListItem",
+          "position": 2,
+          "name": "禾青心訓 銀髮自適應心肺訓練",
+          "url": "https://heqinghealth.com/heqinghealth_HR_TrainingDM/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "iCope 長者整合式照護評估",
+          "url": "https://heqinghealth.com/icope/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "禾青睡眠帶 長者離床睡眠心率偵測"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "波動感 毫米波呼吸心率跌倒偵測"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "發燒跌倒偵測器 熱成像體溫跌倒偵測"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "BodyGo 是什麼？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "BodyGo 是禾青醫電研發的科技體適能評估系統，透過機器視覺（YOLO 姿態辨識）搭配週邊無線檢測設備（心率、握力、平衡感測等），自動完成 SPPB 簡式肢體功能量表、5 次坐站、4 公尺步行、單腳站立平衡、6 分鐘行走測試、坐姿前彎等檢測，並依最新常模產出檢測報告。"
           }
         },
         {
-          "@type": "ItemList",
-          "name": "禾青醫電核心產品 Core Products",
-          "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "BodyGo 科技體適能（含 SPPB 評估）", "url": "https://heqinghealth.com/bodygo3_0/DM/bodygo3-intro.html"},
-            {"@type": "ListItem", "position": 2, "name": "禾青心訓 銀髮自適應心肺訓練", "url": "https://heqinghealth.com/heqinghealth_HR_TrainingDM/"},
-            {"@type": "ListItem", "position": 3, "name": "iCope 長者整合式照護評估", "url": "https://heqinghealth.com/icope/"},
-            {"@type": "ListItem", "position": 4, "name": "禾青睡眠帶 長者離床睡眠心率偵測"},
-            {"@type": "ListItem", "position": 5, "name": "波動感 毫米波呼吸心率跌倒偵測"},
-            {"@type": "ListItem", "position": 6, "name": "發燒跌倒偵測器 熱成像體溫跌倒偵測"}
-          ]
+          "@type": "Question",
+          "name": "BodyGo 支援哪些 SPPB 與體適能檢測項目？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支援銀髮、成人、兒童、競技四大族群常用項目：SPPB 5 次坐站、4 公尺步行、單腳站立平衡、握力、6 分鐘行走測試、3 公尺折返走、30 秒坐站、2 分鐘原地踏步、坐姿前彎、功能性前伸（Functional Reach）、閉眼單腳站立、坐站 5 次等。"
+          }
         },
         {
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "BodyGo 是什麼？",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "BodyGo 是禾青醫電研發的科技體適能評估系統，透過機器視覺（YOLO 姿態辨識）搭配週邊無線檢測設備（心率、握力、平衡感測等），自動完成 SPPB 簡式肢體功能量表、5 次坐站、4 公尺步行、單腳站立平衡、6 分鐘行走測試、坐姿前彎等檢測，並依最新常模產出檢測報告。"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "BodyGo 支援哪些 SPPB 與體適能檢測項目？",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "支援銀髮、成人、兒童、競技四大族群常用項目：SPPB 5 次坐站、4 公尺步行、單腳站立平衡、握力、6 分鐘行走測試、3 公尺折返走、30 秒坐站、2 分鐘原地踏步、坐姿前彎、功能性前伸（Functional Reach）、閉眼單腳站立、坐站 5 次等。"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "iCope 是什麼？ICOPE 6 大領域是什麼？",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "iCope 是禾青醫電依據 WHO ICOPE（Integrated Care for Older People，老年整合照護）設計的長者功能評估系統，透過手機語音辨識與動作偵測自動完成「6 大領域」評估：認知功能、行動功能、營養、視力、聽力、憂鬱情緒，評估完成自動產生報告。"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "禾青心訓有什麼特色？",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "禾青心訓是銀髮居家心肺訓練 App，依個人靜止心率與最大心率以 Karvonen 公式自適應計算訓練區間；支援健走、快走、跑步；醫師、教練可從後台檢視訓練數據與在區間內秒數，為個案設計運動處方。"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "禾青醫電的產品適用哪些場域？",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "適用於長照中心、日照中心、社區關懷據點、健身房、健檢中心、復健診所、學校體適能課程、智慧住宅與居家自主健康管理；BodyGo 也已導入台灣國健署場域與大專校院。"
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "禾青睡眠帶、波動感、發燒跌倒偵測器在隱私保護上有什麼差異？",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "三款產品皆為「去識別化」設計：禾青睡眠帶為床下非接觸式生理感測（無攝影、無穿戴）；波動感採毫米波雷達（無影像、無人臉特徵）；發燒跌倒偵測器使用熱成像（僅體溫分佈與身形輪廓，無臉部辨識）。"
-              }
-            }
-          ]
+          "@type": "Question",
+          "name": "iCope 是什麼？ICOPE 6 大領域是什麼？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "iCope 是禾青醫電依據 WHO ICOPE（Integrated Care for Older People，老年整合照護）設計的長者功能評估系統，透過手機語音辨識與動作偵測自動完成「6 大領域」評估：認知功能、行動功能、營養、視力、聽力、憂鬱情緒，評估完成自動產生報告。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "禾青心訓有什麼特色？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "禾青心訓是銀髮居家心肺訓練 App，依個人靜止心率與最大心率以 Karvonen 公式自適應計算訓練區間；支援健走、快走、跑步；醫師、教練可從後台檢視訓練數據與在區間內秒數，為個案設計運動處方。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "禾青醫電的產品適用哪些場域？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "適用於長照中心、日照中心、社區關懷據點、健身房、健檢中心、復健診所、學校體適能課程、智慧住宅與居家自主健康管理；BodyGo 也已導入台灣國健署場域與大專校院。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "禾青睡眠帶、波動感、發燒跌倒偵測器在隱私保護上有什麼差異？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "三款產品皆為「去識別化」設計：禾青睡眠帶為床下非接觸式生理感測（無攝影、無穿戴）；波動感採毫米波雷達（無影像、無人臉特徵）；發燒跌倒偵測器使用熱成像（僅體溫分佈與身形輪廓，無臉部辨識）。"
+          }
         }
       ]
     }
-    </script>
+  ]
+}
+</script>
     <!-- MSAL Browser (Azure AD B2C / External ID) -->
     <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -465,6 +519,43 @@
       .qr-info span {
         font-size: 12px;
         color: #718096;
+      }
+
+      .direct-line {
+        border: 1px solid #2d3748;
+        background: var(--card-bg);
+        padding: 18px 20px;
+        margin-bottom: 24px;
+      }
+      .direct-line .dl-label {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: #718096;
+        margin-bottom: 12px;
+      }
+      .direct-line a {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        padding: 9px 0;
+        text-decoration: none;
+        color: var(--text-color);
+        border-bottom: 1px dashed #1f2a36;
+        transition: 0.25s;
+      }
+      .direct-line a:last-of-type { border-bottom: 0; }
+      .direct-line a:hover { color: #fff; text-shadow: var(--accent-glow); }
+      .direct-line .dl-k {
+        flex: none;
+        width: 74px;
+        font-size: 11px;
+        letter-spacing: 2px;
+        color: #4a5568;
+      }
+      .direct-line .dl-v {
+        font-size: 1.05rem;
+        letter-spacing: 1px;
+        word-break: break-all;
       }
 
       .terminal-form {
@@ -1715,6 +1806,12 @@
             </div>
           </div>
 
+          <div class="direct-line">
+            <div class="dl-label">DIRECT_CONTACT // 直接聯絡</div>
+            <a href="tel:+886911102789"><span class="dl-k">MOBILE</span><span class="dl-v">0911-102-789</span></a>
+            <a href="mailto:aerosmith.icl@gmail.com"><span class="dl-k">E-MAIL</span><span class="dl-v">aerosmith.icl@gmail.com</span></a>
+          </div>
+
           <form
             class="terminal-form"
             onsubmit="
@@ -1745,7 +1842,16 @@
       </div>
     </section>
 
-    <footer>HEQING MEDICAL ELECTRONICS © 2026 // ALL_SYSTEMS_NOMINAL</footer>
+    <footer>
+      HEQING MEDICAL ELECTRONICS © 2026 // ALL_SYSTEMS_NOMINAL<br />
+      <span style="color: #6b8296"
+        >禾青醫電股份有限公司 &nbsp;//&nbsp; 統一編號 64990372<br />
+        雲林縣古坑鄉朝陽村中正路8號</span
+      ><br />
+      <a href="tel:+886911102789" style="color: var(--text-color); text-decoration: none">0911-102-789</a>
+      &nbsp;//&nbsp;
+      <a href="mailto:aerosmith.icl@gmail.com" style="color: var(--text-color); text-decoration: none">aerosmith.icl@gmail.com</a>
+    </footer>
 
     <!-- ===== AUTH MODAL ===== -->
     <div id="authOverlay" class="auth-overlay">

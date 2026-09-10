@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>BodyGo 3.0 科技體適能評估系統 — 產品型錄 | 禾青醫電 HEQING MEDICAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg0:#02090c; --bg1:#041418; --bg2:#062226;
+  --cy:#52f0ff; --cy2:rgba(82,240,255,.55); --cyl:rgba(82,240,255,.18);
+  --gn:#37f0b4; --am:#ffc24d; --mg:#ff5c8a; --vi:#9d8bff;
+  --tx:#e6fbfe; --txd:rgba(230,251,254,.66); --txf:rgba(230,251,254,.40);
+  --card:rgba(120,235,255,.055); --bd:rgba(82,240,255,.16);
+  --zh:'Noto Sans TC',"Microsoft JhengHei",sans-serif;
+  --en:'Rajdhani','Noto Sans TC',sans-serif;
+  --disp:'Orbitron','Noto Sans TC',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+html,body{background:#0b0f11;font-family:var(--zh);color:var(--tx);}
+@page{size:A4;margin:0;}
+
+.page{
+  position:relative;width:210mm;height:297mm;overflow:hidden;
+  background:var(--bg0);page-break-after:always;break-after:page;
+}
+.page:last-child{page-break-after:auto;}
+.layer{position:absolute;inset:0;pointer-events:none;}
+.grid{
+  background-image:linear-gradient(rgba(82,240,255,.040) .3mm,transparent .3mm),
+                   linear-gradient(90deg,rgba(82,240,255,.040) .3mm,transparent .3mm);
+  background-size:9mm 9mm;
+}
+.vign{background:radial-gradient(120% 80% at 50% 0%,rgba(82,240,255,.06),transparent 60%),
+      radial-gradient(90% 60% at 100% 100%,rgba(55,240,180,.05),transparent 60%);}
+.glow{position:absolute;border-radius:50%;}
+.g-cy{background:radial-gradient(circle,rgba(82,240,255,.20),rgba(82,240,255,0) 68%);}
+.g-gn{background:radial-gradient(circle,rgba(55,240,180,.16),rgba(55,240,180,0) 68%);}
+.g-mg{background:radial-gradient(circle,rgba(255,92,138,.13),rgba(255,92,138,0) 68%);}
+
+.pad{position:relative;height:100%;padding:13mm 14mm 14mm;display:flex;flex-direction:column;}
+
+/* page furniture */
+.phead{display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:2.6mm;border-bottom:.3mm solid var(--cyl);margin-bottom:6mm;}
+.phead .l{display:flex;align-items:center;gap:3mm;}
+.phead img{height:5.4mm;}
+.phead .bn{font-family:var(--disp);font-size:6.2pt;letter-spacing:.30em;color:var(--cy2);}
+.phead .r{font-family:var(--en);font-size:7pt;letter-spacing:.22em;color:var(--txf);text-transform:uppercase;}
+.pfoot{position:absolute;left:14mm;right:14mm;bottom:6.5mm;display:flex;justify-content:space-between;
+  align-items:center;font-family:var(--en);font-size:6.4pt;letter-spacing:.18em;color:rgba(230,251,254,.30);
+  border-top:.3mm solid rgba(82,240,255,.10);padding-top:2.2mm;}
+.pfoot b{color:var(--cy2);font-weight:600;}
+
+/* section head */
+.kick{font-family:var(--disp);font-size:6.6pt;font-weight:700;letter-spacing:.30em;color:var(--cy);
+  display:flex;align-items:center;gap:2.5mm;margin-bottom:2.2mm;}
+.kick::after{content:'';flex:1;height:.3mm;background:linear-gradient(90deg,var(--cyl),transparent);}
+h2{font-size:19pt;font-weight:900;line-height:1.12;letter-spacing:.01em;}
+h2 .en{display:block;font-family:var(--disp);font-size:7pt;font-weight:500;letter-spacing:.26em;
+  color:var(--txf);margin-top:1.6mm;}
+.lead{font-size:8.4pt;line-height:1.68;color:var(--txd);margin-top:3mm;max-width:170mm;}
+.lead b{color:var(--tx);font-weight:700;}
+
+/* hud brackets */
+.hudc{position:absolute;width:6mm;height:6mm;border:.35mm solid var(--cy);opacity:.55;}
+.hudc.tl{top:0;left:0;border-right:0;border-bottom:0;}
+.hudc.tr{top:0;right:0;border-left:0;border-bottom:0;}
+.hudc.bl{bottom:0;left:0;border-right:0;border-top:0;}
+.hudc.br{bottom:0;right:0;border-left:0;border-top:0;}
+
+/* ═════ COVER ═════ */
+.cover{position:relative;height:100%;padding:14mm 14mm 0;display:flex;flex-direction:column;}
+.cv-top{display:flex;align-items:flex-start;justify-content:space-between;z-index:3;}
+.cv-top img{height:9mm;}
+.cv-brand{font-family:var(--disp);font-size:7pt;letter-spacing:.32em;color:var(--cy2);margin-top:1.5mm;}
+.cv-cat{text-align:right;font-family:var(--en);font-size:7.6pt;letter-spacing:.26em;color:var(--txf);line-height:1.8;}
+.cv-body{flex:1;display:grid;grid-template-columns:1.06fr .94fr;gap:6mm;align-items:center;z-index:3;}
+.cv-tag{display:inline-block;font-family:var(--disp);font-size:6.6pt;font-weight:700;letter-spacing:.28em;
+  color:var(--cy);border:.3mm solid var(--cyl);border-radius:99px;padding:1.8mm 4mm;background:rgba(82,240,255,.05);}
+.cv-h1{font-family:var(--disp);font-size:40pt;font-weight:900;line-height:.98;letter-spacing:-.01em;margin-top:6mm;
+  color:#fff;text-shadow:0 0 4mm rgba(82,240,255,.55),0 0 12mm rgba(82,240,255,.28);}
+.cv-h2{font-size:23pt;font-weight:900;line-height:1.2;margin-top:4mm;letter-spacing:.03em;}
+.cv-h2 span{color:var(--cy);}
+.cv-rule{width:26mm;height:.7mm;background:linear-gradient(90deg,var(--cy),rgba(55,240,180,0));margin:5mm 0;}
+.cv-p{font-size:9pt;line-height:1.8;color:var(--txd);max-width:92mm;}
+.cv-p b{color:var(--tx);font-weight:700;}
+.cv-chips{display:flex;flex-wrap:wrap;gap:2mm;margin-top:6mm;max-width:96mm;}
+.cv-chips span{font-size:7.6pt;font-weight:500;letter-spacing:.02em;padding:1.6mm 3.2mm;border-radius:1.4mm;
+  border:.3mm solid var(--bd);background:var(--card);color:var(--tx);}
+.cv-vis{position:relative;height:100%;display:flex;align-items:center;justify-content:center;}
+.cv-vis img{position:relative;max-height:150mm;max-width:100%;object-fit:contain;}
+.cv-halo{position:absolute;width:104mm;height:150mm;left:50%;top:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(50% 50% at 50% 50%,rgba(82,240,255,.26),rgba(82,240,255,0) 70%);}
+.cv-ring{position:absolute;width:74mm;height:74mm;border:.35mm solid rgba(82,240,255,.22);border-radius:50%;
+  bottom:20mm;left:50%;transform:translateX(-50%);}
+.cv-ring::after{content:'';position:absolute;inset:9mm;border:.3mm dashed rgba(82,240,255,.16);border-radius:50%;}
+.cv-cap{position:absolute;bottom:6mm;left:50%;transform:translateX(-50%);font-family:var(--disp);
+  font-size:5.8pt;letter-spacing:.24em;color:var(--cy2);white-space:nowrap;}
+.cv-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:.3mm solid var(--cyl);
+  z-index:3;margin:0 -14mm;padding:0 14mm;}
+.cv-st{padding:6mm 3mm 5mm;border-right:.3mm solid rgba(82,240,255,.10);}
+.cv-st:last-child{border-right:0;}
+.cv-st .n{font-family:var(--disp);font-size:26pt;font-weight:900;color:var(--cy);line-height:1;
+  text-shadow:0 0 5mm rgba(82,240,255,.45);}
+.cv-st .n small{font-size:13pt;}
+.cv-st .l{font-size:7.8pt;color:var(--txd);margin-top:2mm;letter-spacing:.06em;}
+.cv-bar{margin:0 -14mm;padding:3.4mm 14mm;background:linear-gradient(90deg,rgba(82,240,255,.14),rgba(55,240,180,.06) 60%,transparent);
+  border-top:.3mm solid var(--cyl);display:flex;justify-content:space-between;align-items:center;z-index:3;}
+.cv-bar .u{font-family:var(--disp);font-size:8pt;font-weight:700;letter-spacing:.20em;color:var(--cy);}
+.cv-bar .t{font-family:var(--en);font-size:7.4pt;letter-spacing:.20em;color:var(--txf);}
+
+/* generic card */
+.card{background:var(--card);border:.3mm solid var(--bd);border-radius:2.6mm;padding:5mm;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;width:14mm;height:.5mm;background:var(--cy);opacity:.7;}
+.card h4{font-size:10pt;font-weight:900;letter-spacing:.02em;}
+.card .en{font-family:var(--disp);font-size:5.8pt;letter-spacing:.22em;color:var(--cy2);margin-top:1mm;}
+.card p{font-size:7.6pt;line-height:1.62;color:var(--txd);margin-top:2.6mm;}
+
+/* P2 */
+.stage{position:relative;border:.3mm solid var(--bd);border-radius:3mm;background:#000;
+  height:84mm;flex:none;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.stage .shots{display:flex;align-items:flex-end;justify-content:center;gap:3mm;width:100%;height:100%;padding:12mm 5mm 11mm;}
+.stage .shots img{flex:1 1 0;min-width:0;height:100%;object-fit:contain;object-position:bottom;}
+.stage-top{position:absolute;top:3mm;left:4mm;font-family:var(--disp);font-size:5.8pt;letter-spacing:.24em;color:var(--cy);}
+.stage-top::before{content:'';display:inline-block;width:1.6mm;height:1.6mm;border-radius:50%;background:var(--mg);
+  margin-right:1.6mm;vertical-align:middle;box-shadow:0 0 2mm var(--mg);}
+.stage-kpi{position:absolute;right:4mm;top:3mm;text-align:right;font-family:var(--disp);font-size:5.6pt;
+  letter-spacing:.16em;color:var(--txf);line-height:1.9;}
+.stage-kpi b{color:var(--cy);font-size:7pt;}
+.stage-scan{position:absolute;left:0;right:0;top:34%;height:.3mm;background:linear-gradient(90deg,transparent,var(--cy),transparent);opacity:.5;}
+.stage-lbl{position:absolute;bottom:3mm;left:0;right:0;display:flex;}
+.stage-lbl span{flex:1;text-align:center;font-size:6.4pt;letter-spacing:.05em;color:var(--txd);
+  border-left:.3mm solid rgba(82,240,255,.12);}
+.stage-lbl span:first-child{border-left:0;}
+.stage-lbl span b{display:block;font-family:var(--disp);font-size:5.2pt;letter-spacing:.18em;color:var(--cy2);font-weight:600;margin-top:.6mm;}
+
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;}
+.tri .ic{width:9mm;height:9mm;border-radius:2.2mm;border:.3mm solid var(--bd);
+  background:rgba(82,240,255,.08);color:var(--cy);font-size:12pt;line-height:1;
+  display:flex;align-items:center;justify-content:center;margin-bottom:3mm;
+  text-shadow:0 0 2.5mm rgba(82,240,255,.6);}
+
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;}
+.pi{border:.3mm solid var(--bd);border-radius:2.2mm;background:rgba(82,240,255,.04);padding:3.4mm 4mm;position:relative;}
+.pi .s{font-family:var(--disp);font-size:5.4pt;font-weight:700;letter-spacing:.2em;color:var(--cy);}
+.pi .t{font-size:8.4pt;font-weight:700;margin-top:1.4mm;}
+.pi .d{font-size:6.6pt;color:var(--txf);margin-top:1.2mm;line-height:1.5;}
+.pi::after{content:'→';position:absolute;right:-3.4mm;top:50%;transform:translateY(-50%);color:var(--cy2);font-size:8pt;}
+.pi:last-child::after{display:none;}
+.spec{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;}
+.sp{border:.3mm solid var(--bd);border-radius:2.2mm;padding:3.4mm;background:rgba(82,240,255,.035);}
+.sp .k{font-family:var(--disp);font-size:5.6pt;letter-spacing:.2em;color:var(--cy2);}
+.sp .v{font-size:8.6pt;font-weight:700;margin-top:1.4mm;line-height:1.35;}
+.sp .d{font-size:6.6pt;color:var(--txf);margin-top:1.2mm;line-height:1.5;}
+
+/* P3 */
+.modes{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4.5mm;flex:1;}
+.mode{border:.3mm solid var(--bd);border-radius:2.6mm;background:var(--card);padding:4.5mm 4.5mm 4.5mm 5.5mm;
+  display:grid;grid-template-columns:26mm 1fr;gap:4.5mm;position:relative;overflow:hidden;}
+.mode>div:last-child{display:flex;flex-direction:column;}
+.mode::before{content:'';position:absolute;top:0;bottom:0;left:0;width:.9mm;background:var(--acc,var(--cy));}
+.mode .shot{border:.3mm solid var(--bd);border-radius:1.6mm;overflow:hidden;background:#000;align-self:start;}
+.mode .shot img{width:100%;display:block;}
+.mode h3{font-size:11.5pt;font-weight:900;display:flex;align-items:baseline;gap:2.4mm;}
+.mode h3 .cnt{font-family:var(--disp);font-size:6.4pt;font-weight:700;letter-spacing:.12em;color:#02090c;
+  background:var(--acc,var(--cy));border-radius:99px;padding:.9mm 2.4mm;}
+.mode .en{font-family:var(--disp);font-size:5.6pt;letter-spacing:.2em;color:var(--txf);margin-top:1.2mm;}
+.mode ul{list-style:none;margin-top:3mm;flex:1;display:flex;flex-direction:column;justify-content:space-between;}
+.mode li{font-size:7.4pt;line-height:1.5;color:var(--txd);padding:1.05mm 0 1.05mm 3.6mm;position:relative;
+  border-bottom:.25mm dotted rgba(82,240,255,.12);}
+.mode li:last-child{border-bottom:0;}
+.mode li::before{content:'';position:absolute;left:0;top:2.5mm;width:1.4mm;height:1.4mm;
+  background:var(--acc,var(--cy));transform:rotate(45deg);}
+.mode li b{color:var(--tx);font-weight:700;}
+.mode li .dv{color:var(--cy2);font-size:6.6pt;font-family:var(--en);letter-spacing:.02em;}
+
+/* P4 */
+.hw{border:.3mm solid var(--bd);border-radius:2.6mm;background:var(--card);padding:4mm;position:relative;overflow:hidden;}
+.hw .num{position:absolute;top:3mm;right:3.6mm;font-family:var(--disp);font-size:12pt;font-weight:900;
+  color:rgba(82,240,255,.16);letter-spacing:.04em;}
+.hw .im{height:24mm;display:flex;align-items:center;justify-content:center;margin-bottom:2.6mm;position:relative;}
+.hw .im::before{content:'';position:absolute;width:76%;height:80%;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(82,240,255,.20),rgba(82,240,255,0) 68%);}
+.hw .im img{position:relative;max-height:100%;max-width:100%;object-fit:contain;}
+.hw h4{font-size:9pt;font-weight:900;}
+.hw .en{font-family:var(--disp);font-size:5.4pt;letter-spacing:.2em;color:var(--cy2);margin-top:.9mm;}
+.hw p{font-size:6.9pt;line-height:1.56;color:var(--txd);margin-top:2mm;}
+.hw .use{display:flex;flex-wrap:wrap;gap:1.2mm;margin-top:2.4mm;}
+.hw .use span{font-size:5.9pt;letter-spacing:.03em;padding:.8mm 1.8mm;border-radius:1mm;
+  border:.25mm solid rgba(82,240,255,.20);color:var(--cy2);}
+.hw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;}
+.hw-main{display:grid;grid-template-columns:32mm 1fr;gap:6mm;align-items:center;
+  border:.3mm solid var(--bd);border-radius:2.6mm;background:
+  linear-gradient(90deg,rgba(82,240,255,.10),rgba(82,240,255,.02));padding:4.5mm 5mm;position:relative;overflow:hidden;}
+.hw-main .im{height:42mm;display:flex;align-items:center;justify-content:center;}
+.hw-main .im{position:relative;}
+.hw-main .im::before{content:'';position:absolute;width:88%;height:80%;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(82,240,255,.22),rgba(82,240,255,0) 70%);}
+.hw-main .im img{position:relative;max-height:100%;}
+.hw-main h4{font-size:12pt;font-weight:900;}
+.hw-main .use span{font-size:6.2pt;padding:1mm 2.2mm;border-radius:1mm;border:.25mm solid rgba(82,240,255,.24);color:var(--cy2);}
+.space{margin-top:auto;border:.3mm solid rgba(255,194,77,.30);border-radius:2.6mm;
+  background:linear-gradient(90deg,rgba(255,194,77,.10),rgba(255,194,77,.02));padding:4mm 5mm;
+  display:grid;grid-template-columns:auto 1fr;gap:6mm;align-items:center;}
+.space .fig{font-family:var(--disp);font-size:11pt;font-weight:900;color:var(--am);letter-spacing:.06em;white-space:nowrap;
+  text-shadow:0 0 4mm rgba(255,194,77,.35);}
+.space .fig small{display:block;font-size:5.8pt;letter-spacing:.24em;color:rgba(255,194,77,.7);margin-top:1mm;font-weight:600;}
+.space p{font-size:7.4pt;line-height:1.62;color:var(--txd);}
+
+/* P5 */
+.ui-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:3mm;}
+.uic .fr{border:.3mm solid var(--bd);border-radius:2mm;padding:1mm;background:rgba(82,240,255,.05);}
+.uic .fr img{width:100%;display:block;border-radius:1.2mm;}
+.uic .cap{text-align:center;margin-top:2mm;}
+.uic .cap .zh{font-size:6.8pt;font-weight:700;line-height:1.35;}
+.uic .cap .en{font-family:var(--disp);font-size:4.9pt;letter-spacing:.14em;color:var(--txf);margin-top:.7mm;}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:5mm;}
+.fl{border:.3mm solid var(--bd);border-radius:2.6mm;background:var(--card);padding:4.5mm;position:relative;}
+.fl .n{font-family:var(--disp);font-size:20pt;font-weight:900;color:rgba(82,240,255,.22);line-height:1;}
+.fl h4{font-size:9.6pt;font-weight:900;margin-top:1.6mm;}
+.fl .en{font-family:var(--disp);font-size:5.4pt;letter-spacing:.2em;color:var(--cy2);margin-top:.9mm;}
+.fl p{font-size:7pt;line-height:1.56;color:var(--txd);margin-top:2.2mm;}
+.fl::after{content:'▸';position:absolute;right:-3.6mm;top:50%;transform:translateY(-50%);color:var(--cy2);font-size:9pt;}
+.fl:last-child::after{display:none;}
+.hilite{border:.3mm solid rgba(55,240,180,.32);border-radius:2.6mm;
+  background:linear-gradient(90deg,rgba(55,240,180,.10),rgba(55,240,180,.02));padding:4mm 5mm;
+  display:grid;grid-template-columns:auto 1fr;gap:6mm;align-items:center;}
+.hilite .t{font-family:var(--disp);font-size:8.4pt;font-weight:700;letter-spacing:.18em;color:var(--gn);white-space:nowrap;}
+.hilite p{font-size:7.4pt;line-height:1.62;color:var(--txd);}
+.hilite p b{color:var(--tx);}
+
+/* P6 */
+.rep{display:grid;grid-template-columns:1fr 1fr;gap:6mm;}
+.rp{border:.3mm solid var(--bd);border-radius:2mm;padding:1.4mm;background:rgba(82,240,255,.05);}
+.rp img{width:100%;display:block;border-radius:1mm;}
+.rp-cap{text-align:center;font-family:var(--disp);font-size:5.6pt;letter-spacing:.22em;color:var(--cy2);margin-top:2mm;}
+.rf-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.4mm 5mm;}
+.rf{display:grid;grid-template-columns:auto 1fr;gap:3mm;align-items:start;}
+.rf .ic{width:7.4mm;height:7.4mm;border-radius:1.8mm;border:.3mm solid var(--bd);background:rgba(82,240,255,.07);
+  display:flex;align-items:center;justify-content:center;font-size:8.4pt;}
+.rf h4{font-size:8.4pt;font-weight:900;}
+.rf h4 .en{font-family:var(--disp);font-size:5.2pt;letter-spacing:.18em;color:var(--txf);margin-left:1.6mm;font-weight:500;}
+.rf p{font-size:6.9pt;line-height:1.55;color:var(--txd);margin-top:1mm;}
+.lights{display:grid;grid-template-columns:repeat(5,1fr);gap:1.6mm;margin-top:2.4mm;}
+.lt{text-align:center;padding:2mm .5mm;border-radius:1.6mm;font-size:7.2pt;font-weight:700;color:#02090c;}
+
+/* P7 */
+.terms{display:grid;grid-template-columns:1fr 1fr;gap:5mm;align-content:start;}
+.tm{border:.3mm solid var(--bd);border-left:.9mm solid var(--cy);border-radius:2.2mm;
+  background:rgba(82,240,255,.038);padding:4.2mm 4.6mm;}
+.tm h4{font-size:8.6pt;font-weight:900;line-height:1.3;}
+.tm h4 small{display:block;font-family:var(--disp);font-size:5.2pt;letter-spacing:.16em;color:var(--cy2);
+  margin-top:.8mm;font-weight:500;}
+.tm p{font-size:6.9pt;line-height:1.58;color:var(--txd);margin-top:1.6mm;}
+.tm p b{color:var(--am);font-weight:700;}
+.src{font-size:6.2pt;line-height:1.65;color:var(--txf);border-top:.3mm solid var(--cyl);padding-top:3mm;}
+.src i{font-style:italic;}
+.actrow{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;align-items:end;
+  border:.3mm solid rgba(82,240,255,.13);border-radius:2.6mm;
+  background:#000;padding:4mm 4mm 3.4mm;}
+.act{text-align:center;}
+.act .im{height:46mm;display:flex;align-items:flex-end;justify-content:center;}
+.act img{max-height:100%;max-width:100%;object-fit:contain;}
+.act .t{font-size:6.6pt;color:var(--txd);margin-top:2.2mm;}
+
+/* P8 */
+.venues{display:grid;grid-template-columns:repeat(6,1fr);gap:3mm;}
+.vn{border:.3mm solid var(--bd);border-radius:2.2mm;background:var(--card);padding:3.4mm 2mm;text-align:center;}
+.vn .ic{font-size:12pt;line-height:1;}
+.vn .t{font-size:7.4pt;font-weight:700;margin-top:2mm;}
+.vn .s{font-family:var(--disp);font-size:4.9pt;letter-spacing:.14em;color:var(--txf);margin-top:.8mm;}
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:3.4mm 5mm;}
+.fq{border:.3mm solid var(--bd);border-radius:2.2mm;background:rgba(82,240,255,.035);padding:3.4mm 4mm;}
+.fq .q{font-size:8pt;font-weight:900;color:var(--tx);padding-left:5mm;position:relative;line-height:1.4;}
+.fq .q::before{content:'Q';position:absolute;left:0;top:-.2mm;font-family:var(--en);font-weight:700;font-size:10pt;color:var(--cy);}
+.fq .a{font-size:6.9pt;line-height:1.58;color:var(--txd);margin-top:1.8mm;padding-left:5mm;position:relative;}
+.fq .a::before{content:'A';position:absolute;left:0;top:-.6mm;font-family:var(--en);font-weight:700;font-size:10pt;color:var(--gn);}
+.rel{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;}
+.rl{border:.3mm solid var(--bd);border-radius:2.2mm;background:var(--card);padding:3.6mm 4mm;}
+.rl .k{font-family:var(--disp);font-size:5.4pt;letter-spacing:.2em;color:var(--cy);}
+.rl h4{font-size:8.4pt;font-weight:900;margin-top:1.4mm;}
+.rl p{font-size:6.7pt;line-height:1.55;color:var(--txd);margin-top:1.4mm;}
+.contact{margin-top:auto;border:.3mm solid var(--bd);border-radius:3mm;
+  background:linear-gradient(105deg,rgba(82,240,255,.12),rgba(55,240,180,.04) 55%,transparent);
+  padding:4.6mm 5.5mm;display:grid;grid-template-columns:1fr auto auto;gap:6mm;align-items:center;position:relative;overflow:hidden;}
+.contact .logo{height:9mm;margin-bottom:2.4mm;}
+.contact .cn{font-size:12pt;font-weight:900;letter-spacing:.02em;}
+.contact .cs{font-family:var(--disp);font-size:6.4pt;letter-spacing:.26em;color:var(--cy2);margin-top:1.4mm;}
+.clines{margin-top:2.8mm;display:grid;gap:1.2mm;}
+.cl{display:grid;grid-template-columns:18mm 1fr;align-items:baseline;
+  border-bottom:.25mm dotted rgba(82,240,255,.16);padding-bottom:1mm;}
+.cl:last-child{border-bottom:0;}
+.cl .k{font-family:var(--disp);font-size:5.4pt;font-weight:700;letter-spacing:.22em;color:var(--cy2);}
+.cl .v{font-family:var(--en);font-size:11pt;font-weight:600;letter-spacing:.04em;color:var(--cy);}
+.contact .cd{font-size:6.8pt;color:var(--txd);margin-top:2.4mm;line-height:1.55;max-width:96mm;}
+.qr{text-align:center;}
+.qr img{width:22mm;height:22mm;display:block;border-radius:1.6mm;border:.6mm solid #fff;}
+.qr .t{font-size:6.2pt;color:var(--txd);margin-top:1.8mm;line-height:1.4;}
+.qr .t b{display:block;font-family:var(--disp);font-size:5.2pt;letter-spacing:.16em;color:var(--cy2);font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ PAGE 1 · COVER ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div>
+  <div class="layer vign"></div>
+  <div class="glow g-cy" style="width:150mm;height:150mm;right:-30mm;top:20mm;"></div>
+  <div class="glow g-gn" style="width:110mm;height:110mm;left:-40mm;bottom:30mm;"></div>
+  <div class="cover">
+    <div class="cv-top">
+      <div>
+        <img src="img/logo.png" alt="禾青醫電 HEQING MEDICAL">
+        <div class="cv-brand">HEQING MEDICAL</div>
+      </div>
+      <div class="cv-cat">PRODUCT CATALOGUE<br>科技體適能評估系統</div>
+    </div>
+
+    <div class="cv-body">
+      <div>
+        <span class="cv-tag">AI FITNESS ASSESSMENT SYSTEM</span>
+        <div class="cv-h1">BodyGo<br>3.0</div>
+        <div class="cv-h2">科技<span>體適能</span>評估系統</div>
+        <div class="cv-rule"></div>
+        <p class="cv-p">以 <b>AI 機器視覺骨架追蹤</b>、<b>3D 深度感測</b>與 <b>BLE 無線週邊</b>打造的一站式體適能檢測平台。受測者依地墊標線站定位，系統即時辨識動作、自動計次計時，現場產出常模百分位報告。</p>
+        <div class="cv-chips">
+          <span>SPPB 簡式肢體功能量表</span><span>跌倒風險評估</span>
+          <span>銀髮體適能</span><span>成人體適能</span><span>肌少症篩檢</span>
+        </div>
+      </div>
+      <div class="cv-vis">
+        <div class="cv-halo"></div>
+        <div class="cv-ring"></div>
+        <img src="img/station.png" alt="BodyGo 3.0 主機">
+        <div class="cv-cap">BODYGO 3.0 STATION · AI DEPTH CAMERA</div>
+      </div>
+    </div>
+
+    <div class="cv-stats">
+      <div class="cv-st"><div class="n">4</div><div class="l">評估模式</div></div>
+      <div class="cv-st"><div class="n">23<small>+</small></div><div class="l">檢測項目</div></div>
+      <div class="cv-st"><div class="n">17</div><div class="l">AI 骨架關鍵點</div></div>
+      <div class="cv-st"><div class="n">7</div><div class="l">智慧週邊裝置</div></div>
+    </div>
+    <div class="cv-bar">
+      <div class="u">HEQINGHEALTH.COM</div>
+      <div class="t">HEQING MEDICAL · 禾青醫電</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PAGE 2 · AI DETECTION ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div><div class="layer vign"></div>
+  <div class="glow g-cy" style="width:120mm;height:120mm;right:-30mm;top:40mm;"></div>
+  <div class="pad">
+    <div class="phead">
+      <div class="l"><img src="img/logo.png"><span class="bn">BODYGO 3.0</span></div>
+      <div class="r">AI Detection</div>
+    </div>
+
+    <div class="kick">AI DETECTION</div>
+    <h2>檢測進行時，AI 全自動判定<span class="en">LIVE MOTION TRACKING · FULLY AUTOMATED</span></h2>
+    <p class="lead">檢測時系統以 AI 姿態辨識即時追蹤 <b>17 個骨架關鍵點</b>，搭配 3D 深度相機取得空間座標 —— 動作起訖判定、計次、計時與姿勢正確性全部自動完成，操作人員<b>免碼錶、免目測、免手抄</b>。</p>
+
+    <div class="stage" style="margin-top:6mm;">
+      <div class="hudc tl"></div><div class="hudc tr"></div><div class="hudc bl"></div><div class="hudc br"></div>
+      <div class="stage-scan"></div>
+      <div class="stage-top">AI TRACKING · LIVE</div>
+      <div class="stage-kpi">SKELETON <b>17</b> PTS<br>DEPTH <b>3D</b> SENSING</div>
+      <div class="shots">
+        <img src="img/act-gait.jpg" alt="4 公尺步行">
+        <img src="img/act-sit5.jpg" alt="五次坐站">
+        <img src="img/act-reach.jpg" alt="功能性前伸">
+        <img src="img/act-balance.jpg" alt="單腳平衡">
+      </div>
+      <div class="stage-lbl">
+        <span>4 公尺步行<b>GAIT SPEED</b></span>
+        <span>五次坐站<b>SIT-TO-STAND</b></span>
+        <span>功能性前伸<b>FUNCTIONAL REACH</b></span>
+        <span>單腳平衡<b>BALANCE</b></span>
+      </div>
+    </div>
+
+    <div class="tri" style="margin-top:auto;">
+      <div class="card">
+        <div class="ic">◎</div>
+        <h4>標準動作指引</h4><div class="en">MOTION GUIDANCE</div>
+        <p>每項檢測開始前，螢幕以動作示範搭配語音逐步指引，施測者不必反覆解說、受測者一看就懂，確保每次都以正確姿勢受測。</p>
+      </div>
+      <div class="card">
+        <div class="ic">◐</div>
+        <h4>抗光源干擾 · 雙影像融合</h4><div class="en">DEPTH + RGB FUSION</div>
+        <p>彩色影像辨識＋3D 深度影像雙來源融合分析，互補彼此弱點，不受環境亮度與背景顏色侷限，在室內燈光變化、逆光等條件下仍能穩定追蹤動作。</p>
+      </div>
+      <div class="card">
+        <div class="ic">◈</div>
+        <h4>全自動判定</h4><div class="en">FULLY AUTOMATED</div>
+        <p>起訖判定、計次、計時與姿勢正確性全部由系統自動完成，免碼錶、免目測、免手抄，成績即時入檔，杜絕人為誤差。</p>
+      </div>
+    </div>
+
+    <div class="pipe" style="margin-top:auto;">
+      <div class="pi"><div class="s">STEP 01</div><div class="t">人員偵測與追蹤</div><div class="d">自動辨識畫面中的受測者並鎖定主受測目標</div></div>
+      <div class="pi"><div class="s">STEP 02</div><div class="t">17 點骨架擷取</div><div class="d">逐幀取出頭、肩、肘、腕、髖、膝、踝關鍵點</div></div>
+      <div class="pi"><div class="s">STEP 03</div><div class="t">深度座標融合</div><div class="d">結合深度影像換算真實空間位置與位移距離</div></div>
+      <div class="pi"><div class="s">STEP 04</div><div class="t">動作判定與計分</div><div class="d">依關節角度與位移自動計次、計時並換算成績</div></div>
+    </div>
+
+    <div class="spec" style="margin-top:auto;">
+      <div class="sp"><div class="k">VISION</div><div class="v">AI 姿態辨識</div><div class="d">17 點骨架關鍵點即時追蹤</div></div>
+      <div class="sp"><div class="k">DEPTH</div><div class="v">3D 深度相機</div><div class="d">空間座標量測，距離與位移判定</div></div>
+      <div class="sp"><div class="k">WIRELESS</div><div class="v">BLE 無線週邊</div><div class="d">握力、心率、測距、體圍即測即傳</div></div>
+      <div class="sp"><div class="k">GUIDANCE</div><div class="v">語音引導 TTS</div><div class="d">全程口令播報，長者免低頭操作</div></div>
+    </div>
+  </div>
+  <div class="pfoot"><span>BODYGO 3.0 · AI FITNESS ASSESSMENT SYSTEM</span><span><b>02</b> / 08</span></div>
+</section>
+
+<!-- ═══════════ PAGE 3 · MODES ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div><div class="layer vign"></div>
+  <div class="glow g-gn" style="width:120mm;height:120mm;left:-40mm;bottom:0;"></div>
+  <div class="pad">
+    <div class="phead">
+      <div class="l"><img src="img/logo.png"><span class="bn">BODYGO 3.0</span></div>
+      <div class="r">Assessment Modes</div>
+    </div>
+
+    <div class="kick">ASSESSMENT MODES</div>
+    <h2>四大評估模式 · 23＋ 檢測項目<span class="en">TEST BATTERY</span></h2>
+    <p class="lead">依受測對象與評估目的選擇模式，各項目標註所使用的偵測技術與週邊裝置。</p>
+
+    <div class="modes" style="margin-top:5.5mm;">
+      <div class="mode" style="--acc:var(--cy)">
+        <div class="shot"><img src="img/ui-sppb.jpg" alt="SPPB 評估畫面"></div>
+        <div>
+          <h3>SPPB 評估 <span class="cnt">3 項</span></h3>
+          <div class="en">SHORT PHYSICAL PERFORMANCE BATTERY</div>
+          <ul>
+            <li><b>平衡測試</b> — 併足／半併足／前後站三階段計時 <span class="dv">｜AI 姿態辨識</span></li>
+            <li><b>4 公尺步行</b> — 習慣步速自動計時 <span class="dv">｜AI＋深度相機＋地墊定位</span></li>
+            <li><b>5 次坐站</b> — 髖膝角度自動計次計時 <span class="dv">｜AI 姿態辨識</span></li>
+            <li><b>分項計分</b> — 三項各 0–4 分，依標準切點自動換算</li>
+            <li><b>自動計分</b> — 0–12 分總分與分級即時產出</li>
+            <li><b>適用對象</b> — 衰弱篩檢、術後與復健成效追蹤</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mode" style="--acc:var(--mg)">
+        <div class="shot"><img src="img/ui-fall.jpg" alt="跌倒風險評估畫面"></div>
+        <div>
+          <h3>跌倒風險評估 <span class="cnt">7 項</span></h3>
+          <div class="en">FALL RISK SCREENING</div>
+          <ul>
+            <li><b>3 公尺折返走（TUG）</b> — 分段計時 <span class="dv">｜AI＋地墊定位</span></li>
+            <li><b>開眼平衡</b> — 站立穩定度計時 <span class="dv">｜AI 姿態辨識</span></li>
+            <li><b>功能性前伸</b> — 重心控制極限 <span class="dv">｜AI＋雷射測距</span></li>
+            <li><b>5 次坐站</b> — 下肢肌力快篩 <span class="dv">｜AI 姿態辨識</span></li>
+            <li><b>手握力</b> — 肌少症核心指標 <span class="dv">｜BLE 握力計</span></li>
+            <li><b>小腿圍</b> — 肌肉量篩檢 <span class="dv">｜BLE 量測尺</span></li>
+            <li><b>衰弱前期問卷</b> — 結構化風險評估</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mode" style="--acc:var(--gn)">
+        <div class="shot"><img src="img/ui-elder.jpg" alt="銀髮體適能畫面"></div>
+        <div>
+          <h3>銀髮體適能 <span class="cnt">7 項</span></h3>
+          <div class="en">SENIOR FITNESS TEST</div>
+          <ul>
+            <li><b>30 秒坐站</b> — 下肢肌耐力 <span class="dv">｜AI 自動計次</span></li>
+            <li><b>30 秒手臂彎舉</b> — 上肢肌耐力 <span class="dv">｜AI 自動計次</span></li>
+            <li><b>2 分鐘原地踏步</b> — 心肺耐力 <span class="dv">｜AI＋心率臂帶</span></li>
+            <li><b>椅子坐姿體前彎</b> — 下肢柔軟度 <span class="dv">｜雷射測距</span></li>
+            <li><b>抓背測試</b> — 上肢柔軟度 <span class="dv">｜BLE 量測尺</span></li>
+            <li><b>2.44 公尺折返走</b> — 敏捷與動態平衡 <span class="dv">｜AI＋地墊定位</span></li>
+            <li><b>手握力</b> — 上肢肌力 <span class="dv">｜BLE 握力計</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mode" style="--acc:var(--am)">
+        <div class="shot"><img src="img/ui-adult.jpg" alt="成人體適能畫面"></div>
+        <div>
+          <h3>成人體適能 <span class="cnt">6 項</span></h3>
+          <div class="en">ADULT FITNESS</div>
+          <ul>
+            <li><b>3 分鐘登階</b> — 心肺適能推估 <span class="dv">｜心率臂帶</span></li>
+            <li><b>1 分鐘仰臥起坐</b> — 肌耐力 <span class="dv">｜AI 自動計次</span></li>
+            <li><b>坐姿體前彎</b> — 柔軟度 <span class="dv">｜雷射測距</span></li>
+            <li><b>閉眼單腳平衡</b> — 靜態平衡 <span class="dv">｜AI 自動判定</span></li>
+            <li><b>反應力</b> — 視覺刺激反應計時</li>
+            <li><b>手握力</b> — 上肢肌力 <span class="dv">｜BLE 握力計</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pfoot"><span>BODYGO 3.0 · AI FITNESS ASSESSMENT SYSTEM</span><span><b>03</b> / 08</span></div>
+</section>
+
+<!-- ═══════════ PAGE 4 · HARDWARE ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div><div class="layer vign"></div>
+  <div class="glow g-cy" style="width:130mm;height:130mm;left:-45mm;top:30mm;"></div>
+  <div class="pad">
+    <div class="phead">
+      <div class="l"><img src="img/logo.png"><span class="bn">BODYGO 3.0</span></div>
+      <div class="r">Hardware &amp; BLE Peripherals</div>
+    </div>
+
+    <div class="kick">HARDWARE &amp; BLE PERIPHERALS</div>
+    <h2>系統設備與智慧週邊<span class="en">DEVICE LINEUP · 7 UNITS</span></h2>
+    <p class="lead">主機整合 AI 深度相機與直立大螢幕；量測型週邊透過 BLE 無線連接、數位讀值即測即傳 —— <b>免手抄、免鍵入、免目測讀刻度</b>，再搭配定位地墊引導站位，一人即可順暢施測。</p>
+
+    <div class="hw-main" style="margin-top:5mm;">
+      <div style="position:absolute;top:3mm;right:4.5mm;font-family:var(--disp);font-size:14pt;font-weight:900;color:rgba(82,240,255,.16);">01</div>
+      <div class="im"><img src="img/station.png" alt="BodyGo 3.0 系統主機"></div>
+      <div>
+        <h4>系統主機</h4>
+        <div style="font-family:var(--disp);font-size:5.6pt;letter-spacing:.22em;color:var(--cy2);margin-top:1mm;">AI STATION</div>
+        <p style="font-size:7.6pt;line-height:1.62;color:var(--txd);margin-top:2.4mm;">直立式大螢幕顯示器＋AI 深度相機（3D 空間感測）＋附輪腳架，即推即用、機動換場；螢幕尺寸可依場域需求選配。內建語音引導（TTS），長者不需低頭操作。</p>
+        <div class="use" style="display:flex;gap:1.6mm;margin-top:2.8mm;">
+          <span>全部檢測</span><span>AI 姿態辨識</span><span>語音引導</span><span>尺寸可選配</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hw-grid" style="margin-top:4.5mm;">
+      <div class="hw"><div class="num">02</div>
+        <div class="im"><img src="img/hw-mat.jpg" alt="檢測定位地墊" style="border-radius:1.4mm;"></div>
+        <h4>檢測定位地墊</h4><div class="en">TEST MAT</div>
+        <p>防滑地墊印有腳印定位、起步線與折返點記號，受測者一眼就知道站哪裡，施測者指引動線更輕鬆。</p>
+        <div class="use"><span>步行測驗</span><span>折返走</span><span>坐站</span><span>平衡</span></div>
+      </div>
+      <div class="hw"><div class="num">03</div>
+        <div class="im"><img src="img/hw-grip.png" alt="BLE 電子握力計"></div>
+        <h4>BLE 電子握力計</h4><div class="en">GRIP DYNAMOMETER</div>
+        <p>數位量測握力（kg），藍牙即時回傳並自動取多次最佳值；握力為 AWGS 2019 肌少症診斷核心指標。</p>
+        <div class="use"><span>手握力</span><span>肌少症篩檢</span></div>
+      </div>
+      <div class="hw"><div class="num">04</div>
+        <div class="im"><img src="img/hw-hr.png" alt="BLE 心率臂帶"></div>
+        <h4>BLE 心率臂帶</h4><div class="en">HR MONITOR</div>
+        <p>光學式心率臂帶即時串流心率，於登階、踏步測驗中監測運動心率與恢復心率，供心肺適能推估。</p>
+        <div class="use"><span>3 分鐘登階</span><span>2 分鐘踏步</span><span>心肺適能</span></div>
+      </div>
+      <div class="hw"><div class="num">05</div>
+        <div class="im"><img src="img/hw-dist.png" alt="雷射測距感測器"></div>
+        <h4>雷射測距感測器</h4><div class="en">DISTANCE SENSOR</div>
+        <p>非接觸式毫米級距離量測，用於柔軟度與前伸幅度判定，坐姿體前彎、功能性前伸皆免用傳統量尺。</p>
+        <div class="use"><span>坐姿體前彎</span><span>功能性前伸</span></div>
+      </div>
+      <div class="hw"><div class="num">06</div>
+        <div class="im"><img src="img/hw-tape.png" alt="BLE 智慧量測尺"></div>
+        <h4>BLE 智慧量測尺</h4><div class="en">HEALTH TAPE</div>
+        <p>電子皮尺量測值自動回傳：小腿圍（肌少症篩檢）、抓背測試指距等體圍與距離量測，讀值精準免目測。</p>
+        <div class="use"><span>小腿圍</span><span>抓背測試</span><span>體圍量測</span></div>
+      </div>
+      <div class="hw"><div class="num">07</div>
+        <div class="im"><img src="img/hw-ctrl.jpg" alt="無線空間操作器" style="border-radius:2mm;"></div>
+        <h4>空間操作器</h4><div class="en">SPATIAL CONTROLLER</div>
+        <p>無線握持式操作器，施測者免於在機台與受測者間來回奔走：陪在受測者身旁指引動作，同時遙控系統流程。</p>
+        <div class="use"><span>遠端操作</span><span>受測安全</span><span>教學指引</span></div>
+      </div>
+    </div>
+
+    <div class="space">
+      <div class="fig">DEPLOYMENT<small>機動佈署</small></div>
+      <p><b style="color:var(--tx)">主機附輪好移動、螢幕尺寸可依場域選配</b>，健身房、社區據點、診所、活動快閃皆可機動佈署。</p>
+    </div>
+  </div>
+  <div class="pfoot"><span>BODYGO 3.0 · AI FITNESS ASSESSMENT SYSTEM</span><span><b>04</b> / 08</span></div>
+</section>
+
+<!-- ═══════════ PAGE 5 · UI + WORKFLOW ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div><div class="layer vign"></div>
+  <div class="glow g-cy" style="width:120mm;height:120mm;right:-35mm;bottom:20mm;"></div>
+  <div class="pad">
+    <div class="phead">
+      <div class="l"><img src="img/logo.png"><span class="bn">BODYGO 3.0</span></div>
+      <div class="r">System Interface · Workflow</div>
+    </div>
+
+    <div class="kick">SYSTEM INTERFACE</div>
+    <h2>軟體系統介面<span class="en">REAL SCREENSHOTS</span></h2>
+    <p class="lead">以下皆為系統實際畫面。霓虹視覺搭配大圖示、大字體與語音引導，受測者與操作人員都能直覺上手；從個人資料建立、評估模式選擇到單項檢測，動線一致、步驟明確。</p>
+
+    <div class="ui-strip" style="margin-top:auto;">
+      <div class="uic"><div class="fr"><img src="img/ui-index.jpg" alt="系統首頁"></div><div class="cap"><div class="zh">系統首頁</div><div class="en">HOME</div></div></div>
+      <div class="uic"><div class="fr"><img src="img/ui-profile.jpg" alt="個人資料"></div><div class="cap"><div class="zh">個人資料</div><div class="en">PROFILE</div></div></div>
+      <div class="uic"><div class="fr"><img src="img/ui-assess.jpg" alt="評估模式"></div><div class="cap"><div class="zh">評估模式</div><div class="en">ASSESSMENT</div></div></div>
+      <div class="uic"><div class="fr"><img src="img/ui-sppb.jpg" alt="SPPB 評估"></div><div class="cap"><div class="zh">SPPB 評估</div><div class="en">SPPB</div></div></div>
+      <div class="uic"><div class="fr"><img src="img/ui-fall.jpg" alt="跌倒風險"></div><div class="cap"><div class="zh">跌倒風險</div><div class="en">FALL RISK</div></div></div>
+      <div class="uic"><div class="fr"><img src="img/ui-elder.jpg" alt="銀髮體適能"></div><div class="cap"><div class="zh">銀髮體適能</div><div class="en">SENIOR</div></div></div>
+      <div class="uic"><div class="fr"><img src="img/ui-adult.jpg" alt="成人體適能"></div><div class="cap"><div class="zh">成人體適能</div><div class="en">ADULT</div></div></div>
+    </div>
+
+    <div class="hilite" style="margin-top:auto;">
+      <div class="t">QR PRE-REGISTRATION</div>
+      <p><b>多人排隊等候時，可用手機掃碼「預先登錄」個人資料</b>，輪到受測時於機台一鍵快速導入，現場動線不塞車 —— 團體健檢、社區活動大量受測時特別有感。</p>
+    </div>
+
+    <div class="tri" style="margin-top:auto;">
+      <div class="card">
+        <div class="ic">◉</div>
+        <h4>大圖示 · 大字體 · 高對比</h4><div class="en">SENIOR-FRIENDLY UI</div>
+        <p>介面以霓虹高對比配色與特大圖示按鈕設計，長者不需老花眼鏡也能自行點選，減少施測人員代操作的負擔。</p>
+      </div>
+      <div class="card">
+        <div class="ic">♪</div>
+        <h4>全程語音引導</h4><div class="en">VOICE GUIDANCE</div>
+        <p>每項檢測皆由系統語音播報動作口令與倒數，受測者依指示完成，施測者不必反覆解說即可維持一致的施測品質。</p>
+      </div>
+      <div class="card">
+        <div class="ic">⇪</div>
+        <h4>資料上傳與保存</h4><div class="en">DATA UPLOAD</div>
+        <p>檢測成績自動入檔並可上傳保存，個案歷次紀錄一併調閱，供長期追蹤與成效比較。</p>
+      </div>
+    </div>
+
+    <div class="kick" style="margin-top:auto;">WORKFLOW</div>
+    <h2>評估流程<span class="en">4 STEPS</span></h2>
+
+    <div class="flow" style="margin-top:5.5mm;">
+      <div class="fl"><div class="n">1</div><h4>建立個案</h4><div class="en">PROFILE</div><p>現場輸入或手機掃碼預登錄，多人等候也不塞車，受測者資料快速導入。</p></div>
+      <div class="fl"><div class="n">2</div><h4>選擇評估</h4><div class="en">SELECT</div><p>依對象選擇 SPPB／跌倒風險／銀髮／成人四種評估模式。</p></div>
+      <div class="fl"><div class="n">3</div><h4>AI 檢測</h4><div class="en">ASSESS</div><p>語音引導動作，AI 自動計次計時，BLE 週邊成績即時回傳。</p></div>
+      <div class="fl"><div class="n">4</div><h4>產出報告</h4><div class="en">REPORT</div><p>一鍵產出常模 PR 報告，現場列印或雲端保存長期追蹤。</p></div>
+    </div>
+  </div>
+  <div class="pfoot"><span>BODYGO 3.0 · AI FITNESS ASSESSMENT SYSTEM</span><span><b>05</b> / 08</span></div>
+</section>
+
+<!-- ═══════════ PAGE 6 · REPORT ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div><div class="layer vign"></div>
+  <div class="glow g-mg" style="width:120mm;height:120mm;left:-30mm;top:60mm;"></div>
+  <div class="pad">
+    <div class="phead">
+      <div class="l"><img src="img/logo.png"><span class="bn">BODYGO 3.0</span></div>
+      <div class="r">Assessment Report</div>
+    </div>
+
+    <div class="kick">ASSESSMENT REPORT</div>
+    <h2>檢測完成即產出評估報告<span class="en">AUTO-GENERATED · BILINGUAL A4</span></h2>
+    <p class="lead">中英雙語 A4 雙頁版面（實際版面如下），現場列印帶走或 PDF 存檔，成績自動入庫可長期追蹤變化。</p>
+
+    <div class="rep" style="margin-top:5.5mm;">
+      <div><div class="rp"><img src="img/report-1.jpg" alt="評估報告第 1 頁"></div><div class="rp-cap">PAGE 1 · OVERVIEW</div></div>
+      <div><div class="rp"><img src="img/report-2.jpg" alt="評估報告第 2 頁"></div><div class="rp-cap">PAGE 2 · DETAILS</div></div>
+    </div>
+
+    <div style="margin-top:6mm;">
+      <div style="font-size:8pt;font-weight:700;color:var(--tx);letter-spacing:.04em;">常模五級燈號 · NORM-REFERENCED GRADING</div>
+      <div class="lights">
+        <div class="lt" style="background:#ff5c8a">不足</div>
+        <div class="lt" style="background:#ff9a5c">稍弱</div>
+        <div class="lt" style="background:#ffc24d">普通</div>
+        <div class="lt" style="background:#37f0b4">尚好</div>
+        <div class="lt" style="background:#52f0ff">很好</div>
+      </div>
+    </div>
+
+    <div class="rf-grid" style="margin-top:auto;padding-top:6mm;">
+      <div class="rf"><div class="ic">🏅</div><div><h4>綜合等級徽章<span class="en">OVERALL GRADE</span></h4><p>整體表現以等級徽章呈現於報告右上角，受測者一眼掌握自身水準。</p></div></div>
+      <div class="rf"><div class="ic">📡</div><div><h4>多向度雷達圖<span class="en">RADAR CHART</span></h4><p>全部檢測項目 PR 值繪成雷達圖，肌力、平衡、柔軟度、心肺強弱項一目瞭然。</p></div></div>
+      <div class="rf"><div class="ic">📊</div><div><h4>常模大數據 PR 百分位<span class="en">NORM BIG DATA</span></h4><p>導入國健署體適能常模，依年齡、性別以回歸演算法推算 PR 值並以五級燈號標示。</p></div></div>
+      <div class="rf"><div class="ic">🔁</div><div><h4>多次試作紀錄<span class="en">TRIALS</span></h4><p>每項目保留各次試作成績並自動標記最佳值（★），附上同齡正常範圍供對照。</p></div></div>
+      <div class="rf"><div class="ic">🚶</div><div><h4>動作分段圖解<span class="en">PHASE BREAKDOWN</span></h4><p>折返走等動態測驗拆分「坐→站、行走、轉身、站→坐」各分段耗時，指出弱點環節。</p></div></div>
+      <div class="rf"><div class="ic">📈</div><div><h4>歷史成績回顧<span class="en">HISTORY REVIEW</span></h4><p>成績自動存檔，可調閱歷次紀錄繪成趨勢圖，訓練前後差異與長期介入成效一目瞭然。</p></div></div>
+      <div class="rf" style="grid-column:1/-1;"><div class="ic">🖨️</div><div><h4>雙語 A4 即印<span class="en">BILINGUAL PDF</span></h4><p>中英雙語版面、A4 兩頁排版，檢測結束當場列印帶走，亦可 PDF 存檔與雲端上傳，供院所、據點與家屬留存。</p></div></div>
+    </div>
+  </div>
+  <div class="pfoot"><span>BODYGO 3.0 · AI FITNESS ASSESSMENT SYSTEM</span><span><b>06</b> / 08</span></div>
+</section>
+
+<!-- ═══════════ PAGE 7 · CLINICAL BASIS ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div><div class="layer vign"></div>
+  <div class="glow g-gn" style="width:120mm;height:120mm;right:-35mm;top:80mm;"></div>
+  <div class="pad">
+    <div class="phead">
+      <div class="l"><img src="img/logo.png"><span class="bn">BODYGO 3.0</span></div>
+      <div class="r">Clinical Basis</div>
+    </div>
+
+    <div class="kick">CLINICAL BASIS</div>
+    <h2>檢測術語與臨床依據<span class="en">EVIDENCE-BASED PROTOCOLS</span></h2>
+    <p class="lead">全部檢測項目均採用國際通行的標準化量表與切點，結果可與臨床及研究文獻直接對照。</p>
+
+    <div class="terms" style="margin-top:5.5mm;">
+      <div class="tm"><h4>SPPB 簡式肢體功能量表<small>SHORT PHYSICAL PERFORMANCE BATTERY</small></h4>
+        <p>由平衡（併足／半併足／前後站）、4 公尺步行速度、5 次坐站三項組成，總分 <b>0–12 分</b>，是國際最廣泛使用的下肢功能與衰弱評估工具；低分與失能、住院及死亡風險相關。</p></div>
+      <div class="tm"><h4>TUG 計時起走測試<small>TIMED UP &amp; GO（3 公尺折返走）</small></h4>
+        <p>從椅子起身、行走 3 公尺、轉身返回坐下的總時間，評估行動能力與動態平衡；耗時偏長（常用參考值 <b>≥12–13.5 秒</b>）提示跌倒風險增加。</p></div>
+      <div class="tm"><h4>2.44 公尺折返走<small>8-FOOT UP-AND-GO（SFT）</small></h4>
+        <p>Senior Fitness Test 中的敏捷／動態平衡項目：起身繞行 8 英呎（2.44 公尺）標誌後返回坐下計時，對應日常起身接電話、如廁等動作能力。</p></div>
+      <div class="tm"><h4>五次坐站<small>FIVE TIMES SIT-TO-STAND（FTSTS）</small></h4>
+        <p>連續 5 次起立坐下的總耗時，反映下肢肌力與跌倒風險；依 AWGS 2019，<b>≥12 秒</b>即屬身體功能表現低下。</p></div>
+      <div class="tm"><h4>握力與小腿圍<small>AWGS 2019 肌少症篩檢切點</small></h4>
+        <p>亞洲肌少症工作小組（AWGS 2019）切點：握力 <b>男 &lt;28 kg／女 &lt;18 kg</b> 為低肌力；小腿圍 <b>男 &lt;34 cm／女 &lt;33 cm</b> 建議進一步評估。</p></div>
+      <div class="tm"><h4>功能性前伸<small>FUNCTIONAL REACH TEST</small></h4>
+        <p>站立時手臂前平舉、身體盡量前傾的最大前伸距離，量化重心控制極限；前伸幅度過小（常用參考值 <b>&lt;25 cm</b>）與跌倒風險上升相關。</p></div>
+      <div class="tm"><h4>30 秒坐站／手臂彎舉<small>30-S CHAIR STAND · ARM CURL（SFT）</small></h4>
+        <p>SFT 肌耐力項目：30 秒內完成的坐站或彎舉次數，分別評估下肢與上肢肌耐力；AI 以關節角度變化自動計次，杜絕漏數。</p></div>
+      <div class="tm"><h4>2 分鐘原地踏步<small>2-MINUTE STEP TEST（SFT）</small></h4>
+        <p>2 分鐘內膝蓋抬至規定高度的踏步次數，為場地受限時的有氧耐力替代測驗；AI 偵測抬膝高度達標才計次，搭配心率臂帶記錄運動心率。</p></div>
+    </div>
+
+    <div class="actrow" style="margin-top:auto;margin-bottom:6mm;">
+      <div class="act"><div class="im"><img src="img/act-tug.jpg" alt="3 公尺折返走"></div><div class="t">3 公尺折返走 TUG</div></div>
+      <div class="act"><div class="im"><img src="img/act-arm.jpg" alt="30 秒手臂彎舉"></div><div class="t">30 秒手臂彎舉</div></div>
+      <div class="act"><div class="im"><img src="img/act-step.jpg" alt="2 分鐘原地踏步"></div><div class="t">2 分鐘原地踏步</div></div>
+      <div class="act"><div class="im"><img src="img/act-sitreach.jpg" alt="椅子坐姿體前彎"></div><div class="t">椅子坐姿體前彎</div></div>
+    </div>
+
+    <div class="src">
+      主要文獻依據：Guralnik JM, et al. <i>J Gerontol</i> 1994（SPPB）· Podsiadlo D &amp; Richardson S. <i>J Am Geriatr Soc</i> 1991（TUG）· Rikli RE &amp; Jones CJ. <i>Senior Fitness Test Manual</i>（30 秒坐站、手臂彎舉、2 分鐘踏步、2.44 公尺折返走、抓背、椅子體前彎）· Duncan PW, et al. <i>J Gerontol</i> 1990（Functional Reach）· Chen LK, et al. <i>JAMDA</i> 2020, AWGS 2019 共識（握力、小腿圍、五次坐站切點）· 衛生福利部國民健康署體適能常模。
+    </div>
+  </div>
+  <div class="pfoot"><span>BODYGO 3.0 · AI FITNESS ASSESSMENT SYSTEM</span><span><b>07</b> / 08</span></div>
+</section>
+
+<!-- ═══════════ PAGE 8 · VENUES / FAQ / CONTACT ═══════════ -->
+<section class="page">
+  <div class="layer grid"></div><div class="layer vign"></div>
+  <div class="glow g-cy" style="width:140mm;height:140mm;left:35mm;bottom:-50mm;"></div>
+  <div class="pad">
+    <div class="phead">
+      <div class="l"><img src="img/logo.png"><span class="bn">BODYGO 3.0</span></div>
+      <div class="r">Applications · FAQ · Contact</div>
+    </div>
+
+    <div class="kick">APPLICATION</div>
+    <h2>適用場域<span class="en">WHERE IT WORKS</span></h2>
+    <div class="venues" style="margin-top:5mm;">
+      <div class="vn"><div class="ic">🏋️</div><div class="t">健身房</div><div class="s">GYM</div></div>
+      <div class="vn"><div class="ic">🏘️</div><div class="t">社區據點</div><div class="s">COMMUNITY</div></div>
+      <div class="vn"><div class="ic">🏥</div><div class="t">診所醫院</div><div class="s">CLINIC</div></div>
+      <div class="vn"><div class="ic">🧓</div><div class="t">長照機構</div><div class="s">LONG-TERM CARE</div></div>
+      <div class="vn"><div class="ic">🎓</div><div class="t">學校單位</div><div class="s">SCHOOL</div></div>
+      <div class="vn"><div class="ic">🚩</div><div class="t">活動快閃</div><div class="s">POP-UP EVENT</div></div>
+    </div>
+
+    <div class="kick" style="margin-top:8mm;">FAQ</div>
+    <h2>常見問題<span class="en">FREQUENTLY ASKED</span></h2>
+    <div class="faq" style="margin-top:5mm;">
+      <div class="fq"><div class="q">什麼是科技體適能？BodyGo 如何進行檢測？</div>
+        <div class="a">以 AI 機器視覺、3D 深度感測與 BLE 無線量測設備輔助的體適能檢測方式。系統追蹤 17 個骨架關鍵點自動判定動作起訖、計次與計時，週邊自動回傳成績，免碼錶、免手抄，檢測完成即產出常模 PR 報告。</div></div>
+      <div class="fq"><div class="q">SPPB 分數如何判讀？</div>
+        <div class="a">SPPB 由平衡測試、4 公尺步行速度與 5 次坐站三項組成，總分 0–12 分，是國際最廣泛使用的下肢功能與衰弱評估工具；BodyGo 3.0 以 AI 自動計時計次並即時計算總分與分級。</div></div>
+      <div class="fq"><div class="q">銀髮體適能與成人體適能有何不同？</div>
+        <div class="a">銀髮採用 Senior Fitness Test 項目（30 秒坐站、手臂彎舉、2 分鐘踏步、椅子體前彎、抓背、2.44 公尺折返走、握力），強調日常生活功能；成人則含 3 分鐘登階、仰臥起坐、坐姿體前彎、閉眼單腳平衡、反應力與握力。</div></div>
+      <div class="fq"><div class="q">可以佈署在哪些場域？結果能長期追蹤嗎？</div>
+        <div class="a">主機附輪好移動、螢幕尺寸可依場域選配，健身房、社區據點、診所、長照機構與活動快閃皆可機動佈署。成績自動存檔，可調閱歷史紀錄繪成趨勢圖，追蹤訓練前後差異與長期介入成效。</div></div>
+    </div>
+
+    <div class="kick" style="margin-top:8mm;">RELATED PRODUCTS</div>
+    <h2>相關產品<span class="en">MORE FROM HEQING</span></h2>
+    <div class="rel" style="margin-top:5mm;">
+      <div class="rl"><div class="k">HR TRAINING APP</div><h4>禾青心訓 · 銀髮自適應心肺訓練</h4>
+        <p>依 Karvonen 公式自適應計算訓練區間，醫師教練後台設計運動處方，App 即時監控訓練心率。</p></div>
+      <div class="rl"><div class="k">WHO ICOPE</div><h4>iCope · 長者整合式照護評估</h4>
+        <p>認知、行動、營養、視力、聽力、憂鬱六大領域，語音＋動作辨識快速完成 WHO ICOPE 評估。</p></div>
+      <div class="rl"><div class="k">HEQING MEDICAL</div><h4>完整產品線</h4>
+        <p>BodyGo、禾青心訓、iCope、禾青睡眠帶、波動感、發燒跌倒偵測器。</p></div>
+    </div>
+
+    <div class="contact">
+      <div class="hudc tl"></div><div class="hudc br"></div>
+      <div>
+        <img src="img/logo.png" class="logo" alt="禾青醫電">
+        <div class="cn">禾青醫電 HEQING MEDICAL</div>
+        <div class="cs">AI FITNESS ASSESSMENT · SMART HEALTHCARE</div>
+        <div class="clines">
+          <div class="cl"><span class="k">MOBILE</span><span class="v">0911-102-789</span></div>
+          <div class="cl"><span class="k">E-MAIL</span><span class="v">aerosmith.icl@gmail.com</span></div>
+          <div class="cl"><span class="k">WEB</span><span class="v">https://heqinghealth.com</span></div>
+        </div>
+        <div class="cd">禾青醫電股份有限公司 · 統一編號 64990372 · 雲林縣古坑鄉朝陽村中正路8號<br>歡迎來電或來信洽詢展示與試用安排；規格與週邊組合可依場域客製配置。</div>
+      </div>
+      <div class="qr"><img src="img/qr-intro.png" alt="BodyGo 3.0 產品頁 QR"><div class="t"><b>PRODUCT PAGE</b>BodyGo 3.0 產品頁</div></div>
+      <div class="qr"><img src="img/qr-site.png" alt="禾青醫電官網 QR"><div class="t"><b>OFFICIAL SITE</b>禾青醫電官網</div></div>
+    </div>
+  </div>
+  <div class="pfoot"><span>© 2026 HEQING MEDICAL · BODYGO 3.0</span><span><b>08</b> / 08</span></div>
+</section>
+
+</body>
+</html>
