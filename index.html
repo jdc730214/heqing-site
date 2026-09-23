@@ -263,7 +263,7 @@
   --year-font-size: clamp(64px, 9vw, 120px);
   --card-bg: #fefefe;
   --accent-glow: none;
-  --qr-size: 110px;
+  --qr-size: 150px;
 
   /* === RWD helpers === */
   --nav-h: 72px;
@@ -606,7 +606,9 @@ nav > * { pointer-events: auto; }
 .qr-card img {
   width: var(--qr-size);
   height: var(--qr-size);
-  border: 1px solid var(--line);
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  flex: none;
 }
 .qr-info b {
   display: block;
@@ -731,7 +733,7 @@ footer a { color: var(--ink) !important; text-decoration: underline !important; 
   :root {
     --title-font-size: clamp(28px, 7.5vw, 44px);
     --year-font-size: clamp(56px, 14vw, 80px);
-    --qr-size: 92px;
+    --qr-size: 128px;
 
     --ascii-font-size: 8px;
     --hero-text-size: 160px;
@@ -1651,7 +1653,7 @@ html.fx .showcase-card.is-in:hover { transform: translate(-4px, -4px); }
           <div class="qr-sidebar">
             <div class="qr-card">
               <img
-                src="images/wechatQR.png"
+                src="images/paper/qr-wechat.png"
                 onerror="
                   this.src =
                     'https://api.qrserver.com/v1/create-qr-code/?size=150&data=Wechat'
@@ -1663,7 +1665,7 @@ html.fx .showcase-card.is-in:hover { transform: translate(-4px, -4px); }
             </div>
             <div class="qr-card">
               <img
-                src="images/LINEQR.png"
+                src="images/paper/qr-line.png"
                 onerror="
                   this.src =
                     'https://api.qrserver.com/v1/create-qr-code/?size=150&data=LINE'
@@ -1675,7 +1677,7 @@ html.fx .showcase-card.is-in:hover { transform: translate(-4px, -4px); }
             </div>
             <div class="qr-card">
               <img
-                src="images/TELQR.png"
+                src="images/paper/qr-line.png"
                 onerror="
                   this.src =
                     'https://api.qrserver.com/v1/create-qr-code/?size=150&data=tel'
