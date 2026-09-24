@@ -70,3 +70,8 @@ icope/
 - **iOS 截圖**：`<a download>` 無效，改用浮層顯示圖片讓使用者長按儲存
 - **評估次數**：`_recordUse()` 優先讀 `localStorage`，找不到時用 `sessionStorage['icope_session_code']` 備用
 - **聽力題兩輪**：619 失敗後自動進 257，重聽按鈕兩輪共用（`_hearConfig`）
+
+## 聯絡資訊 / contact (2026-09-10)
+
+- 授權閘門 `.lg-footer`（未授權者唯一看得到的畫面）與 `<body>` 頂端的 `.sr-only` SEO 段落，都放了公司電話 `0911-102-789` 與信箱 `aerosmith.icl@gmail.com`；JSON-LD 的 `publisher` Organization 也帶 `telephone`／`email`／`address`／`taxID`／`contactPoint`
+- 這組資料**全站四個頁面共用**，改的時候不能只改這裡 —— 完整清單見外層 `d:\heqinghealth2026_sync\CLAUDE.md` 的「公司聯絡資訊」section
