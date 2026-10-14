@@ -85,6 +85,9 @@
       "rewrite": "/azure-cost/index.html"
     }
   ],
+  "mimeTypes": {
+    ".mp4": "video/mp4"
+  },
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": [
