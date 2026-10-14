@@ -22,6 +22,13 @@ jobs:
         with:
           submodules: true
           lfs: false
+      # 只上傳 repo 追蹤的檔案：app_location 設 "." 時 checkout 的 .git（~120 MiB）會被算進
+      # 免費方案 250 MiB 上限（2026-10-14 加 /exercise/ 後因此部署失敗）
+      - name: Stage site content (tracked files only, no .git)
+        run: |
+          mkdir -p _site
+          git archive HEAD | tar -x -C _site
+          du -sh _site
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
       - name: Get Id Token
@@ -40,7 +47,7 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "." # App source code path
+          app_location: "_site" # 由上方 Stage 步驟匯出的網站內容（不含 .git）
           api_location: "" # Api source code path - optional
           output_location: "." # Built app content directory - optional
           skip_app_build: true # Pure static HTML, no build step needed
