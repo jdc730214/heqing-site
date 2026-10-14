@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>居家運動示範｜禾青醫電</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<!--
+  居家運動示範（2026-10-14）
+  網址參數：
+    ?ids=3570,1791,5062     指定動作（動作編號＝體態程式 exercise_rx.js 的 id），頁面自動分成 ① 放鬆 ② 伸展 ③ 啟動
+    ?m=upperTrap,pec        指定肌群（exercise_rx.js muscles 的 key），列出該肌群全部動作；可與 ids 併用
+    &title=王小明的居家運動   頁面標題（選填）
+    不帶 ids / m             → 動作選擇器：勾選動作、產生網址
+  密碼閘只是前端擋一下（PASSWORD 常數），素材檔案本身仍可直接以網址取得。
+  資料與素材由 bodygo3.0/bodygoPosture/python/build_exercise_site.py 產生，不要手改 data.js / media/。
+-->
+<style>
+:root{
+  --bg:#050b16; --bg2:#0a1526; --card:#0d1b30; --line:#1b3150; --ink:#e6f1ff; --mute:#8aa3c2;
+  --cyan:#5ee7ff; --release:#3fe0c5; --stretch:#7aa8ff; --activate:#ffb547; --danger:#ff6b6b;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.6;
+  background-image:radial-gradient(1200px 600px at 50% -200px,#0f2a4a 0,transparent 70%)}
+a{color:var(--cyan)}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.hidden{display:none!important}
+
+/* ── 密碼閘 ── */
+#gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;z-index:50;background:var(--bg)}
+.gbox{width:100%;max-width:360px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:32px 24px;text-align:center;
+  box-shadow:0 0 0 1px #5ee7ff14,0 20px 60px #0008}
+.gbox .brand{font-family:Rajdhani,sans-serif;letter-spacing:.2em;color:var(--cyan);font-size:13px}
+.gbox h1{font-size:22px;margin:6px 0 4px}
+.gbox p{color:var(--mute);font-size:14px;margin:0 0 20px}
+.gbox input{width:100%;text-align:center;font-size:24px;letter-spacing:.5em;padding:12px;border-radius:10px;border:1px solid var(--line);background:#06101f;outline:none}
+.gbox input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #5ee7ff33}
+.gbox .err{color:var(--danger);font-size:14px;min-height:22px;margin-top:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--cyan);background:transparent;color:var(--cyan);
+  border-radius:10px;padding:10px 18px;cursor:pointer;font-weight:500;box-shadow:0 0 12px #5ee7ff22 inset}
+.btn:hover{background:#5ee7ff14}
+.btn.solid{background:var(--cyan);color:#04121f}
+.btn.ghost{border-color:var(--line);color:var(--mute);box-shadow:none}
+.gbox .btn{width:100%;margin-top:4px;padding:12px}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.shake{animation:shake .35s}
+
+/* ── 頁首 ── */
+header{padding:28px 0 8px}
+.brand{font-family:Rajdhani,sans-serif;letter-spacing:.2em;color:var(--cyan);font-size:13px}
+header h1{font-size:clamp(24px,5vw,34px);margin:4px 0 6px;line-height:1.3}
+header .sub{color:var(--mute);margin:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;text-decoration:none;color:var(--ink);background:var(--bg2)}
+.chip b{font-family:Rajdhani,sans-serif;font-size:16px}
+.chip.release{border-color:#3fe0c566}.chip.release b{color:var(--release)}
+.chip.stretch{border-color:#7aa8ff66}.chip.stretch b{color:var(--stretch)}
+.chip.activate{border-color:#ffb54766}.chip.activate b{color:var(--activate)}
+.arrow{color:var(--mute);align-self:center}
+
+/* ── 段落 ── */
+section.step{padding:26px 0 8px;scroll-margin-top:12px}
+.sh{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px}
+.sh h2{margin:0;font-size:24px;display:flex;align-items:center;gap:10px}
+.sh h2 .no{font-family:Rajdhani,sans-serif;font-size:15px;border:1px solid currentColor;border-radius:6px;padding:0 8px;line-height:24px}
+.sh .why{color:var(--mute);font-size:14px;margin:2px 0 0}
+.dose{font-size:14px;border-radius:8px;padding:6px 12px;background:var(--bg2);border:1px solid var(--line)}
+.step.release h2{color:var(--release)} .step.stretch h2{color:var(--stretch)} .step.activate h2{color:var(--activate)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.media{position:relative;aspect-ratio:1/1;background:#050b16;cursor:pointer}
+.media img,.media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.media .num{position:absolute;left:10px;top:10px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:15px;border-radius:6px;padding:0 8px;background:#050b16cc;border:1px solid currentColor}
+.media .paused{position:absolute;right:10px;bottom:10px;font-size:12px;color:var(--mute);background:#050b16cc;border-radius:6px;padding:2px 8px}
+.card.release .num{color:var(--release)} .card.stretch .num{color:var(--stretch)} .card.activate .num{color:var(--activate)}
+.body{padding:14px 16px 16px}
+.body h3{margin:0 0 6px;font-size:19px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.tag{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:1px 8px;color:var(--mute)}
+.for{font-size:14px;color:var(--mute);margin:0 0 6px}
+.for span{color:var(--ink)}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--cyan);font-size:14px}
+ol{margin:8px 0 0;padding-left:22px}
+ol li{margin:3px 0}
+
+.note{color:var(--mute);font-size:14px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:20px 0}
+.warn{border-color:#ff6b6b55;color:#ffb3b3}
+footer{color:var(--mute);font-size:13px;padding:30px 0 40px;border-top:1px solid var(--line);margin-top:30px}
+
+/* ── 選擇器 ── */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{background:transparent;border:0;padding:8px 14px;cursor:pointer;color:var(--mute)}
+.seg button.on{background:#5ee7ff1f;color:var(--cyan)}
+select{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;max-width:100%}
+.pick .grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.pick .card{cursor:pointer;position:relative;transition:border-color .15s}
+.pick .card.sel{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan),0 0 18px #5ee7ff33}
+.pick .body{padding:10px 12px 12px}
+.pick .body h3{font-size:15px;line-height:1.35}
+.pick .for{font-size:12px;margin:0}
+.badge{position:absolute;right:8px;top:8px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:Rajdhani,sans-serif;font-weight:700;border:2px solid var(--line);background:#050b16cc;color:transparent;z-index:2}
+.sel .badge{background:var(--cyan);border-color:var(--cyan);color:#04121f}
+.cat{font-size:11px;border-radius:4px;padding:0 6px;border:1px solid currentColor;margin-right:4px}
+.cat.release{color:var(--release)}.cat.stretch{color:var(--stretch)}.cat.activate{color:var(--activate)}
+.bar{position:sticky;bottom:0;z-index:20;background:#07111fee;backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:12px 0 calc(12px + env(safe-area-inset-bottom))}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar .cnt{font-weight:700;min-width:84px}
+.bar input[type=text]{flex:1 1 200px;min-width:0;background:#06101f;border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.bar .url{flex-basis:100%;font-size:13px;color:var(--mute);word-break:break-all}
+.bar .url.ok{color:var(--cyan)}
+@media (max-width:520px){
+  .grid{grid-template-columns:1fr}
+  .pick .grid{grid-template-columns:repeat(2,1fr)}
+  .sh h2{font-size:21px}
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <form class="gbox" id="gform" autocomplete="off">
+    <div class="brand">HEQING MEDICAL</div>
+    <h1>居家運動示範</h1>
+    <p>請輸入密碼觀看示範影片</p>
+    <input id="pw" type="password" inputmode="numeric" maxlength="12" aria-label="密碼" autofocus>
+    <div class="err" id="perr"></div>
+    <button class="btn solid" type="submit">進入</button>
+  </form>
+</div>
+
+<main id="app" class="hidden"></main>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  "use strict";
+  var PASSWORD = "1234";
+  var OK_KEY = "rx_site_ok";
+  var D = window.RX_SITE;
+  var STEPS = [
+    { k: "release",  no: "①", name: "放鬆", why: "用滾筒或按摩球放鬆緊繃的肌肉" },
+    { k: "stretch",  no: "②", name: "伸展", why: "把緊繃的肌肉拉長，恢復關節活動度" },
+    { k: "activate", no: "③", name: "啟動", why: "喚醒無力的肌肉，建立正確的發力" }
+  ];
+  var STEP = {}; STEPS.forEach(function (s) { STEP[s.k] = s; });
+  var POSE = { standing: "站姿", seated: "坐姿", lying: "躺姿", kneeling: "跪姿" };
+  var EQUIP = { "body weight": "徒手", "roller": "滾筒／按摩球", "band": "彈力帶", "resistance band": "彈力帶", "stability ball": "抗力球" };
+  var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function store(get, v) {
+    try { if (get) return sessionStorage.getItem(OK_KEY); sessionStorage.setItem(OK_KEY, v); } catch (e) { }
+    return null;
+  }
+  function muscleNames(ex) { return ex.muscles.map(function (m) { return D.muscles[m] || m; }).join("、"); }
+
+  // ── 密碼閘 ──
+  function unlock() { $("#gate").classList.add("hidden"); $("#app").classList.remove("hidden"); start(); }
+  if (store(true) === "1") unlock();
+  $("#gform").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var pw = $("#pw");
+    if (pw.value === PASSWORD) { store(false, "1"); unlock(); return; }
+    $("#perr").textContent = "密碼錯誤，請再試一次";
+    var box = $(".gbox"); box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake");
+    pw.value = ""; pw.focus();
+  });
+
+  // ── 網址參數 ──
+  function params() {
+    var q = new URLSearchParams(location.search);
+    var list = function (k) { return (q.get(k) || "").split(/[,\s]+/).filter(Boolean); };
+    return { ids: list("ids"), m: list("m"), title: (q.get("title") || "").trim() };
+  }
+
+  function start() {
+    var p = params();
+    if (p.ids.length || p.m.length) viewer(p); else picker();
+  }
+
+  // ── 影片：進入畫面才載入並播放，離開就暫停 ──
+  function media(id, num) {
+    return '<div class="media" data-id="' + id + '">' +
+      '<img src="media/still/' + id + '.webp" alt="" loading="lazy">' +
+      (num ? '<span class="num">' + num + "</span>" : "") + "</div>";
+  }
+  function attachVideo(box) {
+    if (box.querySelector("video")) return box.querySelector("video");
+    var id = box.getAttribute("data-id");
+    var v = document.createElement("video");
+    v.muted = true; v.loop = true; v.playsInline = true; v.setAttribute("playsinline", ""); v.setAttribute("muted", "");
+    v.preload = "auto"; v.poster = "media/still/" + id + ".webp";
+    v.src = "media/clip/" + id + ".mp4";
+    box.insertBefore(v, box.firstChild);
+    var img = box.querySelector("img"); if (img) img.remove();
+    return v;
+  }
+  function setPausedTag(box, on) {
+    var t = box.querySelector(".paused");
+    if (on && !t) { t = document.createElement("span"); t.className = "paused"; t.textContent = "點一下播放"; box.appendChild(t); }
+    if (!on && t) t.remove();
+  }
+  function play(box) { var v = attachVideo(box); var pr = v.play(); if (pr && pr.catch) pr.catch(function () { setPausedTag(box, true); }); setPausedTag(box, false); }
+  function pause(box) { var v = box.querySelector("video"); if (v) v.pause(); }
+  function wireVideos(root, auto) {
+    var boxes = $$(".media", root);
+    boxes.forEach(function (b) {
+      if (!auto) setPausedTag(b, true);
+      b.addEventListener("click", function (e) {
+        if (b.closest(".pick")) return;           // 選擇器裡點卡片＝勾選
+        var v = b.querySelector("video");
+        if (v && !v.paused) { v.pause(); b.dataset.user = "off"; setPausedTag(b, true); }
+        else { b.dataset.user = "on"; play(b); }
+        e.stopPropagation();
+      });
+    });
+    if (!auto || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        var b = en.target;
+        if (en.isIntersecting) { if (b.dataset.user !== "off") play(b); } else pause(b);
+      });
+    }, { threshold: 0.45 });
+    boxes.forEach(function (b) { io.observe(b); });
+  }
+
+  // ── 示範頁 ──
+  function viewer(p) {
+    var ids = [], seen = {}, bad = [];
+    function add(id) { if (seen[id]) return; seen[id] = 1; if (D.exercises[id]) ids.push(id); else bad.push(id); }
+    p.ids.forEach(function (id) { add(/^\d+$/.test(id) && id.length < 4 ? ("000" + id).slice(-4) : id); });
+    var badM = [];
+    p.m.forEach(function (mk) {
+      if (!D.muscles[mk]) { badM.push(mk); return; }
+      D.order.forEach(function (id) { if (D.exercises[id].muscles.indexOf(mk) >= 0) add(id); });
+    });
+
+    var title = p.title || "居家運動示範";
+    document.title = title + "｜禾青醫電";
+    var groups = STEPS.map(function (s) { return { s: s, ids: ids.filter(function (id) { return D.exercises[id].cat === s.k; }) }; })
+      .filter(function (g) { return g.ids.length; });
+
+    var h = '<div class="wrap"><header><div class="brand">HEQING MEDICAL · HOME EXERCISE</div>' +
+      "<h1>" + esc(title) + "</h1>" +
+      '<p class="sub">共 ' + ids.length + " 個動作，請依 ① 放鬆 → ② 伸展 → ③ 啟動 的順序進行。</p>";
+    if (groups.length) {
+      h += '<nav class="flow">';
+      groups.forEach(function (g, i) {
+        if (i) h += '<span class="arrow">→</span>';
+        h += '<a class="chip ' + g.s.k + '" href="#' + g.s.k + '"><b>' + g.s.no + "</b>" + g.s.name + " " + g.ids.length + "</a>";
+      });
+      h += "</nav>";
+    }
+    h += "</header>";
+    if (bad.length || badM.length)
+      h += '<div class="note warn">網址中有找不到的項目：' + esc(bad.concat(badM).join("、")) + "</div>";
+    if (!groups.length) h += '<div class="note">這個網址沒有可顯示的動作。</div>';
+
+    var n = 0;
+    groups.forEach(function (g) {
+      h += '<section class="step ' + g.s.k + '" id="' + g.s.k + '"><div class="sh"><div>' +
+        '<h2><span class="no">' + g.s.no + "</span>" + g.s.name + "</h2>" +
+        '<p class="why">' + g.s.why + "</p></div>" +
+        '<div class="dose">建議：' + esc(D.dose[g.s.k] || "") + "</div></div><div class=\"grid\">";
+      g.ids.forEach(function (id) {
+        var ex = D.exercises[id]; n++;
+        var tags = [POSE[ex.pose], EQUIP[ex.equip]].filter(Boolean);
+        h += '<article class="card ' + g.s.k + '">' + media(id, String(n).padStart(2, "0")) +
+          '<div class="body"><h3>' + esc(ex.zh) + "</h3>" +
+          '<div class="tags">' + tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</div>" +
+          '<p class="for">針對：<span>' + esc(muscleNames(ex)) + "</span></p>" +
+          (ex.steps.length ? "<details open><summary>動作步驟</summary><ol>" +
+            ex.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol></details>" : "") +
+          "</div></article>";
+      });
+      h += "</div></section>";
+    });
+    h += footer() + "</div>";
+    $("#app").innerHTML = h;
+    wireVideos($("#app"), !reduceMotion);
+  }
+
+  function footer() {
+    return '<footer>本頁為一般性居家運動建議，非醫療處方。動作過程中如感到疼痛、頭暈或不適，請立即停止並諮詢專業人員。' +
+      '<br>禾青醫電股份有限公司 HEQING MEDICAL · <a href="tel:+886911102789">0911-102-789</a></footer>';
+  }
+
+  // ── 動作選擇器（不帶參數時）──
+  function picker() {
+    var sel = [], fCat = "all", fMus = "all";
+    var mOpts = Object.keys(D.muscles).map(function (k) { return '<option value="' + k + '">' + esc(D.muscles[k]) + "</option>"; }).join("");
+    $("#app").innerHTML =
+      '<div class="pick"><div class="wrap"><header><div class="brand">HEQING MEDICAL · EXERCISE PICKER</div>' +
+      "<h1>動作選擇器</h1><p class=\"sub\">點選要給受測者的動作（依點選順序編號），下方產生專屬網址。頁面會自動分成 ① 放鬆 ② 伸展 ③ 啟動。</p></header>" +
+      '<div class="tools"><div class="seg" id="segCat">' +
+      '<button data-k="all" class="on">全部 ' + D.order.length + "</button>" +
+      STEPS.map(function (s) { return '<button data-k="' + s.k + '">' + s.name + " " + D.order.filter(function (id) { return D.exercises[id].cat === s.k; }).length + "</button>"; }).join("") +
+      '</div><select id="selMus" aria-label="肌群"><option value="all">全部肌群</option>' + mOpts + "</select>" +
+      '<button class="btn ghost hidden" id="allMus" type="button">選取此肌群全部</button></div>' +
+      '<div class="grid" id="pgrid"></div>' + footer() + "</div>" +
+      '<div class="bar"><div class="wrap"><span class="cnt" id="cnt">已選 0 個</span>' +
+      '<input type="text" id="ttl" placeholder="頁面標題（選填，例如：王小明的居家運動）" maxlength="40">' +
+      '<button class="btn ghost" id="clr" type="button">清除</button>' +
+      '<button class="btn" id="copy" type="button">複製網址</button>' +
+      '<button class="btn solid" id="open" type="button">開啟預覽</button>' +
+      '<div class="url" id="url">尚未選擇動作</div></div></div></div>';
+
+    function url() {
+      if (!sel.length) return "";
+      var t = $("#ttl").value.trim();
+      return location.origin + location.pathname + "?ids=" + sel.join(",") + (t ? "&title=" + encodeURIComponent(t) : "");
+    }
+    function sync() {
+      $$(".card", $("#pgrid")).forEach(function (c) {
+        var i = sel.indexOf(c.dataset.id);
+        c.classList.toggle("sel", i >= 0);
+        c.querySelector(".badge").textContent = i >= 0 ? i + 1 : "";
+      });
+      $("#cnt").textContent = "已選 " + sel.length + " 個";
+      var u = url(), el = $("#url");
+      el.textContent = u || "尚未選擇動作"; el.classList.remove("ok");
+    }
+    function draw() {
+      var ids = D.order.filter(function (id) {
+        var ex = D.exercises[id];
+        return (fCat === "all" || ex.cat === fCat) && (fMus === "all" || ex.muscles.indexOf(fMus) >= 0);
+      });
+      $("#pgrid").innerHTML = ids.map(function (id) {
+        var ex = D.exercises[id];
+        return '<article class="card ' + ex.cat + '" data-id="' + id + '"><span class="badge"></span>' + media(id) +
+          '<div class="body"><h3>' + esc(ex.zh) + "</h3>" +
+          '<p class="for"><span class="cat ' + ex.cat + '">' + STEP[ex.cat].name + "</span>" + esc(muscleNames(ex)) + " · #" + id + "</p></div></article>";
+      }).join("") || '<div class="note">沒有符合的動作</div>';
+      $$(".card", $("#pgrid")).forEach(function (c) {
+        var box = c.querySelector(".media");
+        box.addEventListener("mouseenter", function () { play(box); });
+        box.addEventListener("mouseleave", function () { pause(box); });
+        c.addEventListener("click", function () {
+          var i = sel.indexOf(c.dataset.id);
+          if (i >= 0) sel.splice(i, 1); else sel.push(c.dataset.id);
+          sync();
+        });
+      });
+      $("#allMus").classList.toggle("hidden", fMus === "all");
+      sync();
+    }
+    $$("#segCat button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        fCat = b.dataset.k;
+        $$("#segCat button").forEach(function (x) { x.classList.toggle("on", x === b); });
+        draw();
+      });
+    });
+    $("#selMus").addEventListener("change", function () { fMus = this.value; draw(); });
+    $("#allMus").addEventListener("click", function () {
+      $$(".card", $("#pgrid")).forEach(function (c) { if (sel.indexOf(c.dataset.id) < 0) sel.push(c.dataset.id); });
+      sync();
+    });
+    $("#ttl").addEventListener("input", sync);
+    $("#clr").addEventListener("click", function () { sel = []; sync(); });
+    $("#open").addEventListener("click", function () { var u = url(); if (u) window.open(u, "_blank"); });
+    $("#copy").addEventListener("click", function () {
+      var u = url(), el = $("#url");
+      if (!u) return;
+      function done() { el.textContent = "已複製：" + u; el.classList.add("ok"); }
+      try { navigator.clipboard.writeText(u).then(done, fallback); } catch (e) { fallback(); }
+      function fallback() {
+        var ta = document.createElement("textarea"); ta.value = u; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); done(); } catch (e2) { el.textContent = u; }
+        ta.remove();
+      }
+    });
+    draw();
+  }
+})();
+</script>
+</body>
+</html>

@@ -6,6 +6,7 @@ Allow: /
 # Block admin panel from indexing (internal staff use only)
 Disallow: /admin/
 Disallow: /admin-login.html
+Disallow: /exercise/
 
 # Sitemap
 Sitemap: https://heqinghealth.com/sitemap.xml
