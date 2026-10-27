@@ -1112,9 +1112,9 @@ ${a}`);return}throw Qr(e.error,e.error_description,e.suberror)?new Re(e.error,e.
       ${tm(o)}
     </section>
 
-    <!-- ─── 醫師評語 ─── -->
+    <!-- ─── 管理者評語 ─── -->
     <section class="rpt-page">
-      <h2 class="rpt-section-title"><span class="rpt-num">${A()}</span>醫師評語區 / Physician's Notes</h2>
+      <h2 class="rpt-section-title"><span class="rpt-num">${A()}</span>管理者評語區 / Administrator's Notes</h2>
       <p class="rpt-note-tip no-print">以下欄位可直接輸入，內容會包含在 PDF 中（不會儲存至資料庫）。Notes are embedded in PDF only — not saved to the server.</p>
 
       <div class="rpt-note-block">
@@ -1133,7 +1133,7 @@ ${a}`);return}throw Qr(e.error,e.error_description,e.suberror)?new Re(e.error,e.
       <div class="rpt-sign-row">
         <div>
           <div class="rpt-sign-line"></div>
-          <div class="rpt-sign-lbl">主治醫師簽章 / Physician Signature</div>
+          <div class="rpt-sign-lbl">管理者簽章 / Administrator Signature</div>
         </div>
         <div>
           <div class="rpt-sign-line"></div>
