@@ -7,6 +7,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /admin-login.html
 Disallow: /exercise/
+Disallow: /bgp/
 
 # Sitemap
 Sitemap: https://heqinghealth.com/sitemap.xml

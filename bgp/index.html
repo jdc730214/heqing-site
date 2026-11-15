@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#06121b">
+<title>BodyGo 3.0 受測者資料登錄｜禾青醫電</title>
+<!--
+  BodyGo 3.0 測試機「雲端個資轉送」手機填寫頁（2026-11-15）
+  測試機個資頁的 QR：https://heqinghealth.com/bgp/?m=<主機代號>&t=<通行碼>
+  送出 → 後台 bodygo/form/submit → 收件匣 → 測試機每 3 秒取件後刪除
+  與禾青心訓無關（後台資料表 bodygo_*，程式 BodyGoWeb.Backend/BodygoProfileRelay.cs）
+  欄位名稱與測試機 prelog 相同：id name birth gender height_cm weight_kg waist_cm hip_cm lawCheck
+-->
+<style>
+  :root{
+    --bg:#06121b; --panel:rgba(14,36,52,.78); --line:rgba(127,212,255,.22);
+    --cyan:#3fd0ff; --cyan2:#7fe3ff; --text:#e8f6ff; --sub:#8fb3c8; --warn:#ffb4a8; --ok:#5ff0b5;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ background:var(--bg); color:var(--text); }
+  body{
+    font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+    font-size:17px; line-height:1.6; min-height:100vh;
+    background:
+      radial-gradient(120% 60% at 50% -10%, rgba(63,208,255,.20), transparent 60%),
+      radial-gradient(80% 50% at 100% 100%, rgba(30,120,200,.18), transparent 60%),
+      var(--bg);
+    padding:max(18px, env(safe-area-inset-top)) 16px max(28px, env(safe-area-inset-bottom));
+  }
+  .wrap{ max-width:480px; margin:0 auto; }
+  .brand{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .brand b{ font-size:15px; letter-spacing:.08em; color:var(--cyan2); }
+  .brand span{ font-size:12px; color:var(--sub); letter-spacing:.12em; }
+
+  .machine{
+    border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:16px;
+    background:linear-gradient(135deg, rgba(63,208,255,.14), rgba(63,208,255,.03));
+  }
+  .machine small{ display:block; font-size:13px; color:var(--sub); }
+  .machine strong{ font-size:20px; letter-spacing:.03em; }
+  .machine em{ font-style:normal; font-size:14px; color:var(--sub); margin-left:6px; }
+
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 16px; backdrop-filter:blur(6px); }
+  h1{ font-size:22px; letter-spacing:.06em; margin-bottom:4px; }
+  .lead{ font-size:14px; color:var(--sub); margin-bottom:16px; }
+
+  .field{ margin-bottom:14px; }
+  .field > label{ display:block; font-size:15px; margin-bottom:6px; color:var(--cyan2); }
+  .field > label i{ font-style:normal; color:var(--warn); margin-left:4px; }
+  .field > label small{ color:var(--sub); font-size:12px; margin-left:4px; }
+  input[type=text], input[type=number], select{
+    width:100%; height:50px; border-radius:12px; border:1px solid var(--line);
+    background:rgba(4,16,26,.75); color:var(--text); font-size:18px; padding:0 14px; outline:none;
+    font-family:inherit; -webkit-appearance:none; appearance:none;
+  }
+  select{ background-image:linear-gradient(45deg,transparent 50%,var(--cyan2) 50%),linear-gradient(135deg,var(--cyan2) 50%,transparent 50%);
+    background-position:calc(100% - 20px) 22px, calc(100% - 14px) 22px; background-size:6px 6px; background-repeat:no-repeat; padding-right:30px; }
+  input:focus, select:focus{ border-color:var(--cyan); box-shadow:0 0 0 3px rgba(63,208,255,.18); }
+  .birth{ display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:8px; }
+  .seg{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .seg button{
+    height:50px; border-radius:12px; border:1px solid var(--line); background:rgba(4,16,26,.75);
+    color:var(--text); font-size:18px; font-family:inherit;
+  }
+  .seg button.on{ border-color:var(--cyan); background:rgba(63,208,255,.18); color:#fff; box-shadow:0 0 12px rgba(63,208,255,.25) inset; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .unit{ position:relative; }
+  .unit span{ position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--sub); font-size:14px; pointer-events:none; }
+  .unit input{ padding-right:44px; }
+  .opt-title{ font-size:13px; color:var(--sub); margin:6px 0 10px; display:flex; align-items:center; gap:8px; }
+  .opt-title::after{ content:""; flex:1; height:1px; background:var(--line); }
+  .missing input, .missing select, .missing .seg button{ border-color:var(--warn) !important; }
+
+  .btn{
+    display:block; width:100%; height:54px; border-radius:14px; border:0; font-size:19px; font-family:inherit;
+    letter-spacing:.1em; color:#032030; font-weight:700;
+    background:linear-gradient(90deg,var(--cyan),var(--cyan2)); box-shadow:0 6px 18px rgba(63,208,255,.25);
+  }
+  .btn:disabled{ opacity:.4; box-shadow:none; }
+  .btn.ghost{ background:transparent; color:var(--cyan2); border:1px solid var(--line); box-shadow:none; font-weight:500; }
+  .row2{ display:grid; grid-template-columns:1fr 1.6fr; gap:10px; margin-top:18px; }
+  .msg{ font-size:14px; color:var(--warn); min-height:20px; margin-top:10px; text-align:center; }
+
+  .notice{ font-size:14px; color:#cfe6f3; max-height:42vh; overflow:auto; padding:12px 14px;
+    border:1px solid var(--line); border-radius:12px; background:rgba(4,16,26,.6); }
+  .notice ol{ padding-left:20px; margin:8px 0; }
+  .notice li{ margin-bottom:6px; }
+  .notice .privacy{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); color:var(--cyan2); }
+  .agree{ display:flex; align-items:center; gap:10px; margin-top:14px; font-size:16px; }
+  .agree input{ width:24px; height:24px; accent-color:var(--cyan); }
+
+  .done{ text-align:center; padding:26px 6px 8px; }
+  .done .ring{ width:84px; height:84px; margin:0 auto 14px; border-radius:50%; border:2px solid var(--ok);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 0 22px rgba(95,240,181,.35); }
+  .done h1{ margin-bottom:8px; }
+  .done p{ color:var(--sub); font-size:15px; margin-bottom:6px; }
+  .done p b{ color:var(--text); }
+
+  .err{ text-align:center; padding:28px 8px; }
+  .err h1{ color:var(--warn); margin-bottom:10px; }
+  .err p{ color:var(--sub); }
+  .hidden{ display:none !important; }
+  footer{ text-align:center; font-size:12px; color:var(--sub); margin-top:18px; letter-spacing:.06em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><b>BodyGo 3.0</b><span>受測者資料登錄</span></div>
+
+  <div class="machine hidden" id="machineBox">
+    <small>您正要登錄到</small>
+    <strong id="machineName"></strong><em id="machineSite"></em>
+  </div>
+
+  <!-- 載入中 -->
+  <div class="card" id="pgLoading"><p class="lead" style="margin:0;text-align:center">讀取測試機資訊中…</p></div>
+
+  <!-- 錯誤 -->
+  <div class="card err hidden" id="pgError">
+    <h1>無法登錄</h1>
+    <p id="errMsg"></p>
+  </div>
+
+  <!-- 第 1 頁：個人資料 -->
+  <form class="card hidden" id="pgForm" autocomplete="off" novalidate>
+    <h1>個人資料</h1>
+    <p class="lead">標示 <span style="color:var(--warn)">*</span> 為必填，其餘可留空</p>
+
+    <div class="field" id="fName">
+      <label for="name">姓名<i>*</i></label>
+      <input type="text" id="name" maxlength="40" autocomplete="off">
+    </div>
+
+    <div class="field" id="fBirth">
+      <label>生日<i>*</i></label>
+      <div class="birth">
+        <select id="by" aria-label="出生年"><option value="">年</option></select>
+        <select id="bm" aria-label="出生月"><option value="">月</option></select>
+        <select id="bd" aria-label="出生日"><option value="">日</option></select>
+      </div>
+    </div>
+
+    <div class="field" id="fGender">
+      <label>性別<i>*</i></label>
+      <div class="seg" id="gender">
+        <button type="button" data-v="男">男</button>
+        <button type="button" data-v="女">女</button>
+        <button type="button" data-v="其他">其他</button>
+      </div>
+    </div>
+
+    <div class="opt-title">以下選填</div>
+
+    <div class="field">
+      <label for="uid">使用者編號<small>有編號才能查詢歷次成績</small></label>
+      <input type="text" id="uid" maxlength="40" autocomplete="off">
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="height">身高</label><div class="unit"><input type="number" id="height" inputmode="decimal" step="0.1"><span>cm</span></div></div>
+      <div class="field"><label for="weight">體重</label><div class="unit"><input type="number" id="weight" inputmode="decimal" step="0.1"><span>kg</span></div></div>
+      <div class="field"><label for="waist">腰圍</label><div class="unit"><input type="number" id="waist" inputmode="decimal" step="0.1"><span>cm</span></div></div>
+      <div class="field"><label for="hip">臀圍</label><div class="unit"><input type="number" id="hip" inputmode="decimal" step="0.1"><span>cm</span></div></div>
+    </div>
+
+    <button type="button" class="btn" id="toNotice" style="margin-top:6px">下一步</button>
+    <div class="msg" id="formMsg"></div>
+  </form>
+
+  <!-- 第 2 頁：測試前須知 -->
+  <div class="card hidden" id="pgNotice">
+    <h1>測試前須知</h1>
+    <p class="lead">請閱讀後勾選同意再送出</p>
+    <div class="notice">
+      <p>本人（以下稱「受測者」）自願參加由 BodyGo 3.0 評估系統所進行之體適能評估活動，並充分了解活動內容與潛在風險，特此聲明如下：</p>
+      <ol>
+        <li><b>健康狀況確認：</b>本人確認目前身體健康，無心臟病、高血壓、骨骼關節損傷或其他不適合進行體能測試之疾病或症狀。</li>
+        <li><b>風險自行承擔：</b>本人了解體適能評估涉及一定程度之身體活動，本人自願承擔參與過程中可能發生之一切風險，包括但不限於扭傷、肌肉痠痛或其他運動傷害。</li>
+        <li><b>免除責任：</b>本人同意免除本活動之主辦單位、導師、工作人員及相關志工因本次評估活動所可能產生之任何法律責任，惟因故意或重大過失所致之損害不在此限。</li>
+        <li><b>個人資料使用同意：</b>本人同意主辦單位依據《個人資料保護法》蒐集、處理及利用本人填寫之個人資料（包括姓名、生日、身高、體重等），用途僅限於本次體適能評估結果之記錄與分析，不對外公開或轉讓第三方。</li>
+        <li><b>緊急聯絡授權：</b>若評估過程中發生緊急狀況，本人授權工作人員採取必要之急救措施，並通知緊急聯絡人。</li>
+      </ol>
+      <p>本人已詳細閱讀以上條款，充分理解其內容，並自願同意遵守上述規定。</p>
+      <p class="privacy">資料傳送說明：您填寫的資料會經由禾青醫電的伺服器加密轉送到上方這台測試機，測試機收到後即從伺服器刪除；若測試機未收取，最長保留 24 小時後自動刪除。</p>
+    </div>
+    <label class="agree"><input type="checkbox" id="lawCheck"><span>已詳閱並同意以上內容</span></label>
+    <div class="row2">
+      <button type="button" class="btn ghost" id="back">上一步</button>
+      <button type="button" class="btn" id="submit" disabled>送出</button>
+    </div>
+    <div class="msg" id="sendMsg"></div>
+  </div>
+
+  <!-- 完成 -->
+  <div class="card done hidden" id="pgDone">
+    <div class="ring"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5ff0b5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12.5 10 17.5 19 7"/></svg></div>
+    <h1>已送出</h1>
+    <p><b id="doneName"></b> 的資料已傳到測試機</p>
+    <p>請告知現場工作人員您的姓名，等候唱名檢測</p>
+    <button type="button" class="btn ghost" id="again" style="margin-top:22px">幫另一位家人填寫</button>
+  </div>
+
+  <footer>禾青醫電股份有限公司 HEQING MEDICAL</footer>
+</div>
+
+<script>
+(() => {
+  const API = "https://bodygo-web-backend-anfsetcnf4g9g8cq.eastasia-01.azurewebsites.net/api/bodygo";
+  const $ = (id) => document.getElementById(id);
+  const qs = new URLSearchParams(location.search);
+  const M = (qs.get("m") || "").trim();
+  const T = (qs.get("t") || "").trim();
+
+  const pages = ["pgLoading", "pgError", "pgForm", "pgNotice", "pgDone"];
+  function show(id) {
+    pages.forEach((p) => $(p).classList.toggle("hidden", p !== id));
+    window.scrollTo(0, 0);
+  }
+  function fail(msg) { $("errMsg").textContent = msg; show("pgError"); }
+
+  // ── 生日下拉：年（西元＋民國）、月、日 ──
+  (function initBirth() {
+    const now = new Date().getFullYear();
+    const by = $("by"), bm = $("bm"), bd = $("bd");
+    for (let y = now - 3; y >= 1920; y--) {
+      const o = new Option(`${y}（民國${y - 1911}）`, y);
+      by.add(o);
+    }
+    for (let m = 1; m <= 12; m++) bm.add(new Option(`${m} 月`, m));
+    const fillDays = () => {
+      const keep = bd.value;
+      const y = +by.value || 2000, m = +bm.value || 1;
+      const n = new Date(y, m, 0).getDate();
+      bd.length = 1;
+      for (let d = 1; d <= n; d++) bd.add(new Option(`${d} 日`, d));
+      if (keep && +keep <= n) bd.value = keep;
+    };
+    by.addEventListener("change", fillDays);
+    bm.addEventListener("change", fillDays);
+    fillDays();
+  })();
+  const pad = (n) => String(n).padStart(2, "0");
+  const birthValue = () => ($("by").value && $("bm").value && $("bd").value)
+    ? `${$("by").value}-${pad($("bm").value)}-${pad($("bd").value)}` : "";
+
+  // ── 性別按鈕 ──
+  let gender = "";
+  $("gender").addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    gender = b.dataset.v;
+    [...$("gender").children].forEach((x) => x.classList.toggle("on", x === b));
+    $("fGender").classList.remove("missing");
+  });
+  $("name").addEventListener("input", () => $("fName").classList.remove("missing"));
+  ["by", "bm", "bd"].forEach((id) => $(id).addEventListener("change", () => { if (birthValue()) $("fBirth").classList.remove("missing"); }));
+
+  // ── 第 1 頁 → 第 2 頁 ──
+  $("toNotice").addEventListener("click", () => {
+    const miss = [];
+    const need = [["fName", "姓名", () => $("name").value.trim()], ["fBirth", "生日", birthValue], ["fGender", "性別", () => gender]];
+    need.forEach(([box, label, get]) => { const ok = !!get(); $(box).classList.toggle("missing", !ok); if (!ok) miss.push(label); });
+    if (miss.length) {
+      $("formMsg").textContent = "尚未填寫：" + miss.join("、");
+      document.querySelector(".missing")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    $("formMsg").textContent = "";
+    show("pgNotice");
+  });
+  $("back").addEventListener("click", () => show("pgForm"));
+  $("lawCheck").addEventListener("change", (e) => { $("submit").disabled = !e.target.checked; });
+
+  // ── 送出 ──
+  const num = (id) => { const v = $(id).value.trim(); return v === "" ? null : Number(v); };
+  $("submit").addEventListener("click", async () => {
+    const btn = $("submit");
+    btn.disabled = true; btn.textContent = "傳送中…"; $("sendMsg").textContent = "";
+    const profile = {
+      id: $("uid").value.trim(),
+      name: $("name").value.trim(),
+      birth: birthValue(),
+      gender,
+      height_cm: num("height"), weight_kg: num("weight"), waist_cm: num("waist"), hip_cm: num("hip"),
+      lawCheck: $("lawCheck").checked,
+    };
+    try {
+      const r = await fetch(`${API}/form/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ m: M, t: T, profile }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.ok) {
+        $("doneName").textContent = profile.name;
+        show("pgDone");
+        return;
+      }
+      if (r.status === 410 || r.status === 404 || r.status === 403) return fail(j.message || "請重新掃描測試機上的 QR code");
+      $("sendMsg").textContent = j.message || `送出失敗（${r.status}），請再試一次`;
+    } catch {
+      $("sendMsg").textContent = "網路連線不穩，請確認手機有網路後再按一次送出";
+    } finally {
+      btn.textContent = "送出"; btn.disabled = !$("lawCheck").checked;
+    }
+  });
+
+  // ── 再填一位（同一支手機幫家人填）──
+  $("again").addEventListener("click", () => {
+    $("pgForm").reset();
+    ["by", "bm", "bd"].forEach((id) => ($(id).value = ""));
+    gender = ""; [...$("gender").children].forEach((x) => x.classList.remove("on"));
+    $("lawCheck").checked = false; $("submit").disabled = true;
+    show("pgForm");
+  });
+
+  // ── 進頁：確認是哪一台測試機 ──
+  (async () => {
+    if (!M || !T) return fail("網址不完整，請用手機相機重新掃描測試機畫面上的 QR code。");
+    try {
+      const r = await fetch(`${API}/form/info?m=${encodeURIComponent(M)}&t=${encodeURIComponent(T)}`);
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.ok) return fail(j.message || "無法確認測試機，請重新掃描 QR code。");
+      $("machineName").textContent = j.displayName;
+      $("machineSite").textContent = j.site ? `｜${j.site}` : "";
+      $("machineBox").classList.remove("hidden");
+      show("pgForm");
+    } catch {
+      fail("網路連線失敗。請確認手機已開啟行動網路，再重新掃描 QR code。");
+    }
+  })();
+})();
+</script>
+</body>
+</html>

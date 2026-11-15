@@ -81,6 +81,12 @@
       }
     },
     {
+      "route": "/bgp/*",
+      "headers": {
+        "Cache-Control": "no-cache"
+      }
+    },
+    {
       "route": "/azure-cost",
       "rewrite": "/azure-cost/index.html"
     }
@@ -120,7 +126,8 @@
       "/bodygo3_0/DM/frames/成人-心肺適能/*",
       "/bodygo3_0/DM/frames/銀髮上肢肌耐力/*",
       "/azure-cost/*",
-      "/exercise/*"
+      "/exercise/*",
+      "/bgp/*"
     ]
   }
 }
